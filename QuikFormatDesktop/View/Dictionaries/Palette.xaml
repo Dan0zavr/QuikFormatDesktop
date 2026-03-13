@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="SoftBlue">#4282aa</Color>
+    <Color x:Key="ButterYellow">#ffeda2</Color>
+    <Color x:Key="LightSoftBlue">#498eba</Color>
+    <Color x:Key="LightButterYellow">#ffeea8</Color>
+
+    <Color x:Key="Ocean">#19485F</Color>
+    <Color x:Key="Lime">#D9E0A4</Color>
+    <Color x:Key="LightOcean">#205f7d</Color>
+    <Color x:Key="LightLime">#ebf2b3</Color>
+    <Color x:Key="DarkOcean">#143a4d</Color>
+
+    <Color x:Key="White">#f9fafb</Color>
+
+</ResourceDictionary>

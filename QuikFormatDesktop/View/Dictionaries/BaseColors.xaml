@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    
+    <SolidColorBrush Color="{StaticResource Ocean}" x:Key="BackColor"/>
+    <SolidColorBrush Color="{StaticResource Lime}" x:Key="ForeColor"/>
+    <SolidColorBrush Color="{StaticResource LightOcean}" x:Key="HoverBackColor"/>
+    <SolidColorBrush Color="{StaticResource LightLime}" x:Key="HoverForeColor"/>
+    <SolidColorBrush Color="{StaticResource DarkOcean}" x:Key="ButtonColor"/>
+    <SolidColorBrush Color="#1b3745" x:Key="BorderColor"/>
+
+    <SolidColorBrush Color="{StaticResource SoftBlue}" x:Key="SecondBackColor"/>
+    <SolidColorBrush Color="{StaticResource ButterYellow}" x:Key="BaseTextColor"/>
+    <SolidColorBrush Color="{StaticResource LightSoftBlue}" x:Key="HoverSecondBackColor"/>
+    <SolidColorBrush Color="{StaticResource LightButterYellow}" x:Key="HoverBaseTextzColor"/>
+
+    <SolidColorBrush Color="{StaticResource White}" x:Key="MainBackground"/>
+
+</ResourceDictionary>

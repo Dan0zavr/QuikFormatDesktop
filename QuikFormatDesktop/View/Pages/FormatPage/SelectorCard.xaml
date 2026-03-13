@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="QuikFormatDesktop.View.Pages.SelectorCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="288"
+             Background="{StaticResource BackColor}">
+    
+    <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="2">
+        <Grid MinWidth="200">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="0.2*"/>
+            </Grid.RowDefinitions>
+            
+            <!--Drag'n'drop окно-->
+                <Border Grid.Column="1" Grid.Row="1" BorderThickness="2" BorderBrush="{StaticResource BorderColor}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="5"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*" MinWidth="5"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="Перетащите сюда или" HorizontalAlignment="Center" Style="{StaticResource BaseText}"/>
+                    <Button Grid.Column="1" Grid.Row="2" Content="выберите файл" Style="{StaticResource BaseButton}" Height="26" VerticalAlignment="Bottom" FontSize="16"/>
+                </Grid>
+            </Border>
+            
+            <!--Окно с шаблоном-->
+            <Grid Grid.Column="1" Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Шаблон:" Style="{StaticResource BaseText}"/>
+                <Border Grid.Row="1" Style="{StaticResource TemplatePlace}">
+                </Border>
+            </Grid>
+
+            <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" Margin="0, 0, 0, 20">
+                <TextBlock Text="Предпросмотр" Style="{StaticResource BaseText}"/>
+                <CheckBox Width="20" Height="20" VerticalAlignment="Top" Margin="5, 4, 0, 0"/>
+            </StackPanel>
+
+            <Button Grid.Column="1" Grid.Row="5" Content="Форматировать" Style="{StaticResource BaseButton}" FontSize="18" Height="30"/>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="QuikFormatDesktop.View.Pages.PreviewCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="480" d:DesignWidth="346"
+             Background="{StaticResource MainBackground}">
+
+    <Grid MinWidth="200">
+        <Border BorderBrush="#a9b2c4" BorderThickness="2">
+            <wv2:WebView2 Margin="10">
+            </wv2:WebView2>
+        </Border>
+    </Grid>
+    
+</UserControl>
