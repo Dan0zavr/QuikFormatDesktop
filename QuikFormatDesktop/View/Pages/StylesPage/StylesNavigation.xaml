@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="QuikFormatDesktop.View.Pages.StylesNavigation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="650">
+    <Border BorderBrush="{StaticResource ButtonColor}" BorderThickness="0, 0, 0, 5">
+        <Grid Background="{StaticResource BackColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.4*"/>
+            </Grid.ColumnDefinitions>
+
+            <RadioButton Grid.Column="1" Content="Стиль текста" Style="{StaticResource TabButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <RadioButton Grid.Column="2" Content="Стиль таблиц" Style="{StaticResource TabButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <RadioButton Grid.Column="3" Content="Стиль списков" Style="{StaticResource TabButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <RadioButton Grid.Column="4" Content="Стиль рисунков" Style="{StaticResource TabButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <RadioButton Grid.Column="5" Content="Стиль формул" Style="{StaticResource TabButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
+    </Border>
+</UserControl>

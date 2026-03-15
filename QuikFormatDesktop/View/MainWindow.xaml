@@ -18,6 +18,6 @@
         </Grid.ColumnDefinitions>
 
         <local:NavigationMenu Grid.Column="0"/>
-        <pages:FormatPage Grid.Column="1"/>
+        <pages:StylesPage Grid.Column="1"/>
     </Grid>
 </Window>

@@ -10,6 +10,8 @@
                 <ResourceDictionary Source="/View/Dictionaries/BaseColors.xaml"/>
                 <ResourceDictionary Source="/View/Dictionaries/BaseControls.xaml"/>
                 <ResourceDictionary Source="/View/Dictionaries/SpecialStyles.xaml"/>
+                <ResourceDictionary Source="/View/Dictionaries/AlignmentButtons.xaml"/>
+                <ResourceDictionary Source="/View/Resources/QuestionMark.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
