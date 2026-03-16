@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace QuikFormatDesktop.View.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для TextStyleCard.xaml
+    /// Логика взаимодействия для PictureStyle.xaml
     /// </summary>
-    public partial class TextStyleCard : UserControl
+    public partial class PictureCard : UserControl
     {
-        public TextStyleCard()
+        public PictureCard()
         {
             InitializeComponent();
         }

@@ -1,0 +1,211 @@
+﻿<UserControl x:Class="QuikFormatDesktop.View.Pages.PictureCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             mc:Ignorable="d">
+    
+    <GroupBox Header="Стиль картинки" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Имя стиля-->
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
+                <TextBox x:Name="ParagraphStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding ParagraphStyleName}"/>
+            </StackPanel>
+
+            <!--Блок выравнивания-->
+            <Grid Grid.Row="2" Margin="0, 10, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Выравнивание" FontSize="12" Margin="0,0,5,5"/>
+                        <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+
+                    </Grid>
+                    <UniformGrid Grid.Row="1" Rows="1" Margin="0,0,0,5">
+                        <RadioButton GroupName="Alignment" Style="{StaticResource LeftIndent}"/>
+                        <RadioButton GroupName="Alignment" Style="{StaticResource CenterIndent}"/>
+                        <RadioButton GroupName="Alignment" Style="{StaticResource BothIndent}"/>
+                        <RadioButton GroupName="Alignment" Style="{StaticResource RightIndent}"/>
+                    </UniformGrid>
+                </Grid>
+
+                <!--Блок отступов-->
+            <Grid Grid.Row="4" Margin="0, 10, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Отступы" FontSize="12" Margin="0,0,5,5"/>
+                        <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition MaxWidth="200" Width="0.25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Width="100">
+                            <TextBlock Text="Первая строка:" FontSize="12"/>
+                            <TextBox HorizontalAlignment="Left" Width="90" Margin="0,0,5,0" Text="{Binding FirstLineIndent}"/>
+                        </StackPanel>
+
+                        <DockPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="20">
+
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <TextBlock Margin="7, 0, 0, 0" Text="Справа:" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBox Margin="2,0,0,0" Width="25" Height="20" Text="{Binding RightIndent}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <TextBlock Margin="2, 0, 0, 0" Text="Слева:" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBox Margin="2,0,0,0" Width="25" Height="20" Text="{Binding LeftIndent}"/>
+                            </StackPanel>
+
+                        </DockPanel>
+                    </Grid>
+                </Grid>
+
+                <!--Блок интервалов-->
+            <Grid Grid.Row="6" Margin="0, 10, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Интервал" FontSize="12" Margin="0,0,5,0"/>
+                        <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="0.25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <ComboBox FontSize="12" HorizontalAlignment="Left" Width="80" Margin="0,3,0,0" ItemsSource="{Binding Intervals}" SelectedItem="{Binding Interval}"/>
+
+                        <DockPanel Grid.Column="2" Height="22" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <TextBlock Margin="10, 0, 0, 0" Text="После:" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBox Margin="2,0,0,0" Width="30" Height="20" Text="{Binding BeforeInterval}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <TextBlock Margin="10, 0, 0, 0" Text="Перед:" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBox Margin="2,0,0,0" Width="30" Height="20" Text="{Binding AfterInterval}"/>
+                            </StackPanel>
+
+                        </DockPanel>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3" Margin="0, 3, 0, 0">
+                            <TextBlock FontSize="12" Text="Не добавлять между абзацами одного стиля" TextWrapping="WrapWithOverflow"/>
+                            <CheckBox Margin="10, 0, 0, 0" IsChecked="{Binding ContextualSpacing}"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Grid>
+
+             <Grid Grid.Row="8">
+                    
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Подпись" FontSize="12" Margin="0,0,5,5"/>
+                    <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="Генерировать подпись автоматически" FontSize="12" Margin="0, 0, 5, 0"/>
+                        <CheckBox VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1"> <!--Здесь нужно управлять видимостью в зависимости от чекбокса-->
+                        <Grid Margin="0, 5, 0, 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Текст подписи" FontSize="12" Margin="0, 0, 5, 0"/>
+                            <TextBox Grid.Column="1" FontSize="12"/>
+                        </Grid>
+                        <StackPanel Margin="0, 5, 0, 0" Orientation="Horizontal">
+                            <TextBlock Text="Пустые строки перед и после рисунка" FontSize="12" Margin="0, 0, 5, 0"/>
+                            <CheckBox VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <StackPanel Grid.Row="10" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
+                <TextBlock Text="{Binding PStatusMessage}" 
+                        Foreground="Green" 
+                        FontWeight="Bold"
+                        Margin="0,0,0,10" />
+                <StackPanel Orientation="Horizontal" >
+                    <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding TextDeleteCommand}"/>
+                    <Button Content="Сохранить" Width="100" Command="{Binding AddParagraphCommand}"/>
+
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </GroupBox>
+</UserControl>

@@ -13,7 +13,7 @@
                     <TextBlock Text="Стиль текста"/>
                 </TabItem.Header>
                 <TabItem.Content>
-                    <local:TextStyleCard/>
+                    <local:TextStylePage/>
                 </TabItem.Content>
             </TabItem>
 
@@ -22,7 +22,7 @@
                     <TextBlock Text="Стиль списков"/>
                 </TabItem.Header>
                 <TabItem.Content>
-                    <Border/>
+                    <local:NumberingPage/>
                 </TabItem.Content>
             </TabItem>
 
@@ -31,7 +31,7 @@
                     <TextBlock Text="Стиль таблиц"/>
                 </TabItem.Header>
                 <TabItem.Content>
-                    <Border/>
+                    <local:TablePage/>
                 </TabItem.Content>
             </TabItem>
 
@@ -40,7 +40,7 @@
                     <TextBlock Text="Стиль рисунков"/>
                 </TabItem.Header>
                 <TabItem.Content>
-                    <Border/>
+                    <local:PicturePage/>
                 </TabItem.Content>
             </TabItem>
 
@@ -49,7 +49,7 @@
                     <TextBlock Text="Стиль формул"/>
                 </TabItem.Header>
                 <TabItem.Content>
-                    <Border/>
+                    <local:FormulaPage/>
                 </TabItem.Content>
             </TabItem>
         </TabControl>

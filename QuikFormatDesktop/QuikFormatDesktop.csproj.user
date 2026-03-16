@@ -14,10 +14,34 @@
     <Compile Update="View\Pages\FormatPage\SelectorCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Pages\StylesPage\FormulaStyle\FormulaCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\FormulaStyle\FormulaPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\NumberingStyle\NumberingPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\PictureStyle\PictureCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\PictureStyle\PicturePage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Pages\StylesPage\StylesNavigation.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Pages\StylesPage\StylesPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\NumberingStyle\NumberingCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\TableStyle\TableCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\StylesPage\TableStyle\TablePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Pages\StylesPage\TextStyle\ParagraphCard.xaml.cs">
@@ -26,7 +50,7 @@
     <Compile Update="View\Pages\StylesPage\TextStyle\TextCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Pages\StylesPage\TextStyle\TextStyleCard.xaml.cs">
+    <Compile Update="View\Pages\StylesPage\TextStyle\TextStylePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
