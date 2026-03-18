@@ -18,9 +18,9 @@ namespace QuikFormatDesktop.View.Pages
     /// <summary>
     /// Логика взаимодействия для NumberingCard.xaml
     /// </summary>
-    public partial class NumberingCard : UserControl
+    public partial class NumberedNumberingCard : UserControl
     {
-        public NumberingCard()
+        public NumberedNumberingCard()
         {
             InitializeComponent();
         }

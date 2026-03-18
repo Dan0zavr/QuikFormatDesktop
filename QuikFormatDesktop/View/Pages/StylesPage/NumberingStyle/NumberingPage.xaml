@@ -6,7 +6,16 @@
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="650">
-    <Grid>
-        <local:NumberingCard MaxHeight="600" MaxWidth="500"/>
+    <Grid Background="{StaticResource MainBackground}">
+        <Grid Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <local:NumberedNumberingCard Grid.Column="0" MaxHeight="600" MaxWidth="500"/>
+
+            <local:MarkedNumberingStyle Grid.Column="2" MaxHeight="600" MaxWidth="500"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="QuikFormatDesktop.View.Pages.TemplatePreview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="400">
+    <Grid Background="{StaticResource MainBackground}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="10, 5, 10, 0" Grid.Row="0">
+            <TextBlock Text="Название шаблона" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <GroupBox Header="Описание" Height="65">
+                <TextBlock/>
+            </GroupBox>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Шрифт: "/>
+                    <TextBlock Text="Times new rewfew" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Интервал: "/>
+                    <TextBlock Text="Times new rewfew" FontWeight="SemiBold"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="10, 0, 0, 0" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Выравнивание: "/>
+                    <TextBlock Text="По левому краю" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Отступ первой строки: "/>
+                    <TextBlock Text="1.28" FontWeight="SemiBold"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

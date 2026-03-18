@@ -20,6 +20,9 @@
     <Compile Update="View\Pages\StylesPage\FormulaStyle\FormulaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Pages\StylesPage\NumberingStyle\MarkedNumberingStyle.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Pages\StylesPage\NumberingStyle\NumberingPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -35,7 +38,7 @@
     <Compile Update="View\Pages\StylesPage\StylesPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Pages\StylesPage\NumberingStyle\NumberingCard.xaml.cs">
+    <Compile Update="View\Pages\StylesPage\NumberingStyle\NumberedNumberingCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Pages\StylesPage\TableStyle\TableCard.xaml.cs">
@@ -51,6 +54,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Pages\StylesPage\TextStyle\TextStylePage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\TemplatePreview.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
