@@ -23,7 +23,7 @@
 
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox x:Name="FontStyleName" FontSize="12" Margin="0,0,0,15" Text="{Binding TextStyleName}"/>
+                <TextBox x:Name="NumberingStyleName" FontSize="12" Margin="0,0,0,15" Text="{Binding NumberingStyleName}"/>
             </StackPanel>
 
             <Grid Grid.Row="2">
@@ -50,8 +50,8 @@
                     <StackPanel Grid.Column="0">
                         <TextBlock Margin="5, 0, 0, 0"  Text="Маркер:" FontSize="12"/>
                         <ComboBox Margin="5,0,0,10" 
-                        ItemsSource="{Binding FontSizes}"
-                        SelectedItem="{Binding TextFontSize}"
+                        ItemsSource="{Binding Markers}"
+                        SelectedItem="{Binding SelectedMarker}"
                         SelectedValue="{x:Null}">
 
                             <ComboBox.ItemTemplate>
@@ -80,10 +80,10 @@
                     <Button Content="Сброс" 
                     Width="100" 
                     Margin="0,0,10,0" 
-                    Command="{Binding TextDeleteCommand}"/>
+                    Command="{Binding NumberingDeleteCommand}"/>
                     <Button Content="Сохранить" 
                     Width="100" 
-                    Command="{Binding AddParagraphCommand}"/>
+                    Command="{Binding AddNumberingCommand}"/>
                 </StackPanel>
             </Grid>
         </Grid>

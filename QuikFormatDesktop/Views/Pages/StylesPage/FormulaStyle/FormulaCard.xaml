@@ -21,7 +21,7 @@
             <!--Имя стиля-->
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox x:Name="ParagraphStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding ParagraphStyleName}"/>
+                <TextBox x:Name="FormulaStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding FormulaStyleName}"/>
             </StackPanel>
 
             <Grid Grid.Row="2">
@@ -100,8 +100,8 @@
             FontWeight="Bold"
             Margin="0,0,0,10" />
                 <StackPanel Orientation="Horizontal" >
-                    <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding TextDeleteCommand}"/>
-                    <Button Content="Сохранить" Width="100" Command="{Binding AddParagraphCommand}"/>
+                    <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding FormulaDeleteCommand}"/>
+                    <Button Content="Сохранить" Width="100" Command="{Binding AddFormulaCommand}"/>
 
                 </StackPanel>
             </StackPanel>

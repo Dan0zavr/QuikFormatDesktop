@@ -25,9 +25,6 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private ObservableCollection<double> _intervals;
 
-        private ICommand _textDeleteCommand;
-        private ICommand _addParagraphCommand;
-
         public ParagraphStyleViewModel(ParagraphService paragraphService)
         {
             _paragraphService = paragraphService;

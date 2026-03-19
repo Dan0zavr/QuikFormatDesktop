@@ -13,6 +13,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _styleName;
         private Font _selectedFont;
         private int _selectedFontSize;
+        private string _pStatusMessage;
 
         private List<Font> _fonts = new List<Font>();
 
@@ -58,6 +59,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _selectedFontSize = value;
                 OnPropertyChanged(nameof(SelectedFontSize));
+            }
+        }
+
+        public string PStatusMessage
+        {
+            get => _pStatusMessage;
+            set
+            {
+                _pStatusMessage = value;
+                OnPropertyChanged(nameof(PStatusMessage));
             }
         }
     }
