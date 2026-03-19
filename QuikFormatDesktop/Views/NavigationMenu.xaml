@@ -18,10 +18,10 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <Button Content="Лого" Style="{StaticResource BaseButton}" Margin="4,10,4,10" Height="45"/>
+                <Button Content="Лого" Style="{StaticResource BaseButton}" Margin="4,10,4,10" Height="45" Command="{Binding GoToFormat}"/>
                 <StackPanel Margin="4,10,4,10">
-                    <Button Content="Форматировать" Style="{StaticResource BaseButton}" FontSize="14" Height="25"/>
-                    <Button Content="Стили" Style="{StaticResource BaseButton}" FontSize="14" Height="25" Margin="0,5,0,0"/>
+                    <Button Content="Форматировать" Style="{StaticResource BaseButton}" FontSize="14" Height="25" Command="{Binding GoToFormat}"/>
+                    <Button Content="Стили" Style="{StaticResource BaseButton}" FontSize="14" Height="25" Margin="0,5,0,0" Command="{Binding GoToStyles}"/>
                 </StackPanel>
             </StackPanel>
 

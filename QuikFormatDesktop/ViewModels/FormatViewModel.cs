@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuikFormatDesktop.ViewModels
 {
-    class FormatViewModel
+    public class FormatViewModel : ViewModelBase
     {
     }
 }

@@ -2,50 +2,50 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="View\Resources\bothAlignment.png" />
-    <None Remove="View\Resources\bothAlignmentChecked.png" />
-    <None Remove="View\Resources\bothAlignmentMouseOver.png" />
-    <None Remove="View\Resources\bothAlignmentNormal.png" />
-    <None Remove="View\Resources\centerAlignment.png" />
-    <None Remove="View\Resources\centerAlignmentChecked.png" />
-    <None Remove="View\Resources\centerAlignmentMouseOver.png" />
-    <None Remove="View\Resources\centerAlignmentNormal.png" />
-    <None Remove="View\Resources\leftAlignment.png" />
-    <None Remove="View\Resources\leftAlignmentChecked.png" />
-    <None Remove="View\Resources\leftAlignmentMouseOver.png" />
-    <None Remove="View\Resources\leftAlignmentNormal.png" />
-    <None Remove="View\Resources\rightAlignment.png" />
-    <None Remove="View\Resources\rightAlignmentChecked.png" />
-    <None Remove="View\Resources\rightAlignmentMouseOver.png" />
-    <None Remove="View\Resources\rightAlignmentNormal.png" />
+    <None Remove="Views\Resources\bothAlignment.png" />
+    <None Remove="Views\Resources\bothAlignmentChecked.png" />
+    <None Remove="Views\Resources\bothAlignmentMouseOver.png" />
+    <None Remove="Views\Resources\bothAlignmentNormal.png" />
+    <None Remove="Views\Resources\centerAlignment.png" />
+    <None Remove="Views\Resources\centerAlignmentChecked.png" />
+    <None Remove="Views\Resources\centerAlignmentMouseOver.png" />
+    <None Remove="Views\Resources\centerAlignmentNormal.png" />
+    <None Remove="Views\Resources\leftAlignment.png" />
+    <None Remove="Views\Resources\leftAlignmentChecked.png" />
+    <None Remove="Views\Resources\leftAlignmentMouseOver.png" />
+    <None Remove="Views\Resources\leftAlignmentNormal.png" />
+    <None Remove="Views\Resources\rightAlignment.png" />
+    <None Remove="Views\Resources\rightAlignmentChecked.png" />
+    <None Remove="Views\Resources\rightAlignmentMouseOver.png" />
+    <None Remove="Views\Resources\rightAlignmentNormal.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="View\Dictionaries\BaseColors.xaml" />
-    <Page Remove="View\Dictionaries\BaseControls.xaml" />
+    <Page Remove="Views\Dictionaries\BaseColors.xaml" />
+    <Page Remove="Views\Dictionaries\BaseControls.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.14">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.14">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.14" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3800.47" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,57 +53,57 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="View\Dictionaries\BaseControls.xaml" />
+    <Resource Include="Views\Dictionaries\BaseControls.xaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="View\Dictionaries\BaseColors.xaml" />
-    <Resource Include="View\Resources\bothAlignment.png">
+    <Resource Include="Views\Dictionaries\BaseColors.xaml" />
+    <Resource Include="Views\Resources\bothAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\bothAlignmentChecked.png">
+    <Resource Include="Views\Resources\bothAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\bothAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\bothAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\bothAlignmentNormal.png">
+    <Resource Include="Views\Resources\bothAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\centerAlignment.png">
+    <Resource Include="Views\Resources\centerAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\centerAlignmentChecked.png">
+    <Resource Include="Views\Resources\centerAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\centerAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\centerAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\centerAlignmentNormal.png">
+    <Resource Include="Views\Resources\centerAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\leftAlignment.png">
+    <Resource Include="Views\Resources\leftAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\leftAlignmentChecked.png">
+    <Resource Include="Views\Resources\leftAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\leftAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\leftAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\leftAlignmentNormal.png">
+    <Resource Include="Views\Resources\leftAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\rightAlignment.png">
+    <Resource Include="Views\Resources\rightAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\rightAlignmentChecked.png">
+    <Resource Include="Views\Resources\rightAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\rightAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\rightAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="View\Resources\rightAlignmentNormal.png">
+    <Resource Include="Views\Resources\rightAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

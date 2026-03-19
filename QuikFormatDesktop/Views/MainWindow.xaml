@@ -5,9 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuikFormatDesktop.View"
         xmlns:pages="clr-namespace:QuikFormatDesktop.View.Pages"
+        xmlns:vms="clr-namespace:QuikFormatDesktop.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="480" Width="853">
     <Grid>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type vms:FormatViewModel}">
+                <pages:FormatPage/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:StylesViewModel}">
+                <pages:StylesPage/>
+            </DataTemplate>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -17,7 +28,7 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
 
-        <local:NavigationMenu Grid.Column="0"/>
-        <pages:FormatPage Grid.Column="1"/>
+        <local:NavigationMenu Grid.Column="0" DataContext="{Binding NavigationViewModel}"/>
+        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}"/>
     </Grid>
 </Window>
