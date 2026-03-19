@@ -7,11 +7,11 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.Commands
 {
-    public class NavigateCommand : ICommand
+    public class NavigateCommand<T> : ICommand where T : ViewModelBase
     {
-        private NavigationService _navigationService;
+        private NavigationService<T> _navigationService;
 
-        public NavigateCommand(NavigationService navigationService)
+        public NavigateCommand(NavigationService<T> navigationService)
         {
             _navigationService = navigationService;
         }

@@ -24,5 +24,10 @@ namespace QuikFormatDesktop.View.Pages
         {
             InitializeComponent();
         }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

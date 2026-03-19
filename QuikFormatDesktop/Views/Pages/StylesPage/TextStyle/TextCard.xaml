@@ -18,7 +18,7 @@
 
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox x:Name="FontStyleName" FontSize="12" Margin="0,0,0,15" Text="{Binding TextStyleName}"/>
+                <TextBox x:Name="FontStyleName" FontSize="12" Margin="0,0,0,15" Text="{Binding StyleName}"/>
             </StackPanel>
             
             <Grid Grid.Row="2">
@@ -55,7 +55,7 @@
                         <TextBlock Margin="5, 0, 0, 0" Text="Размер:" FontSize="12"/>
                         <ComboBox Margin="5,0,0,10" 
                                 ItemsSource="{Binding FontSizes}"
-                                SelectedItem="{Binding TextFontSize}"
+                                SelectedItem="{Binding SelectedFontSize}"
                                 SelectedValue="{x:Null}">
 
                             <ComboBox.ItemTemplate>

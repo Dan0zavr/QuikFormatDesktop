@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace QuikFormatDesktop.ViewModels.Services
 {
-    public class TextStyleService : BaseDataService<TextStyle>
+    public class TextService : BaseDataService<TextStyle>
     {
-        public TextStyleService(QfDbContext context) : base(context) { }
+        public TextService(QfDbContext context) : base(context) { }
     }
 }

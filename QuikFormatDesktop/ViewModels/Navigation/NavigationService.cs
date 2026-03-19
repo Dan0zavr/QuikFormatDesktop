@@ -1,23 +1,24 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace QuikFormatDesktop.ViewModels.Navigation
 {
-    public class NavigationService
+    public class NavigationService<T> where T : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
-        private readonly Func<ViewModelBase> _createViewModel;
+        private readonly IServiceProvider _serviceProvider;
 
-        public NavigationService(NavigationStore navigationStore, Func<ViewModelBase> createViewModel)
+        public NavigationService(NavigationStore navigationStore, IServiceProvider serviceProvider)
         {
             _navigationStore = navigationStore;
-            _createViewModel = createViewModel;
+            _serviceProvider = serviceProvider;
         }
 
         public void Navigate()
         {
-            _navigationStore.CurrentViewModel = _createViewModel();
+            _navigationStore.CurrentViewModel = _serviceProvider.GetRequiredService<T>();
         }
     }
 }

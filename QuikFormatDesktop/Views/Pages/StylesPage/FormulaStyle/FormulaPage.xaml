@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Background="{StaticResource MainBackground}">
         <local:FormulaCard MaxHeight="600" MaxWidth="500"/>
     </Grid>
 </UserControl>

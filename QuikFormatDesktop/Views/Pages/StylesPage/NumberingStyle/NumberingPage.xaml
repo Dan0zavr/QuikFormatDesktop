@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="650">
+             d:DesignHeight="400" d:DesignWidth="650" Loaded="UserControl_Loaded">
     <Grid Background="{StaticResource MainBackground}">
         <Grid Margin="20">
             <Grid.ColumnDefinitions>

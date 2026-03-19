@@ -13,10 +13,10 @@ namespace QuikFormatDesktop.ViewModels
         public ICommand GoToStyles { get; }
         public ICommand GoToFormat { get; }
 
-        public NavigationViewModel(NavigationService navigationToFormatService, NavigationService navigationToStylesService)
+        public NavigationViewModel(NavigationService<FormatViewModel> navigationToFormatService, NavigationService<StylesViewModel> navigationToStylesService)
         {
-            GoToStyles = new NavigateCommand(navigationToStylesService);
-            GoToFormat = new NavigateCommand(navigationToFormatService);
+            GoToStyles = new NavigateCommand<StylesViewModel>(navigationToStylesService);
+            GoToFormat = new NavigateCommand<FormatViewModel>(navigationToFormatService);
         }
     }
 }

@@ -18,7 +18,6 @@ namespace QuikFormatDesktop.ViewModels
             _navigationStore = navigationStore;
             NavigationViewModel = navigationViewModel;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-
         }
 
         private void OnCurrentViewModelChanged()
