@@ -1,4 +1,5 @@
-﻿using QuikFormatDesktop.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using QuikFormatDesktop.Database;
 using QuikFormatDesktop.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace QuikFormatDesktop.ViewModels.Services
 {
     public class TemplateService : BaseDataService<Template>
     {
-        public TemplateService(QfDbContext context) : base(context) { }
+        public TemplateService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
     }
 }

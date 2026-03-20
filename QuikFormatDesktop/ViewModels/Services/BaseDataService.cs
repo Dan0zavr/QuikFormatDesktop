@@ -10,39 +10,50 @@ namespace QuikFormatDesktop.ViewModels.Services
 {
     public abstract class BaseDataService<T> where T : class
     {
-        protected readonly QfDbContext _context;
+        protected readonly IDbContextFactory<QfDbContext> _factory;
 
-        protected BaseDataService(QfDbContext context)
+        protected  BaseDataService(IDbContextFactory<QfDbContext> factory)
         {
-            _context = context;
+            _factory = factory;
+            
         }
 
         public async Task Add(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await using var context = await _factory.CreateDbContextAsync();
+
+            await context.Set<T>().AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task Update(T entity)
         {
-            _context.Set<T>().Update(entity);
-            await _context.SaveChangesAsync();
+            await using var context = await _factory.CreateDbContextAsync();
+
+            context.Set<T>().Update(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task Delete(T entity)
         {
-            _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
+            await using var context = await _factory.CreateDbContextAsync();
+
+            context.Set<T>().Remove(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task<List<T>> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            await using var context = await _factory.CreateDbContextAsync();
+
+            return await context.Set<T>().ToListAsync();
         }
 
         public async Task<T> GetById(string id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            await using var context = await _factory.CreateDbContextAsync();
+
+            return await context.Set<T>().FindAsync(id);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using QuikFormatDesktop.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using QuikFormatDesktop.Database;
 using QuikFormatDesktop.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace QuikFormatDesktop.ViewModels.Services
 {
     public class ParagraphService : BaseDataService<ParagraphStyle>
     {
-        public ParagraphService(QfDbContext context) : base(context) { }
+        public ParagraphService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
     }
 }

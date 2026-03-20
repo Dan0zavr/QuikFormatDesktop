@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using QuikFormatDesktop.Database;
 using QuikFormatDesktop.View;
 using QuikFormatDesktop.ViewModels;
@@ -9,6 +11,7 @@ using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Windows;
 
 namespace QuikFormatDesktop
@@ -18,60 +21,76 @@ namespace QuikFormatDesktop
     /// </summary>
     public partial class App : Application
     {
-        private readonly NavigationStore _navigationStore;
-        private ServiceProvider _serviceProvider;
+        private readonly IHost _host;
 
         public App()
         {
-            _navigationStore = new NavigationStore();
+            _host = CreateHostBuilder().Build();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        private static IHostBuilder CreateHostBuilder(string[] args = null)
         {
-            var services = new ServiceCollection();
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddDbContextFactory<QfDbContext>(options => options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<QfDbContext>(options => options.UseSqlite(@"Data Source=C:\Users\Temp\source\repos\QuikFormatDesktop\QuikFormatDesktop\TemplatesDataBase.db"));
+                    services.AddSingleton<NavigationStore>();
 
-            services.AddSingleton<NavigationStore>();
+                    services.AddSingleton<MainViewModel>();
+                    services.AddSingleton<NavigationViewModel>();
 
-            services.AddSingleton<MainViewModel>();
-            services.AddSingleton<NavigationViewModel>();
+                    services.AddTransient<FormatViewModel>();
+                    services.AddTransient<StylesViewModel>();
 
-            services.AddTransient<FormatViewModel>();
-            services.AddTransient<StylesViewModel>();
+                    services.AddTransient<TextStyleViewModel>();
+                    services.AddTransient<FontStyleViewModel>();
+                    services.AddTransient<ParagraphStyleViewModel>();
+                    services.AddTransient<TableStyleViewModel>();
+                    services.AddTransient<PictureStyleViewModel>();
+                    services.AddTransient<NumberingStyleViewModel>();
+                    services.AddTransient<FormulaStyleViewModel>();
 
-            services.AddTransient<TextStyleViewModel>();
-            services.AddTransient<FontStyleViewModel>();
-            services.AddTransient<ParagraphStyleViewModel>();
-            services.AddTransient<TableStyleViewModel>();
-            services.AddTransient<PictureStyleViewModel>();
-            services.AddTransient<NumberingStyleViewModel>();
-            services.AddTransient<FormulaStyleViewModel>();
+                    //сервисы стилей
+                    services.AddTransient<TextService>();
+                    services.AddTransient<ParagraphService>();
+                    services.AddTransient<TableService>();
+                    services.AddTransient<PictureService>();
+                    services.AddTransient<NumberingService>();
+                    services.AddTransient<FormulaService>();
 
-            //сервисы стилей
-            services.AddTransient<TextService>();
-            services.AddTransient<ParagraphService>();
-            services.AddTransient<TableService>();
-            services.AddTransient<PictureService>();
-            services.AddTransient<NumberingService>();
-            services.AddTransient<FormulaService>();
+                    services.AddTransient<TemplateService>();
 
-            services.AddTransient<TemplateService>();
+                    //вспомогательные сервисы
+                    services.AddTransient<AlignmentService>();
+                    services.AddTransient<FontService>();
+                    services.AddTransient<MarkerService>();
+                    services.AddTransient<MarkerTypeService>();
+                    services.AddTransient<PositionService>();
 
-            //вспомогательные сервисы
-            services.AddTransient<AlignmentService>();
-            services.AddTransient<FontService>();
-            services.AddTransient<MarkerService>();
-            services.AddTransient<MarkerTypeService>();
-            services.AddTransient<PositionService>();
+                    services.AddSingleton<NavigationService<FormatViewModel>>();
+                    services.AddSingleton<NavigationService<StylesViewModel>>();
+                });
+        }
 
-            services.AddSingleton<NavigationService<FormatViewModel>>();
-            services.AddSingleton<NavigationService<StylesViewModel>>();
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            await _host.StartAsync();
 
-            _serviceProvider = services.BuildServiceProvider();
+            using (var scope = _host.Services.CreateScope())
+            {
+                var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<QfDbContext>>();
+                await using var context = await factory.CreateDbContextAsync();
+                await context.Database.EnsureCreatedAsync();
+            }
 
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            var nav = _serviceProvider.GetRequiredService<NavigationService<FormatViewModel>>();
+            var mainViewModel = _host.Services.GetRequiredService<MainViewModel>();
+            var nav = _host.Services.GetRequiredService<NavigationService<FormatViewModel>>();
 
             nav.Navigate();
 
@@ -81,6 +100,13 @@ namespace QuikFormatDesktop
             };
             MainWindow.Show();
             base.OnStartup(e);
+        }
+
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            await _host.StopAsync();
+            _host.Dispose();
+            base.OnExit(e);
         }
     }
 
