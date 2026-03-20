@@ -3,12 +3,15 @@ using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using QuikFormatDesktop.ViewModels.Enums;
 
 namespace QuikFormatDesktop.ViewModels
 {
     public class StylesViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
+
+        private int _selectedTabIndex;
 
         private TextStyleViewModel _textStyleViewModel;
         private TableStyleViewModel _tableStyleViewModel;
@@ -20,6 +23,19 @@ namespace QuikFormatDesktop.ViewModels
         {
             _serviceProvider = serviceProvider;
         }
+
+        
+        public int SelectedTabIndex
+        {
+            get => _selectedTabIndex;
+            set
+            {
+                _selectedTabIndex = value;
+                OnPropertyChanged(nameof(SelectedTabIndex));
+            }
+        }
+
+        public TabItemIndex SelectedTab => (TabItemIndex)SelectedTabIndex;
 
         public TextStyleViewModel TextStyleViewModel =>
             _textStyleViewModel ??= _serviceProvider.GetRequiredService<TextStyleViewModel>();

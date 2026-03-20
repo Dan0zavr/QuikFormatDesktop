@@ -7,8 +7,9 @@
              xmlns:vms="clr-namespace:QuikFormatDesktop.ViewModels.StylesViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
+    
     <Grid Background="{StaticResource MainBackground}">
-        <TabControl>
+        <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem x:Name="TextStyle">
                 <TabItem.Header>
                     <TextBlock Text="Стиль текста"/>

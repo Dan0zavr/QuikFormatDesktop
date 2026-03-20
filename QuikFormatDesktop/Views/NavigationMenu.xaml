@@ -25,7 +25,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <GroupBox Grid.Row="1" Header="Шаблоны" MinHeight="100" Style="{StaticResource TemplateBox}" FocusVisualStyle="{x:Null}" Effect="{x:Null}">
+            <GroupBox Grid.Row="1" Header="{Binding GroupBoxHeader}" MinHeight="100" Style="{StaticResource TemplateBox}" FocusVisualStyle="{x:Null}" Effect="{x:Null}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>

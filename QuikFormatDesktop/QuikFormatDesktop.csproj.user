@@ -32,9 +32,6 @@
     <Compile Update="Views\Pages\StylesPage\PictureStyle\PicturePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\StylesNavigation.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\Pages\StylesPage\StylesPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
