@@ -1,14 +1,23 @@
-﻿using QuikFormatDesktop.Models;
+﻿using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Exceptions;
+using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.ViewModels.Commands.TextViewModelCommands.TextStyleCommands;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows;
+using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
     public class FontStyleViewModel : ViewModelBase
     {
-        private readonly TextService _textStyleService;
+        public readonly TextService textStyleService;
+        public readonly FontService fontService;
+        public readonly IDialogService dialogService;
 
         private string _styleName;
         private Font _selectedFont;
@@ -16,10 +25,18 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _pStatusMessage;
 
         private List<Font> _fonts = new List<Font>();
+        private List<int> _fontSizes = new List<int>();
 
-        public FontStyleViewModel(TextService textStyleService)
+        public ICommand AddTextStyle { get; }
+
+        public FontStyleViewModel(TextService DiTextStyleService, FontService DiFontService, IDialogService DiDialogService, IOptions<FontSettings> options)
         {
-            _textStyleService = textStyleService;
+            textStyleService = DiTextStyleService;
+            fontService = DiFontService;
+            dialogService = DiDialogService;
+            LoadFonts(options);
+
+            AddTextStyle = new AddTextStyleCommand(this);
         }
 
         public string StyleName
@@ -29,6 +46,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _styleName = value;
                 OnPropertyChanged(nameof(StyleName));
+                (AddTextStyle as AddTextStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -62,6 +80,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
+        public List<int> FontSizes
+        {
+            get => _fontSizes;
+            set
+            {
+                _fontSizes = value;
+            }
+        }
+
         public string PStatusMessage
         {
             get => _pStatusMessage;
@@ -70,6 +97,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _pStatusMessage = value;
                 OnPropertyChanged(nameof(PStatusMessage));
             }
+        }
+
+        private async Task LoadFonts(IOptions<FontSettings> options)
+        {
+            _fontSizes = options.Value.AllowedSizes;
+            _selectedFontSize = options.Value.DefaultSize;
+
+            _fonts = await fontService.GetAll();
+            _selectedFont = _fonts.FirstOrDefault(f => f.FontName == options.Value.DefaultName);
         }
     }
 }

@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace QuikFormatDesktop.Models;
 
-public partial class FormulaStyle
+public partial class FormulaStyle : StyleObject
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = null!;
-
     public bool Numeration { get; set; }
 
     public bool EmptyLineAround { get; set; }

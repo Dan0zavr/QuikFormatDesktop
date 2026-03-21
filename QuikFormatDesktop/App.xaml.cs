@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuikFormatDesktop.Database;
+using QuikFormatDesktop.Models.SupportModels;
 using QuikFormatDesktop.View;
 using QuikFormatDesktop.ViewModels;
 using QuikFormatDesktop.ViewModels.Commands;
@@ -38,6 +39,9 @@ namespace QuikFormatDesktop
                 })
                 .ConfigureServices((context, services) =>
                 {
+                    services.Configure<FontSettings>(context.Configuration.GetSection("FontSettings"));
+                    services.Configure<ParagraphSettings>(context.Configuration.GetSection("ParagraphSettings"));
+
                     services.AddDbContextFactory<QfDbContext>(options => options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection")));
 
                     services.AddSingleton<NavigationStore>();
@@ -73,6 +77,8 @@ namespace QuikFormatDesktop
                     services.AddTransient<MarkerTypeService>();
                     services.AddTransient<PositionService>();
 
+                    services.AddTransient<IDialogService, DialogService>();
+
                     services.AddSingleton<NavigationService<FormatViewModel>>();
                     services.AddSingleton<NavigationService<StylesViewModel>>();
                 });
@@ -86,7 +92,7 @@ namespace QuikFormatDesktop
             {
                 var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<QfDbContext>>();
                 await using var context = await factory.CreateDbContextAsync();
-                await context.Database.EnsureCreatedAsync();
+                await context.Database.MigrateAsync();
             }
 
             var mainViewModel = _host.Services.GetRequiredService<MainViewModel>();

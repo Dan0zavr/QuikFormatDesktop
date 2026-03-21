@@ -50,12 +50,21 @@
                 </Grid>
                 <UniformGrid Grid.Row="1" Rows="1" Margin="0,0,0,5">
                     <RadioButton GroupName="Alignment" Style="{StaticResource LeftIndent}" 
-                             IsChecked="{Binding SelectedAlignment,
-                             Converter={StaticResource EnumToBooleanConverter},
-                             ConverterParameter={x:Static enums:ParagraphAlignmentType.Left}}"/>
-                    <RadioButton GroupName="Alignment" Style="{StaticResource CenterIndent}"/>
-                    <RadioButton GroupName="Alignment" Style="{StaticResource BothIndent}"/>
-                    <RadioButton GroupName="Alignment" Style="{StaticResource RightIndent}"/>
+                                 IsChecked="{Binding SelectedAlignment,
+                                 Converter={StaticResource EnumToBooleanConverter},
+                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Left}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource CenterIndent}"
+                                 IsChecked="{Binding SelectedAlignment,
+                                 Converter={StaticResource EnumToBooleanConverter},
+                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Center}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource BothIndent}"
+                                 IsChecked="{Binding SelectedAlignment,
+                                 Converter={StaticResource EnumToBooleanConverter},
+                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Both}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource RightIndent}"
+                                 IsChecked="{Binding SelectedAlignment,
+                                 Converter={StaticResource EnumToBooleanConverter},
+                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Right}}"/>
                 </UniformGrid>
             </Grid>
 

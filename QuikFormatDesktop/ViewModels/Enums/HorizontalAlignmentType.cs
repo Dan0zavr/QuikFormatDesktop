@@ -4,7 +4,7 @@ using System.Text;
 
 namespace QuikFormatDesktop.ViewModels.Enums
 {
-    public enum ParagraphAlignmentType
+    public enum HorizontalAlignmentType
     {
         Left,
         Center,

@@ -5,31 +5,44 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using QuikFormatDesktop.ViewModels.Enums;
+using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.ViewModels.Commands.TextViewModelCommands.ParagraphStyleCommands;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
     public class ParagraphStyleViewModel : ViewModelBase
     {
-        private readonly ParagraphService _paragraphService;
+        public IDialogService dialogService;
+        public readonly ParagraphService paragraphService;
+        public readonly AlignmentService alignmentService;
 
         private string _paragraphStyleName;
-        private ParagraphAlignmentType _selectedAlignment;
+        private HorizontalAlignmentType _selectedAlignment;
         private double _firstLineIndent;
         private double _leftIndent;
         private double _rightIndent;
         private double _selectedInterval;
         private double _beforeInterval;
         private double _afterInterval;
-        private bool _contextualSpacing;
+        private bool _contextualSpacing = false;
         private string _pStatusMessage;
 
-        private ObservableCollection<double> _intervals;
+        private List<double> _intervals;
 
-        public ParagraphStyleViewModel(ParagraphService paragraphService)
+        public ParagraphStyleViewModel(IOptions<ParagraphSettings> options, ParagraphService DiParagraphService, AlignmentService DiAlignmentService, IDialogService DiDialogService)
         {
-            _paragraphService = paragraphService;
-            Intervals = new ObservableCollection<double> { 1.0, 1.5, 2.0, 2.5, 3.0 };
+            dialogService = DiDialogService;
+            paragraphService = DiParagraphService;
+            alignmentService = DiAlignmentService;
+            Intervals = options.Value.AllowedIntervals;
+            SelectedAlignment = HorizontalAlignmentType.Both;
+
+            AddParagraphCommand = new AddParagraphStyleCommand(this);
         }
+
+        public ICommand TextDeleteCommand;
+        public ICommand AddParagraphCommand { get; }
 
         public string ParagraphStyleName
         {
@@ -38,10 +51,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _paragraphStyleName = value;
                 OnPropertyChanged(nameof(ParagraphStyleName));
+                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
-        public ParagraphAlignmentType SelectedAlignment
+        public HorizontalAlignmentType SelectedAlignment
         {
             get => _selectedAlignment;
             set
@@ -58,6 +72,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _firstLineIndent = value;
                 OnPropertyChanged(nameof(FirstLineIndent));
+                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -68,6 +83,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _leftIndent = value;
                 OnPropertyChanged(nameof(LeftIndent));
+                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -78,6 +94,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _rightIndent = value;
                 OnPropertyChanged(nameof(RightIndent));
+                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -98,6 +115,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _beforeInterval = value;
                 OnPropertyChanged(nameof(BeforeInterval));
+                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -108,6 +126,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _afterInterval = value;
                 OnPropertyChanged(nameof(AfterInterval));
+                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -131,7 +150,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public ObservableCollection<double> Intervals
+        public List<double> Intervals
         {
             get => _intervals;
             set
@@ -140,9 +159,6 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 OnPropertyChanged(nameof(Intervals));
             }
         }
-
-        public ICommand TextDeleteCommand;
-        public ICommand AddParagraphCommand;
     }
 }
 

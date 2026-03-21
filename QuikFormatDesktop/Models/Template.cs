@@ -3,11 +3,8 @@ using System.Collections.Generic;
 
 namespace QuikFormatDesktop.Models;
 
-public partial class Template
+public partial class Template : StyleObject
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = null!;
 
     public string? Description { get; set; }
 

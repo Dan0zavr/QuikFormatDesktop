@@ -18,7 +18,7 @@
 
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox x:Name="FontStyleName" FontSize="12" Margin="0,0,0,15" Text="{Binding StyleName}"/>
+                <TextBox x:Name="FontStyleName" FontSize="12" Margin="0,0,0,15" Text="{Binding StyleName, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             
             <Grid Grid.Row="2">
@@ -55,14 +55,7 @@
                         <TextBlock Margin="5, 0, 0, 0" Text="Размер:" FontSize="12"/>
                         <ComboBox Margin="5,0,0,10" 
                                 ItemsSource="{Binding FontSizes}"
-                                SelectedItem="{Binding SelectedFontSize}"
-                                SelectedValue="{x:Null}">
-
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
+                                SelectedItem="{Binding SelectedFontSize}">
                         </ComboBox>
                     </StackPanel>
                 </Grid>
@@ -87,7 +80,7 @@
                             Command="{Binding TextDeleteCommand}"/>
                     <Button Content="Сохранить" 
                             Width="100" 
-                            Command="{Binding AddParagraphCommand}"/>
+                            Command="{Binding AddTextStyle}"/>
                 </StackPanel>
             </Grid>
         </Grid>

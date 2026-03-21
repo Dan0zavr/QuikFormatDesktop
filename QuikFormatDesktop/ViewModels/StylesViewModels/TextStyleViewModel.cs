@@ -10,10 +10,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public FontStyleViewModel FontStyleViewModel { get; }
         public ParagraphStyleViewModel ParagraphStyleViewModel { get; }
 
-        public TextStyleViewModel(TextService textStyleService, ParagraphService paragraphService)
+        public TextStyleViewModel(FontStyleViewModel fontStyleViewModel, ParagraphStyleViewModel paragraphStyleViewModel)
         {
-            FontStyleViewModel = new FontStyleViewModel(textStyleService);
-            ParagraphStyleViewModel = new ParagraphStyleViewModel(paragraphService);
+            FontStyleViewModel = fontStyleViewModel;
+            ParagraphStyleViewModel = paragraphStyleViewModel;
         }
     }
 }

@@ -6,9 +6,10 @@ using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows.Input;
 using System.ComponentModel;
+using System.Text;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels
 {
@@ -24,9 +25,11 @@ namespace QuikFormatDesktop.ViewModels
         private readonly PictureService _pictureService;
         private readonly FormulaService _formulaService;
 
-        private object _selectedItem;
-        private ObservableCollection<object> _items = new ObservableCollection<object>();
+        private StyleObject _selectedItem;
+        private ObservableCollection<StyleObject> _items = new ObservableCollection<StyleObject>();
         private string _groupBoxHeader;
+
+        private StylesViewModel? _currentStylesViewModel;
 
         public NavigationViewModel(NavigationStore navigationStore, 
             TemplateService templateService, TextService textService, 
@@ -48,12 +51,16 @@ namespace QuikFormatDesktop.ViewModels
             GoToFormat = new NavigateCommand<FormatViewModel>(navigationToFormatService);
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            ItemsView = CollectionViewSource.GetDefaultView(Items);
         }
 
         public ICommand GoToStyles { get; }
         public ICommand GoToFormat { get; }
 
-        public object SelectedItem
+        public ICollectionView ItemsView { get; }
+
+        public StyleObject SelectedItem
         {
             get => _selectedItem;
             set
@@ -63,7 +70,7 @@ namespace QuikFormatDesktop.ViewModels
             }
         }
 
-        public ObservableCollection<object> Items
+        public ObservableCollection<StyleObject> Items
         {
             get => _items;
             set
@@ -83,27 +90,34 @@ namespace QuikFormatDesktop.ViewModels
             }
         }
 
-        private void OnCurrentViewModelChanged()
+        private async void OnCurrentViewModelChanged()
         {
-            UpdateContent();
+            if (_currentStylesViewModel != null)
+            {
+                _currentStylesViewModel.PropertyChanged -= OnStylesPropertyChanged;
+                _currentStylesViewModel = null;
+            }
+
+            await UpdateContent();
 
             if (_navigationStore.CurrentViewModel is StylesViewModel stylesVM)
             {
+                _currentStylesViewModel = stylesVM;
                 stylesVM.PropertyChanged += OnStylesPropertyChanged;
             }
         }
-        private void OnStylesPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private async void OnStylesPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(StylesViewModel.SelectedTabIndex))
             {
                 if (sender is StylesViewModel stylesVM)
                 {
-                    UpdateStyles(stylesVM);
+                    await UpdateStyles(stylesVM);
                 }
             }
         }
 
-        private async void UpdateContent()
+        private async Task UpdateContent()
         {
             Items.Clear();
 
@@ -114,15 +128,37 @@ namespace QuikFormatDesktop.ViewModels
                 var templates = await _templateService.GetAll();
 
                 foreach (var t in templates)
+                {
+                    t.Type = StyleType.None;
                     Items.Add(t);
+                }
             }
             else if (_navigationStore.CurrentViewModel is StylesViewModel stylesVM)
             {
-                UpdateStyles(stylesVM);
+                await UpdateStyles(stylesVM);
+            }
+
+            UpdateGrouping();
+        }
+
+        private void UpdateGrouping()
+        {
+            ItemsView.GroupDescriptions.Clear();
+
+            var distinctTypes = Items
+                .Select(i => i.Type)
+                .Where(t => t != StyleType.None)
+                .Distinct()
+                .Count();
+
+            if (distinctTypes > 1)
+            {
+                ItemsView.GroupDescriptions.Add(
+                    new PropertyGroupDescription(nameof(StyleObject.Type)));
             }
         }
 
-        private async void UpdateStyles(StylesViewModel stylesVM)
+        private async Task UpdateStyles(StylesViewModel stylesVM)
         {
             Items.Clear();
 
@@ -133,15 +169,35 @@ namespace QuikFormatDesktop.ViewModels
 
                     var text = await _textService.GetAll();
                     foreach (var item in text)
+                    {
+                        item.Type = StyleType.Text;
                         Items.Add(item);
+                    }
+
+                    var paragraph = await _paragraphService.GetAll();
+                    foreach (var item in paragraph)
+                    {
+                        item.Type = StyleType.Paragraph;
+                        Items.Add(item);
+                    }
                     break;
 
                 case TabItemIndex.Numbering:
                     GroupBoxHeader = "Стили списков";
 
-                    var numbering = await _numberingService.GetAll();
-                    foreach (var item in numbering)
+                    var markedNumbering = await _numberingService.GetStylesByType(MarkerTypeEnum.Marked);
+                    foreach (var item in markedNumbering)
+                    {
+                        item.Type = StyleType.MarkedNumbering;
                         Items.Add(item);
+                    }
+
+                    var numberedNumbering = await _numberingService.GetStylesByType(MarkerTypeEnum.Numberd);
+                    foreach (var item in numberedNumbering)
+                    {
+                        item.Type = StyleType.NumberedNumbering;
+                        Items.Add(item);
+                    }
                     break;
 
                 case TabItemIndex.Table:
@@ -168,6 +224,8 @@ namespace QuikFormatDesktop.ViewModels
                         Items.Add(item);
                     break;
             }
+
+            UpdateGrouping();
         }
     }
 }

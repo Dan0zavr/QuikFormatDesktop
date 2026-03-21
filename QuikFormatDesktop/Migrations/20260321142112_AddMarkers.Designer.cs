@@ -10,8 +10,8 @@ using QuikFormatDesktop.Database;
 namespace QuikFormatDesktop.Migrations
 {
     [DbContext(typeof(QfDbContext))]
-    [Migration("20260320073007_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260321142112_AddMarkers")]
+    partial class AddMarkers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,6 +22,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.Alignment", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -41,6 +42,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.Font", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -55,11 +57,29 @@ namespace QuikFormatDesktop.Migrations
                         .IsUnique();
 
                     b.ToTable("font", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FontName = "Arial"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FontName = "Times New Roman"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FontName = "Calibri"
+                        });
                 });
 
             modelBuilder.Entity("QuikFormatDesktop.Models.FormulaStyle", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -84,6 +104,9 @@ namespace QuikFormatDesktop.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("position");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Marker");
@@ -99,6 +122,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.Marker", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -119,11 +143,44 @@ namespace QuikFormatDesktop.Migrations
                         .IsUnique();
 
                     b.ToTable("marker", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Marker1 = "&#8211;",
+                            MarkerType = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Marker1 = "&#8226;",
+                            MarkerType = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Marker1 = "&#8227;",
+                            MarkerType = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Marker1 = "$.",
+                            MarkerType = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Marker1 = "$)",
+                            MarkerType = 2
+                        });
                 });
 
             modelBuilder.Entity("QuikFormatDesktop.Models.MarkerType", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -138,11 +195,24 @@ namespace QuikFormatDesktop.Migrations
                         .IsUnique();
 
                     b.ToTable("marker_type", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Type = "marked"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Type = "numbered"
+                        });
                 });
 
             modelBuilder.Entity("QuikFormatDesktop.Models.NumberingStyle", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -154,6 +224,9 @@ namespace QuikFormatDesktop.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(32)")
                         .HasColumnName("name");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -168,6 +241,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.ParagraphStyle", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -208,6 +282,9 @@ namespace QuikFormatDesktop.Migrations
                         .HasColumnType("REAL")
                         .HasColumnName("right_indent");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex(new[] { "Name" }, "IX_paragraph_style_name")
@@ -219,6 +296,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.PictureStyle", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -243,6 +321,9 @@ namespace QuikFormatDesktop.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("paragraph_style");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParagraphStyle");
@@ -256,6 +337,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.Position", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -275,6 +357,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.TableStyle", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -308,6 +391,9 @@ namespace QuikFormatDesktop.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("text_style");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Alignment");
@@ -325,6 +411,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.Template", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -369,6 +456,9 @@ namespace QuikFormatDesktop.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("text_style");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FormulaStyle");
@@ -394,6 +484,7 @@ namespace QuikFormatDesktop.Migrations
             modelBuilder.Entity("QuikFormatDesktop.Models.TextStyle", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
@@ -409,6 +500,9 @@ namespace QuikFormatDesktop.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(32)")
                         .HasColumnName("name");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

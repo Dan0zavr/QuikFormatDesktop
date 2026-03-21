@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace QuikFormatDesktop.Models;
 
-public partial class ParagraphStyle
+public partial class ParagraphStyle : StyleObject
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = null!;
-
     public int Alignment { get; set; }
 
     public double? FirstLineIndent { get; set; }

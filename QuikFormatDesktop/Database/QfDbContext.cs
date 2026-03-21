@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using QuikFormatDesktop.Models;
+using QuikFormatDesktop.ViewModels.Enums;
 
 namespace QuikFormatDesktop.Database;
 
@@ -49,7 +50,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Alignment1, "IX_alignment_alignment").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Alignment1)
                 .HasColumnType("varchar(6)")
@@ -63,7 +63,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.FontName, "IX_font_font_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.FontName)
                 .HasColumnType("varchar(32)")
@@ -77,7 +76,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_formula_style_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.EmptyLineAround)
                 .HasColumnType("bool")
@@ -105,7 +103,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Marker1, "IX_marker_marker").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Marker1)
                 .HasColumnType("varchar(8)")
@@ -124,7 +121,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Type, "IX_marker_type_type").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Type)
                 .HasColumnType("varchar(13)")
@@ -138,7 +134,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_numbering_style_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Marker).HasColumnName("marker");
             entity.Property(e => e.Name)
@@ -155,7 +150,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_paragraph_style_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.AfterInterval).HasColumnName("after_interval");
             entity.Property(e => e.Alignment).HasColumnName("alignment");
@@ -179,7 +173,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_picture_style_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.EmptyLineAround)
                 .HasColumnType("bool")
@@ -207,7 +200,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Position1, "IX_position_position").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Position1)
                 .HasColumnType("varchar(11)")
@@ -221,7 +213,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_table_style_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Alignment).HasColumnName("alignment");
             entity.Property(e => e.BorderColor)
@@ -249,7 +240,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_template_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Formula)
@@ -288,7 +278,6 @@ public partial class QfDbContext : DbContext
             entity.HasIndex(e => e.Name, "IX_text_style_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Font).HasColumnName("font");
             entity.Property(e => e.FontSize).HasColumnName("font_size");
@@ -298,6 +287,32 @@ public partial class QfDbContext : DbContext
 
             entity.HasOne(d => d.FontNavigation).WithMany(p => p.TextStyles).HasForeignKey(d => d.Font);
         });
+
+        modelBuilder.Entity<Alignment>().HasData(
+            new Alignment { Id = 1, Alignment1 = HorizontalAlignmentType.Left.ToString().ToLower()},
+            new Alignment { Id = 2, Alignment1 = HorizontalAlignmentType.Right.ToString().ToLower()},
+            new Alignment { Id = 3, Alignment1 = HorizontalAlignmentType.Center.ToString().ToLower()},
+            new Alignment { Id = 4, Alignment1 = HorizontalAlignmentType.Both.ToString().ToLower()},
+            new Alignment { Id = 5, Alignment1 = VerticalAlignmentType.Top.ToString().ToLower()},
+            new Alignment { Id = 6, Alignment1 = VerticalAlignmentType.Bottom.ToString().ToLower()},
+            new Alignment { Id = 7, Alignment1 = VerticalAlignmentType.Center.ToString().ToLower()}
+        );
+
+        modelBuilder.Entity<MarkerType>().HasData(
+            new MarkerType { Id = 1, Type = "marked" },
+            new MarkerType { Id = 2, Type = "numbered" });
+
+        modelBuilder.Entity<Marker>().HasData(
+            new Marker { Id = 1, Marker1 = "&#8211;", MarkerType = 1 },
+            new Marker { Id = 2, Marker1 = "&#8226;", MarkerType = 1 },
+            new Marker { Id = 3, Marker1 = "&#8227;", MarkerType = 1 },
+            new Marker { Id = 4, Marker1 = "$.", MarkerType = 2 },
+            new Marker { Id = 5, Marker1 = "$)", MarkerType = 2 });
+
+        modelBuilder.Entity<Font>().HasData(
+        new Font { Id = 1, FontName = "Arial" },
+        new Font { Id = 2, FontName = "Times New Roman" },
+        new Font { Id = 3, FontName = "Calibri" });
 
         OnModelCreatingPartial(modelBuilder);
     }

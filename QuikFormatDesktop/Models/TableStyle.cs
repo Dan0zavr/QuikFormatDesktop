@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace QuikFormatDesktop.Models;
 
-public partial class TableStyle
+public partial class TableStyle : StyleObject
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = null!;
-
     public int TextStyle { get; set; }
 
     public int ParagraphStyle { get; set; }

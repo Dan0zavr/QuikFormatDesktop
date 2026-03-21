@@ -7,7 +7,7 @@
         xmlns:pages="clr-namespace:QuikFormatDesktop.View.Pages"
         xmlns:vms="clr-namespace:QuikFormatDesktop.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="853">
+        Title="MainWindow" Height="490" Width="880">
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type vms:FormatViewModel}">
