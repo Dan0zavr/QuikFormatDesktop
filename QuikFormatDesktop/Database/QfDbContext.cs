@@ -299,8 +299,8 @@ public partial class QfDbContext : DbContext
         );
 
         modelBuilder.Entity<MarkerType>().HasData(
-            new MarkerType { Id = 1, Type = "marked" },
-            new MarkerType { Id = 2, Type = "numbered" });
+            new MarkerType { Id = 1, Type = MarkerTypeEnum.Marked.ToString().ToLower() },
+            new MarkerType { Id = 2, Type = MarkerTypeEnum.Numberd.ToString().ToLower() });
 
         modelBuilder.Entity<Marker>().HasData(
             new Marker { Id = 1, Marker1 = "&#8211;", MarkerType = 1 },

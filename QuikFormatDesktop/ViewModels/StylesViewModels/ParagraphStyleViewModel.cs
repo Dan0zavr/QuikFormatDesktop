@@ -37,6 +37,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             alignmentService = DiAlignmentService;
             Intervals = options.Value.AllowedIntervals;
             SelectedAlignment = HorizontalAlignmentType.Both;
+            SelectedInterval = options.Value.DefaultInterval;
 
             AddParagraphCommand = new AddParagraphStyleCommand(this);
         }

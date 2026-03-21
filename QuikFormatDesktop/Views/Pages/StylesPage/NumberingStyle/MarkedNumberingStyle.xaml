@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
-             xmlns:converters="clr-namespace:QuikFormatDesktop.View.Converters"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
              mc:Ignorable="d">
     
     <UserControl.Resources>
@@ -50,13 +50,11 @@
                     <StackPanel Grid.Column="0">
                         <TextBlock Margin="5, 0, 0, 0"  Text="Маркер:" FontSize="12"/>
                         <ComboBox Margin="5,0,0,10" 
-                        ItemsSource="{Binding Markers}"
-                        SelectedItem="{Binding SelectedMarker}"
-                        SelectedValue="{x:Null}">
-
+                                  ItemsSource="{Binding Markers}"
+                                  SelectedItem="{Binding SelectedMarker}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock/>
+                                    <TextBlock Text="{Binding Marker1, Converter={StaticResource UnicodeToCharConverter}}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>

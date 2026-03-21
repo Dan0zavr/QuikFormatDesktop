@@ -13,9 +13,9 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <local:NumberedNumberingCard Grid.Column="0" MaxHeight="600" MaxWidth="500"/>
+            <local:NumberedNumberingCard Grid.Column="0" MaxHeight="600" MaxWidth="500" DataContext="{Binding NumberedNumberingStyle}"/>
 
-            <local:MarkedNumberingStyle Grid.Column="2" MaxHeight="600" MaxWidth="500"/>
+            <local:MarkedNumberingStyle Grid.Column="2" MaxHeight="600" MaxWidth="500" DataContext="{Binding MarkedNumberingStyle}"/>
         </Grid>
     </Grid>
 </UserControl>

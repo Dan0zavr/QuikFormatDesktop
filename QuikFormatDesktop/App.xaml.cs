@@ -58,6 +58,8 @@ namespace QuikFormatDesktop
                     services.AddTransient<TableStyleViewModel>();
                     services.AddTransient<PictureStyleViewModel>();
                     services.AddTransient<NumberingStyleViewModel>();
+                    services.AddTransient<NumberedNumberingStyleViewModel>();
+                    services.AddTransient<MarkedNumberingStyleViewModel>();
                     services.AddTransient<FormulaStyleViewModel>();
 
                     //сервисы стилей

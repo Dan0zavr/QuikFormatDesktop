@@ -8,7 +8,7 @@
              mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converters:UnicodeToCharConverter x:Key="UnicodeToCharConverter"/>
+        <converters:CodeToStringConverter x:Key="CodeToStringConverter"/>
     </UserControl.Resources>
 
     <GroupBox Header="Стиль нумерованного списка" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
@@ -51,12 +51,11 @@
                         <TextBlock Margin="5, 0, 0, 0"  Text="Маркер:" FontSize="12"/>
                         <ComboBox Margin="5,0,0,10" 
                             ItemsSource="{Binding Markers}"
-                            SelectedItem="{Binding SelectedMarker}"
-                            SelectedValue="{x:Null}">
+                            SelectedItem="{Binding SelectedMarker}">
 
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock/>
+                                    <TextBlock Text="{Binding Marker1, Converter={StaticResource CodeToStringConverter}}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
@@ -83,7 +82,7 @@
                         Command="{Binding FormulaDeleteCommand}"/>
                     <Button Content="Сохранить" 
                         Width="100" 
-                        Command="{Binding AddFormulaCommand}"/>
+                        Command="{Binding AddNumberingCommand}"/>
                 </StackPanel>
             </Grid>
         </Grid>

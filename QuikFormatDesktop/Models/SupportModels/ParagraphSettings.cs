@@ -6,6 +6,7 @@ namespace QuikFormatDesktop.Models.SupportModels
 {
     public class ParagraphSettings
     {
+        public double DefaultInterval { get; set; }
         public List<double> AllowedIntervals {  get; set; }
     }
 }

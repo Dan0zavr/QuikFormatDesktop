@@ -23,5 +23,18 @@ namespace QuikFormatDesktop.ViewModels.Services
                 .Where(ns => ns.MarkerNavigation.MarkerTypeNavigation.Type == markerType.ToString().ToLower()).ToListAsync();
             return styles;
         }
+
+        public async Task<bool> IsUnique(string name)
+        {
+            await using var context = await _factory.CreateDbContextAsync();
+
+            NumberingStyle numberingStyle = await context.NumberingStyles.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (numberingStyle == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
