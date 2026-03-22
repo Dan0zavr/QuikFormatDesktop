@@ -4,11 +4,13 @@ using System.Text;
 
 namespace QuikFormatDesktop.ViewModels.Enums
 {
-    public enum HorizontalAlignmentType
+    public enum AlignmentType
     {
         Left,
         Center,
         Both,
-        Right
+        Right,
+        Top,
+        Bottom,
     }
 }

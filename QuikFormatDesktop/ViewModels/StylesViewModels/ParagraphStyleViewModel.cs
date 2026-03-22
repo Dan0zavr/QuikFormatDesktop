@@ -1,13 +1,15 @@
-﻿using QuikFormatDesktop.ViewModels.Services;
+﻿using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Exceptions;
+using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Enums;
+using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
-using QuikFormatDesktop.ViewModels.Enums;
-using Microsoft.Extensions.Options;
-using QuikFormatDesktop.Models.SupportModels;
-using QuikFormatDesktop.ViewModels.Commands.TextViewModelCommands.ParagraphStyleCommands;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -18,7 +20,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public readonly AlignmentService alignmentService;
 
         private string _paragraphStyleName;
-        private HorizontalAlignmentType _selectedAlignment;
+        private AlignmentType _selectedAlignment;
         private double _firstLineIndent;
         private double _leftIndent;
         private double _rightIndent;
@@ -36,10 +38,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             paragraphService = DiParagraphService;
             alignmentService = DiAlignmentService;
             Intervals = options.Value.AllowedIntervals;
-            SelectedAlignment = HorizontalAlignmentType.Both;
+            SelectedAlignment = AlignmentType.Both;
             SelectedInterval = options.Value.DefaultInterval;
 
-            AddParagraphCommand = new AddParagraphStyleCommand(this);
+            AddParagraphCommand = new AsyncRelayCommand(AddParagraphStyleAsync, CanAddParagraphStyle);
         }
 
         public ICommand TextDeleteCommand;
@@ -52,11 +54,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _paragraphStyleName = value;
                 OnPropertyChanged(nameof(ParagraphStyleName));
-                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
-        public HorizontalAlignmentType SelectedAlignment
+        public AlignmentType SelectedAlignment
         {
             get => _selectedAlignment;
             set
@@ -73,7 +75,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _firstLineIndent = value;
                 OnPropertyChanged(nameof(FirstLineIndent));
-                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -84,7 +86,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _leftIndent = value;
                 OnPropertyChanged(nameof(LeftIndent));
-                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -95,7 +97,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _rightIndent = value;
                 OnPropertyChanged(nameof(RightIndent));
-                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -116,7 +118,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _beforeInterval = value;
                 OnPropertyChanged(nameof(BeforeInterval));
-                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -127,7 +129,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _afterInterval = value;
                 OnPropertyChanged(nameof(AfterInterval));
-                (AddParagraphCommand as AddParagraphStyleCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -158,6 +160,55 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _intervals = value;
                 OnPropertyChanged(nameof(Intervals));
+            }
+        }
+
+        private bool CanAddParagraphStyle(object? parameter)
+        {
+            return !string.IsNullOrWhiteSpace(ParagraphStyleName) &&
+                   FirstLineIndent != null &&
+                   LeftIndent != null &&
+                   RightIndent != null &&
+                   AfterInterval != null &&
+                   BeforeInterval != null;
+        }
+
+        private async Task AddParagraphStyleAsync(object? parameter)
+        {
+            try
+            {
+                int alignmentId = await alignmentService.GetIdByType(SelectedAlignment);
+
+                var paragraphStyle = new ParagraphStyle
+                {
+                    Name = ParagraphStyleName,
+                    Alignment = alignmentId,
+                    LeftIndent = LeftIndent,
+                    RightIndent = RightIndent,
+                    FirstLineIndent = FirstLineIndent,
+                    IntervalInText = SelectedInterval,
+                    BeforeInterval = BeforeInterval,
+                    AfterInterval = AfterInterval,
+                    ContextualSpacing = ContextualSpacing,
+                };
+
+                if (await paragraphService.IsUnique(paragraphStyle.Name))
+                {
+                    await paragraphService.Add(paragraphStyle);
+                    PStatusMessage = "Стиль успешно добавлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (AlignmentNotFoundException aex)
+            {
+                dialogService.ShowError(aex.Message);
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
         }
     }

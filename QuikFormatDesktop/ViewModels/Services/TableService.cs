@@ -12,5 +12,18 @@ namespace QuikFormatDesktop.ViewModels.Services
     public class TableService : BaseDataService<TableStyle>
     {
         public TableService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
+
+        public async Task<bool> IsUnique(string name)
+        {
+            await using var context = await _factory.CreateDbContextAsync();
+
+            TableStyle tableStyle = await context.TableStyles.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (tableStyle == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

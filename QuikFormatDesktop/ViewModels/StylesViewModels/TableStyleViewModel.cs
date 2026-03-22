@@ -1,4 +1,9 @@
-﻿using QuikFormatDesktop.Models;
+﻿using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Exceptions;
+using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
@@ -12,32 +17,42 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
     public class TableStyleViewModel : ViewModelBase
     {
+        private readonly TextService _textService;
+        private readonly ParagraphService _paragraphService;
         private readonly TableService _tableService;
+        private readonly AlignmentService _alignmentService;
+        private readonly IDialogService _dialogService;
 
         private string _tableStyleName;
         private ParagraphStyle _selectedParagraphStyle;
         private TextStyle _selectedTextStyle;
-        private VerticalAlignment _selectedVerticalAlignment;
-        private double
-            _padding;
+        private AlignmentType _selectedAlignment;
+        private double _padding;
         private int _borderThikness;
-        private Color _borderColor;
+        private string _borderColor;
         private string _pStatusMessage;
 
-        private ObservableCollection<ParagraphStyle> _paragraphStyles;
-        private ObservableCollection<TextStyle> _textStyles;
-
-        private ICommand _textDeleteCommand;
-        private ICommand _addParagraphCommand;
-
-        public TableStyleViewModel()
+        private ObservableCollection<ParagraphStyle> _paragraphStyles = new ObservableCollection<ParagraphStyle>();
+        private ObservableCollection<TextStyle> _textStyles = new ObservableCollection<TextStyle>();
+        public TableStyleViewModel(TableService tableService, AlignmentService alignmentService, IDialogService dialogService, TextService textService, ParagraphService paragraphService, IOptions<TableSettings> options)
         {
-            ParagraphStyles = new ObservableCollection<ParagraphStyle>();
-            TextStyles = new ObservableCollection<TextStyle>();
+            _textService = textService;
+            _paragraphService = paragraphService;
+            _tableService = tableService;
+            _alignmentService = alignmentService;
+            _dialogService = dialogService;
+
+            AddTableCommand = new AsyncRelayCommand(AddTableStyleAsync, CanAddTableStyle);
+
+            LoadTextStyles();
+            LoadParagraphStyles();
+
+            SetDefault(options);
         }
 
-        // Если потребуется сервис, можно добавить конструктор с параметром
-        // public TableStyleViewModel(TableService tableService) : this() { _tableService = tableService; }
+        public ICommand TextDeleteCommand { get; }
+        public ICommand AddTableCommand { get; }
+
 
         public string TableStyleName
         {
@@ -46,6 +61,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _tableStyleName = value;
                 OnPropertyChanged(nameof(TableStyleName));
+                (AddTableCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -89,13 +105,13 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public VerticalAlignment SelectedVerticalAlignment
+        public AlignmentType SelectedAlignment
         {
-            get => _selectedVerticalAlignment;
+            get => _selectedAlignment;
             set
             {
-                _selectedVerticalAlignment = value;
-                OnPropertyChanged(nameof(SelectedVerticalAlignment));
+                _selectedAlignment = value;
+                OnPropertyChanged(nameof(SelectedAlignment));
             }
         }
 
@@ -119,7 +135,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public Color BorderColor
+        public string BorderColor
         {
             get => _borderColor;
             set
@@ -139,8 +155,81 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public ICommand TextDeleteCommand;
+        private async Task LoadTextStyles()
+        {
+            List<TextStyle> textStyles = await _textService.GetAll();
 
-        public ICommand AddParagraphCommand;
+            _textStyles.Clear();
+            foreach (var t in textStyles)
+            {
+                _textStyles.Add(t);
+            }
+        }
+
+        private async Task LoadParagraphStyles()
+        {
+            List<ParagraphStyle> paragraphStyles = await _paragraphService.GetAll();
+
+            _paragraphStyles.Clear();
+            foreach (var p in paragraphStyles)
+            {
+                _paragraphStyles.Add(p);
+            }
+        }
+
+        private bool CanAddTableStyle(object? parametr)
+        {
+            return !string.IsNullOrWhiteSpace(TableStyleName);
+        }
+
+        private async Task AddTableStyleAsync(object? parametr)
+        {
+            try
+            {
+                int alignmentId = await _alignmentService.GetIdByType(_selectedAlignment);
+
+                TableStyle tableStyle = new TableStyle
+                {
+                    Name = TableStyleName,
+                    TextStyle = SelectedTextStyle.Id,
+                    ParagraphStyle = SelectedParagraphStyle.Id,
+                    Alignment = alignmentId,
+                    BorderThikness = this.BorderThikness,
+                    BorderColor = this.BorderColor,
+                    CellPadding = Padding
+                };
+
+                if (await _tableService.IsUnique(tableStyle.Name))
+                {
+                    await _tableService.Add(tableStyle);
+                    PStatusMessage = "Стиль успешно добавлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (AlignmentNotFoundException fex)
+            {
+                _dialogService.ShowError(fex.Message);
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+        }
+
+        private void SetDefault(IOptions<TableSettings> options)
+        {
+            SelectedParagraphStyle = ParagraphStyles.FirstOrDefault();
+            SelectedTextStyle = TextStyles.FirstOrDefault();
+
+            BorderThikness = options.Value.DefaultBorderThikness;
+            BorderColor = options.Value.DefaultBorderColor;
+            Padding = options.Value.CellPadding;
+
+            SelectedAlignment = AlignmentType.Center;
+        }
+
     }
 }

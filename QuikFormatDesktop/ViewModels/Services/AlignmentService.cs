@@ -15,7 +15,7 @@ namespace QuikFormatDesktop.ViewModels.Services
     {
         public AlignmentService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
 
-        public async Task<int> GetIdByType(HorizontalAlignmentType alignmentType)
+        public async Task<int> GetIdByType(AlignmentType alignmentType)
         {
             await using var context = await _factory.CreateDbContextAsync();
 

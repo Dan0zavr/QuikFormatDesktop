@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace QuikFormatDesktop.ViewModels.Commands.TextViewModelCommands.NumberingStyleCommand
+namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand
 {
     public class AddNumberingStyleCommand : ICommand
     {

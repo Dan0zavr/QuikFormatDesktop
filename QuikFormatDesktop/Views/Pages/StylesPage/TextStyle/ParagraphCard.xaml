@@ -49,22 +49,22 @@
 
                 </Grid>
                 <UniformGrid Grid.Row="1" Rows="1" Margin="0,0,0,5">
-                    <RadioButton GroupName="Alignment" Style="{StaticResource LeftIndent}" 
+                    <RadioButton GroupName="Alignment" Style="{StaticResource LeftAlignment}" 
                                  IsChecked="{Binding SelectedAlignment,
                                  Converter={StaticResource EnumToBooleanConverter},
-                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Left}}"/>
-                    <RadioButton GroupName="Alignment" Style="{StaticResource CenterIndent}"
+                                 ConverterParameter={x:Static enums:AlignmentType.Left}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource CenterAlignment}"
                                  IsChecked="{Binding SelectedAlignment,
                                  Converter={StaticResource EnumToBooleanConverter},
-                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Center}}"/>
-                    <RadioButton GroupName="Alignment" Style="{StaticResource BothIndent}"
+                                 ConverterParameter={x:Static enums:AlignmentType.Center}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource BothAlignment}"
                                  IsChecked="{Binding SelectedAlignment,
                                  Converter={StaticResource EnumToBooleanConverter},
-                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Both}}"/>
-                    <RadioButton GroupName="Alignment" Style="{StaticResource RightIndent}"
+                                 ConverterParameter={x:Static enums:AlignmentType.Both}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource RightAlignment}"
                                  IsChecked="{Binding SelectedAlignment,
                                  Converter={StaticResource EnumToBooleanConverter},
-                                 ConverterParameter={x:Static enums:HorizontalAlignmentType.Right}}"/>
+                                 ConverterParameter={x:Static enums:AlignmentType.Right}}"/>
                 </UniformGrid>
             </Grid>
 

@@ -289,13 +289,13 @@ public partial class QfDbContext : DbContext
         });
 
         modelBuilder.Entity<Alignment>().HasData(
-            new Alignment { Id = 1, Alignment1 = HorizontalAlignmentType.Left.ToString().ToLower()},
-            new Alignment { Id = 2, Alignment1 = HorizontalAlignmentType.Right.ToString().ToLower()},
-            new Alignment { Id = 3, Alignment1 = HorizontalAlignmentType.Center.ToString().ToLower()},
-            new Alignment { Id = 4, Alignment1 = HorizontalAlignmentType.Both.ToString().ToLower()},
-            new Alignment { Id = 5, Alignment1 = VerticalAlignmentType.Top.ToString().ToLower()},
-            new Alignment { Id = 6, Alignment1 = VerticalAlignmentType.Bottom.ToString().ToLower()},
-            new Alignment { Id = 7, Alignment1 = VerticalAlignmentType.Center.ToString().ToLower()}
+            new Alignment { Id = 1, Alignment1 = AlignmentType.Left.ToString().ToLower()},
+            new Alignment { Id = 2, Alignment1 = AlignmentType.Right.ToString().ToLower()},
+            new Alignment { Id = 3, Alignment1 = AlignmentType.Center.ToString().ToLower()},
+            new Alignment { Id = 4, Alignment1 = AlignmentType.Both.ToString().ToLower()},
+            new Alignment { Id = 5, Alignment1 = AlignmentType.Top.ToString().ToLower()},
+            new Alignment { Id = 6, Alignment1 = AlignmentType.Bottom.ToString().ToLower()},
+            new Alignment { Id = 7, Alignment1 = AlignmentType.Center.ToString().ToLower()}
         );
 
         modelBuilder.Entity<MarkerType>().HasData(

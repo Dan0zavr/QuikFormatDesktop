@@ -13,7 +13,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private readonly PictureService _pictureService; // опционально, если будет использоваться
 
         private string _pictureStyleName;
-        private HorizontalAlignmentType _selectedAlignment;
+        private AlignmentType _selectedAlignment;
         private double _firstLineIndent;
         private double _leftIndent;
         private double _rightIndent;
@@ -43,7 +43,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public HorizontalAlignmentType SelectedAlignment
+        public AlignmentType SelectedAlignment
         {
             get => _selectedAlignment;
             set

@@ -2,7 +2,7 @@
 using QuikFormatDesktop.Exceptions;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
-using QuikFormatDesktop.ViewModels.Commands.TextViewModelCommands.TextStyleCommands;
+using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             dialogService = DiDialogService;
             LoadFonts(options);
 
-            AddTextStyle = new AddTextStyleCommand(this);
+            AddTextStyle = new AsyncRelayCommand(AddTextStyleAsync, CanAddTextStyle);
         }
 
         public string StyleName
@@ -46,7 +46,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _styleName = value;
                 OnPropertyChanged(nameof(StyleName));
-                (AddTextStyle as AddTextStyleCommand)?.RaiseCanExecuteChanged();
+                (AddTextStyle as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -106,6 +106,44 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             _fonts = await fontService.GetAll();
             _selectedFont = _fonts.FirstOrDefault(f => f.FontName == options.Value.DefaultName);
+        }
+
+        private bool CanAddTextStyle(object? parameter)
+        {
+            return !string.IsNullOrWhiteSpace(StyleName);
+        }
+
+        private async Task AddTextStyleAsync(object? parameter)
+        {
+            try
+            {
+                int fontId = await fontService.GetIdByName(SelectedFont.FontName);
+
+                var textStyle = new TextStyle
+                {
+                    Name = StyleName,
+                    Font = fontId,
+                    FontSize = SelectedFontSize
+                };
+
+                if (await textStyleService.IsUnique(textStyle.Name))
+                {
+                    await textStyleService.Add(textStyle);
+                    PStatusMessage = "Стиль успешно добавлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (FontNotFoundException fex)
+            {
+                dialogService.ShowError(fex.Message);
+            }
+            catch (Exception ex)
+            {
+                dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
         }
     }
 }

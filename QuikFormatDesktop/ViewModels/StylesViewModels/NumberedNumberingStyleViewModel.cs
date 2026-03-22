@@ -1,5 +1,5 @@
 ﻿using QuikFormatDesktop.Models;
-using QuikFormatDesktop.ViewModels.Commands.TextViewModelCommands.NumberingStyleCommand;
+using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
 using System;

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
              xmlns:converters="clr-namespace:QuikFormatDesktop.View.Converters"
+             xmlns:enums="clr-namespace:QuikFormatDesktop.ViewModels.Enums"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -60,7 +61,7 @@
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Стиль абзаца:" FontSize="12"/>
                         <ComboBox FontSize="12" ItemsSource="{Binding ParagraphStyles}" 
-                                 DisplayMemberPath="ParagraphStyleName"
+                                 DisplayMemberPath="Name"
                                  SelectedItem="{Binding SelectedParagraphStyle}"/>
                     </StackPanel>
 
@@ -68,7 +69,7 @@
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Стиль шрифта:" FontSize="12"/>
                         <ComboBox FontFamily="12" ItemsSource="{Binding TextStyles}" 
-                                 DisplayMemberPath="TextStyleName"
+                                 DisplayMemberPath="Name"
                                  SelectedItem="{Binding SelectedTextStyle}"/>
                     </StackPanel>
                 </Grid>
@@ -95,9 +96,18 @@
                 <StackPanel Grid.Row="1">
                     <TextBlock Text="Вертикальное выравнивание:" FontSize="12"/>
                     <UniformGrid Rows="1">
-                        <RadioButton Content="Верх" GroupName="VerticalAlign"/>
-                        <RadioButton Content="Центр" GroupName="VerticalAlign"/>
-                        <RadioButton Content="Низ" GroupName="VerticalAlign"/>
+                        <RadioButton GroupName="VerticalAlign" Style="{StaticResource TopAlignment}"
+                                                                              IsChecked="{Binding SelectedAlignment,
+                                                                              Converter={StaticResource EnumToBooleanConverter},
+                                                                              ConverterParameter={x:Static enums:AlignmentType.Top}}"/>
+                        <RadioButton GroupName="VerticalAlign" Style="{StaticResource CenterAlignment}"
+                                                                               IsChecked="{Binding SelectedAlignment,
+                                                                               Converter={StaticResource EnumToBooleanConverter},
+                                                                               ConverterParameter={x:Static enums:AlignmentType.Center}}"/>
+                        <RadioButton GroupName="VerticalAlign" Style="{StaticResource BottomAlignment}"
+                                                                              IsChecked="{Binding SelectedAlignment,
+                                                                              Converter={StaticResource EnumToBooleanConverter},
+                                                                              ConverterParameter={x:Static enums:AlignmentType.Bottom}}"/>
                     </UniformGrid>
 
                     <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
@@ -159,7 +169,7 @@
                 Command="{Binding TextDeleteCommand}"/>
                     <Button Content="Сохранить" 
                             Width="100" 
-                            Command="{Binding AddParagraphCommand}"/>
+                            Command="{Binding AddTableCommand}"/>
                 </StackPanel>
             </Grid>
         </Grid>
