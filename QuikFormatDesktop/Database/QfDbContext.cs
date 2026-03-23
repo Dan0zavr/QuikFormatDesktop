@@ -288,6 +288,13 @@ public partial class QfDbContext : DbContext
             entity.HasOne(d => d.FontNavigation).WithMany(p => p.TextStyles).HasForeignKey(d => d.Font);
         });
 
+        modelBuilder.Entity<Position>().HasData(
+            new Position { Id = 1, Position1 = PositionType.CenterLeft.ToString().ToLower()},
+            new Position { Id = 2, Position1 = PositionType.CenterRight.ToString().ToLower()},
+            new Position { Id = 3, Position1 = PositionType.RightLeft.ToString().ToLower()},
+            new Position { Id = 4, Position1 = PositionType.LeftRight.ToString().ToLower()}
+            );
+
         modelBuilder.Entity<Alignment>().HasData(
             new Alignment { Id = 1, Alignment1 = AlignmentType.Left.ToString().ToLower()},
             new Alignment { Id = 2, Alignment1 = AlignmentType.Right.ToString().ToLower()},

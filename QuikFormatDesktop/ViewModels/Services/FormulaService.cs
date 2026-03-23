@@ -12,5 +12,18 @@ namespace QuikFormatDesktop.ViewModels.Services
     public class FormulaService : BaseDataService<FormulaStyle>
     {
         public FormulaService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
+
+        public async Task<bool> IsUnique(string name)
+        {
+            await using var context = await _factory.CreateDbContextAsync();
+
+            FormulaStyle formulaStyle = await context.FormulaStyles.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (formulaStyle == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

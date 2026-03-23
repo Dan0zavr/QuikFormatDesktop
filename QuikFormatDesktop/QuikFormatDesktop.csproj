@@ -24,6 +24,18 @@
     <None Remove="Views\Resources\leftAlignmentChecked.png" />
     <None Remove="Views\Resources\leftAlignmentMouseOver.png" />
     <None Remove="Views\Resources\leftAlignmentNormal.png" />
+    <None Remove="Views\Resources\Position\centerLeft.png" />
+    <None Remove="Views\Resources\Position\centerLeftChecked.png" />
+    <None Remove="Views\Resources\Position\centerLeftMouseOver.png" />
+    <None Remove="Views\Resources\Position\centerRight.png" />
+    <None Remove="Views\Resources\Position\centerRightChecked.png" />
+    <None Remove="Views\Resources\Position\centerRightMouseOver.png" />
+    <None Remove="Views\Resources\Position\leftRight.png" />
+    <None Remove="Views\Resources\Position\leftRightChecked.png" />
+    <None Remove="Views\Resources\Position\leftRightMouseOver.png" />
+    <None Remove="Views\Resources\Position\rightLeft.png" />
+    <None Remove="Views\Resources\Position\rightLeftChecked.png" />
+    <None Remove="Views\Resources\Position\rightLeftMouseOver.png" />
     <None Remove="Views\Resources\rightAlignment.png" />
     <None Remove="Views\Resources\rightAlignmentChecked.png" />
     <None Remove="Views\Resources\rightAlignmentMouseOver.png" />
@@ -108,6 +120,42 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Views\Resources\leftAlignmentNormal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\centerLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\centerLeftChecked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\centerLeftMouseOver.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\centerRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\centerRightChecked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\centerRightMouseOver.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\leftRight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\leftRightChecked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\leftRightMouseOver.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\rightLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\rightLeftChecked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Resources\Position\rightLeftMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Views\Resources\rightAlignment.png">

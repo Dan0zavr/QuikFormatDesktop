@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="/Views/Dictionaries/SpecialStyles.xaml"/>
                 <ResourceDictionary Source="/Views/Dictionaries/AlignmentButtons.xaml"/>
                 <ResourceDictionary Source="/Views/Resources/QuestionMark.xaml"/>
+                <ResourceDictionary Source="/Views/Dictionaries/PositionButtons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -12,5 +12,18 @@ namespace QuikFormatDesktop.ViewModels.Services
     public class PictureService : BaseDataService<PictureStyle>
     {
         public PictureService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
+
+        public async Task<bool> IsUnique(string name)
+        {
+            await using var context = await _factory.CreateDbContextAsync();
+
+            PictureStyle pictureStyle = await context.PictureStyles.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (pictureStyle == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

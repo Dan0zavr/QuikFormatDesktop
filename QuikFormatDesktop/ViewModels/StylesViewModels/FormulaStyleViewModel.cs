@@ -1,8 +1,12 @@
 ﻿using QuikFormatDesktop.Models;
+using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Printing;
+using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Input;
 
@@ -11,20 +15,33 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
     public class FormulaStyleViewModel : ViewModelBase
     {
         private readonly FormulaService _formulaService;
+        private readonly PositionService _positionService;
+        private readonly MarkerService _markerService;
+        private readonly IDialogService _dialogService;
 
         private string _formulaStyleName;
-        private Alignment _selectedPosition;
+        private PositionType _selectedPosition;
         private bool _insertBlankLines;
         private bool _isNumberingEnabled;
-        private ObservableCollection<string> _numberingFormats;
-        private string _selectedNumberingFormat;
+        private List<Marker> _numberingFormats;
+        private Marker _selectedNumberingFormat;
         private string _pStatusMessage;
 
 
-        public FormulaStyleViewModel()
+        public FormulaStyleViewModel(FormulaService formulaService, PositionService positionService, MarkerService markerService, IDialogService dialogService)
         {
-            NumberingFormats = new ObservableCollection<string>();
+            _formulaService = formulaService;
+            _positionService = positionService;
+            _markerService = markerService;
+            _dialogService = dialogService;
+
+            SetDefault();
+
+            AddFormulaCommand = new AsyncRelayCommand(AddFormulaStyle, CanAddFormulaStyle);
         }
+
+        public ICommand FormulaDeleteCommand { get; }
+        public ICommand AddFormulaCommand {  get; }
 
         public string FormulaStyleName
         {
@@ -33,10 +50,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _formulaStyleName = value;
                 OnPropertyChanged(nameof(FormulaStyleName));
+                (AddFormulaCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
-        public Alignment SelectedPosition
+        public PositionType SelectedPosition
         {
             get => _selectedPosition;
             set
@@ -66,7 +84,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public ObservableCollection<string> NumberingFormats
+        public List<Marker> NumberingFormats
         {
             get => _numberingFormats;
             set
@@ -76,7 +94,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public string SelectedNumberingFormat
+        public Marker SelectedNumberingFormat
         {
             get => _selectedNumberingFormat;
             set
@@ -96,8 +114,54 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public ICommand FormulaDeleteCommand;
+        private async Task SetDefault()
+        {
+            _formulaStyleName = null;
+            _selectedPosition = PositionType.CenterRight;
+            _insertBlankLines = false;
+            _isNumberingEnabled = true;
+            _numberingFormats = await _markerService.GetByType(MarkerTypeEnum.Numberd);
+            _selectedNumberingFormat = _numberingFormats.FirstOrDefault();
+        }
 
-        public ICommand AddFormulaCommand;
+        private bool CanAddFormulaStyle(object? parametr)
+        {
+            if (!string.IsNullOrWhiteSpace(FormulaStyleName))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private async Task AddFormulaStyle(object? parametr)
+        {
+            try
+            {
+                int positionId = await _positionService.GetIdByType(_selectedPosition);
+
+                FormulaStyle formulaStyle = new FormulaStyle
+                {
+                    Name = FormulaStyleName,
+                    EmptyLineAround = InsertBlankLines,
+                    Marker = SelectedNumberingFormat.Id,
+                    Position = positionId
+                };
+
+                if (await _formulaService.IsUnique(formulaStyle.Name))
+                {
+                    await _formulaService.Add(formulaStyle);
+                    PStatusMessage = "Стиль успешно добавлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+            
+        }
     }
 }

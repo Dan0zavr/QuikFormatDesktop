@@ -4,8 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             xmlns:enums="clr-namespace:QuikFormatDesktop.ViewModels.Enums"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.View.Converters"
              mc:Ignorable="d">
-    
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    </UserControl.Resources>
+
     <GroupBox Header="Стиль картинки" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
         <Grid>
             <Grid.RowDefinitions>
@@ -45,11 +52,23 @@
 
                     </Grid>
                     <UniformGrid Grid.Row="1" Rows="1" Margin="0,0,0,5">
-                        <RadioButton GroupName="Alignment" Style="{StaticResource LeftIndent}"/>
-                        <RadioButton GroupName="Alignment" Style="{StaticResource CenterIndent}"/>
-                        <RadioButton GroupName="Alignment" Style="{StaticResource BothIndent}"/>
-                        <RadioButton GroupName="Alignment" Style="{StaticResource RightIndent}"/>
-                    </UniformGrid>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource LeftAlignment}" 
+                                                         IsChecked="{Binding SelectedAlignment,
+                                                         Converter={StaticResource EnumToBooleanConverter},
+                                                         ConverterParameter={x:Static enums:AlignmentType.Left}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource CenterAlignment}"
+                                                         IsChecked="{Binding SelectedAlignment,
+                                                         Converter={StaticResource EnumToBooleanConverter},
+                                                         ConverterParameter={x:Static enums:AlignmentType.Center}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource BothAlignment}"
+                                                         IsChecked="{Binding SelectedAlignment,
+                                                         Converter={StaticResource EnumToBooleanConverter},
+                                                         ConverterParameter={x:Static enums:AlignmentType.Both}}"/>
+                    <RadioButton GroupName="Alignment" Style="{StaticResource RightAlignment}"
+                                                         IsChecked="{Binding SelectedAlignment,
+                                                         Converter={StaticResource EnumToBooleanConverter},
+                                                         ConverterParameter={x:Static enums:AlignmentType.Right}}"/>
+                </UniformGrid>
                 </Grid>
 
                 <!--Блок отступов-->
@@ -169,22 +188,22 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
-                        <TextBlock Text="Генерировать подпись автоматически" FontSize="12" Margin="0, 0, 5, 0"/>
-                        <CheckBox VerticalAlignment="Center"/>
+                        <TextBlock Text="Генерировать подпись автоматически" FontSize="12" Margin="0, 0, 5, 0" />
+                        <CheckBox VerticalAlignment="Center" IsChecked="{Binding AutoGenerateCaption}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1"> <!--Здесь нужно управлять видимостью в зависимости от чекбокса-->
-                        <Grid Margin="0, 5, 0, 0">
+                    <StackPanel Grid.Row="1">
+                        <Grid Margin="0, 5, 0, 0" Visibility="{Binding AutoGenerateCaption, Converter={StaticResource BoolToVis}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Текст подписи" FontSize="12" Margin="0, 0, 5, 0"/>
-                            <TextBox Grid.Column="1" FontSize="12"/>
+                            <TextBox Grid.Column="1" FontSize="12" Text="{Binding CaptionText}"/>
                         </Grid>
                         <StackPanel Margin="0, 5, 0, 0" Orientation="Horizontal">
                             <TextBlock Text="Пустые строки перед и после рисунка" FontSize="12" Margin="0, 0, 5, 0"/>
-                            <CheckBox VerticalAlignment="Center"/>
+                            <CheckBox VerticalAlignment="Center" IsChecked="{Binding InsertBlankLines, Converter={StaticResource BoolToVis}}"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

@@ -4,8 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.View.Pages"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.View.Converters"
+             xmlns:enums="clr-namespace:QuikFormatDesktop.ViewModels.Enums"
              mc:Ignorable="d">
-    
+
+    <UserControl.Resources>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:CodeToStringConverter x:Key="CodeToStringConverter"/>
+    </UserControl.Resources>
+
     <GroupBox Header="Стиль формулы" FontSize="12" Background="{StaticResource MainBackground}">
         <Grid>
             <Grid.RowDefinitions>
@@ -47,15 +55,27 @@
                     </Grid.RowDefinitions>
 
                     <UniformGrid Grid.Row="0" Rows="1" Margin="0,0,0,5">
-                        <RadioButton GroupName="Alignment" Style="{StaticResource LeftIndent}"/>
-                        <RadioButton GroupName="Alignment" Style="{StaticResource CenterIndent}"/>
-                        <RadioButton GroupName="Alignment" Style="{StaticResource BothIndent}"/>
-                        <RadioButton GroupName="Alignment" Style="{StaticResource RightIndent}"/>
+                        <RadioButton GroupName="Position" Style="{StaticResource CenterLeftPosition}" 
+                                     IsChecked="{Binding SelectedPosition,
+                                     Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter={x:Static enums:PositionType.CenterLeft}}"/>
+                        <RadioButton GroupName="Position" Style="{StaticResource LeftRightPosition}"
+                                     IsChecked="{Binding SelectedPosition,
+                                     Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter={x:Static enums:PositionType.LeftRight}}"/>
+                        <RadioButton GroupName="Position" Style="{StaticResource RightLeftPosition}"
+                                     IsChecked="{Binding SelectedPosition,
+                                     Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter={x:Static enums:PositionType.RightLeft}}"/>
+                        <RadioButton GroupName="Position" Style="{StaticResource CenterRightPosition}"
+                                     IsChecked="{Binding SelectedPosition,
+                                     Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter={x:Static enums:PositionType.CenterRight}}"/>
                     </UniformGrid>
 
                     <StackPanel Grid.Row="1" Margin="0, 5, 0, 0" Orientation="Horizontal">
                         <TextBlock Text="Пустые строки перед и после рисунка" FontSize="12" Margin="0, 0, 5, 0"/>
-                        <CheckBox VerticalAlignment="Center"/>
+                        <CheckBox VerticalAlignment="Center" IsChecked="{Binding InsertBlankLines}"/>
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -84,12 +104,21 @@
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <TextBlock Text="Нумерация" FontSize="12" VerticalAlignment="Center"/>
-                        <CheckBox Margin="5, 0, 0, 0" FontSize="12" VerticalAlignment="Center"/>
+                        <CheckBox Margin="5, 0, 0, 0" FontSize="12" VerticalAlignment="Center" IsChecked="{Binding IsNumberingEnabled}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" Margin="0, 5, 0, 0" Orientation="Horizontal">
+                    <StackPanel Grid.Row="1" Margin="0, 5, 0, 0" Orientation="Horizontal" Visibility="{Binding IsNumberingEnabled, Converter={StaticResource BoolToVis}}">
                         <TextBlock Text="Формат нумерации" FontSize="12"/>
-                        <ComboBox FontSize="12" Margin="5, 0, 0, 0" Width="60"/>
+                        <ComboBox FontSize="12" Margin="5, 0, 0, 0" Width="60"
+                                  ItemsSource="{Binding NumberingFormats}"
+                                  SelectedItem="{Binding SelectedNumberingFormat}">
+
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Marker1, Converter={StaticResource CodeToStringConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
                 </Grid>
             </Grid>

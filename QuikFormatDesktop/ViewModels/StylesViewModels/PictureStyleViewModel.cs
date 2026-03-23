@@ -5,12 +5,19 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using QuikFormatDesktop.ViewModels.Enums;
+using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.Models;
+using QuikFormatDesktop.ViewModels.Commands;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
     public class PictureStyleViewModel : ViewModelBase
     {
-        private readonly PictureService _pictureService; // опционально, если будет использоваться
+        private readonly PictureService _pictureService;
+        private readonly ParagraphService _paragraphService;
+        private readonly AlignmentService _alignmentService;
+        private readonly IDialogService _dialogService;
 
         private string _pictureStyleName;
         private AlignmentType _selectedAlignment;
@@ -26,12 +33,21 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private bool _insertBlankLines;
         private string _pStatusMessage;
 
-        private ObservableCollection<double> _intervals;
+        private List<double> _intervals;
 
-        public PictureStyleViewModel()
+        public PictureStyleViewModel(PictureService pictureService, ParagraphService paragraphService, IOptions<ParagraphSettings> options, IDialogService dialogService, AlignmentService alignmentService)
         {
-            Intervals = new ObservableCollection<double> { 1.0, 1.5, 2.0, 2.5, 3.0 };
+            _pictureService = pictureService;
+            _paragraphService = paragraphService;
+            _dialogService = dialogService;
+            _alignmentService = alignmentService;
+            SetDefault(options);
+
+            AddPictureCommand = new AsyncRelayCommand(AddPictureStyle, CanAddPictureStyle);
         }
+
+        public ICommand PictureDeleteCommand { get; }
+        public ICommand AddPictureCommand { get; }
 
         public string PictureStyleName
         {
@@ -40,6 +56,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _pictureStyleName = value;
                 OnPropertyChanged(nameof(PictureStyleName));
+                (AddPictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -140,6 +157,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _captionText = value;
                 OnPropertyChanged(nameof(CaptionText));
+                (AddPictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -163,7 +181,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public ObservableCollection<double> Intervals
+        public List<double> Intervals
         {
             get => _intervals;
             set
@@ -173,8 +191,110 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public ICommand PictureDeleteCommand;
+        private void SetDefault(IOptions<ParagraphSettings> options)
+        {
+            _intervals = options.Value.AllowedIntervals;
 
-        public ICommand AddPictureCommand;
+            _pictureStyleName = null;
+            _selectedAlignment = AlignmentType.Center;
+            FirstLineIndent = 0;
+            LeftIndent = 0;
+            RightIndent = 0;
+            Interval = _intervals.FirstOrDefault();
+            AfterInterval = 0;
+            BeforeInterval = 0;
+            AutoGenerateCaption = false;
+            CaptionText = null;
+            InsertBlankLines = false;
+        }
+
+        private bool CanAddPictureStyle(object? parametr)
+        {
+            if (!string.IsNullOrWhiteSpace(PictureStyleName))
+            {
+                if (_autoGenerateCaption)
+                {
+                    if (!string.IsNullOrWhiteSpace(CaptionText))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async Task AddPictureStyle(object? parametr)
+        {
+            try
+            {
+                if (await _pictureService.IsUnique(PictureStyleName))
+                {
+                    int paragraphId = await AddParagraphStyle();
+
+                    PictureStyle pictureStyle = new PictureStyle
+                    {
+                        Name = PictureStyleName,
+                        ParagraphStyle = paragraphId,
+                        GenerateLabel = AutoGenerateCaption,
+                        LabelValue = CaptionText,
+                        EmptyLineAround = InsertBlankLines
+                    };
+
+                    await _pictureService.Add(pictureStyle);
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+        }
+        private async Task<int> AddParagraphStyle()
+        {
+            int alignmentId = await _alignmentService.GetIdByType(SelectedAlignment);
+            string styleName = "Для рисунка " + $"\"{PictureStyleName}\""+ "(Generated)";
+            ParagraphStyle style = new ParagraphStyle
+            {
+                Name = styleName,
+                Alignment = alignmentId,
+                FirstLineIndent = this.FirstLineIndent,
+                LeftIndent = this.LeftIndent,
+                RightIndent = this.RightIndent,
+                IntervalInText = Interval,
+                BeforeInterval = this.BeforeInterval,
+                AfterInterval = this.AfterInterval,
+                ContextualSpacing = this.ContextualSpacing
+            };
+
+            if (!await _paragraphService.IsUnique(styleName))
+            {
+                styleName = await EnsureUniqueParagraphName(styleName);
+                style.Name = styleName;
+            }
+
+            await _paragraphService.Add(style);
+            return await _paragraphService.GetIdByName(styleName);
+        }
+
+        private async Task<string> EnsureUniqueParagraphName(string name)
+        {
+            List<string> usedNames = await _paragraphService.GetLikeNames(name);
+            string uniqueName = name;
+            int count = 0;
+            while (!usedNames.Contains(name))
+            {
+                count++;
+                uniqueName = name + count.ToString();
+            }
+
+            return uniqueName;
+        }
     }
 }
