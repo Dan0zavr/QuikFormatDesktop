@@ -9,6 +9,9 @@
     <SolidColorBrush Color="{StaticResource DarkOcean}" x:Key="ButtonColor"/>
     <SolidColorBrush Color="#1b3745" x:Key="BorderColor"/>
     <SolidColorBrush Color="LightGray" x:Key="InnerBorderColor"/>
+    <SolidColorBrush x:Key="DeleteButtonColor" Color="#D9534F"/>
+    <SolidColorBrush x:Key="DeleteHoverColor" Color="#C9302C"/>
+    <SolidColorBrush x:Key="DeleteForeground" Color="White"/>
 
     <SolidColorBrush Color="{StaticResource SoftBlue}" x:Key="SecondBackColor"/>
     <SolidColorBrush Color="{StaticResource ButterYellow}" x:Key="BaseTextColor"/>

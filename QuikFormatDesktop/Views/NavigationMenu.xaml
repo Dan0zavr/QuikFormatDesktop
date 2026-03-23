@@ -8,6 +8,10 @@
              d:DesignHeight="450" d:DesignWidth="160"
              Background = "{StaticResource BackColor}">
 
+    <UserControl.Resources>
+        <Style TargetType="ScrollBar" BasedOn="{StaticResource MyScrollBar}"/>
+    </UserControl.Resources>
+
 
     <Border BorderThickness="0,0,2,0" BorderBrush="{StaticResource BorderColor}">
         <Grid>
@@ -34,7 +38,9 @@
                     <ListBox Grid.Row="0" Background="Transparent" BorderThickness="0" 
                              ItemsSource="{Binding ItemsView}"
                              HorizontalContentAlignment="Stretch"
-                             VerticalAlignment="Stretch">
+                             VerticalAlignment="Stretch"
+                             ItemContainerStyle="{StaticResource Item}">
+
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}" />

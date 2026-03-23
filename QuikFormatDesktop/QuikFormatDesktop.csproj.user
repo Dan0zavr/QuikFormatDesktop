@@ -20,10 +20,16 @@
     <Compile Update="Views\Pages\StylesPage\FormulaStyle\FormulaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Pages\StylesPage\FormulaStyle\ShortFormulaMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Pages\StylesPage\NumberingStyle\MarkedNumberingStyle.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPage\NumberingStyle\NumberingPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\StylesPage\NumberingStyle\ShortNumberingMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPage\PictureStyle\PictureCard.xaml.cs">
@@ -32,10 +38,16 @@
     <Compile Update="Views\Pages\StylesPage\PictureStyle\PicturePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Pages\StylesPage\PictureStyle\ShortPictureModel.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Pages\StylesPage\StylesPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPage\NumberingStyle\NumberedNumberingCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\StylesPage\TableStyle\ShortTableMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPage\TableStyle\TableCard.xaml.cs">
@@ -45,6 +57,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPage\TextStyle\ParagraphCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\StylesPage\TextStyle\ShortParagraphMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\StylesPage\TextStyle\ShortTexMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPage\TextStyle\TextCard.xaml.cs">
