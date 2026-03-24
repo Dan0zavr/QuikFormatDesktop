@@ -1,18 +1,19 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm;
+using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
+using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm;
-using CommunityToolkit.Mvvm.Input;
-using System.Windows;
 
 namespace QuikFormatDesktop.ViewModels
 {
@@ -27,6 +28,11 @@ namespace QuikFormatDesktop.ViewModels
         private readonly NumberingService _numberingService;
         private readonly PictureService _pictureService;
         private readonly FormulaService _formulaService;
+        private readonly FontService _fontService;
+        private readonly AlignmentService _alignmentService;
+        private readonly PositionService _positionService;
+        private readonly MarkerService _markerService;
+        private object? _popupViewModel;
 
         private StyleObject _selectedItem;
         private ObservableCollection<StyleObject> _items = new ObservableCollection<StyleObject>();
@@ -35,12 +41,16 @@ namespace QuikFormatDesktop.ViewModels
 
         private StylesViewModel? _currentStylesViewModel;
 
-        public NavigationViewModel(NavigationStore navigationStore, 
-            TemplateService templateService, TextService textService, 
-            ParagraphService paragraphService, TableService tableService, 
+        public NavigationViewModel(NavigationStore navigationStore,
+            TemplateService templateService, TextService textService,
+            ParagraphService paragraphService, TableService tableService,
             NumberingService numberingService, PictureService pictureService,
             FormulaService formulaService,
-            NavigationService<StylesViewModel> navigationToStylesService, NavigationService<FormatViewModel> navigationToFormatService)
+            NavigationService<StylesViewModel> navigationToStylesService,
+            NavigationService<FormatViewModel> navigationToFormatService,
+            FontService fontService,
+            AlignmentService alignmentService,
+            PositionService positionService, MarkerService markerService)
         {
             _navigationStore = navigationStore;
             _templateService = templateService;
@@ -50,6 +60,11 @@ namespace QuikFormatDesktop.ViewModels
             _numberingService = numberingService;
             _pictureService = pictureService;
             _formulaService = formulaService;
+
+            _fontService = fontService;
+            _alignmentService = alignmentService;
+            _positionService = positionService;
+            _markerService = markerService;
 
             GoToStyles = new NavigateCommand<StylesViewModel>(navigationToStylesService);
             GoToFormat = new NavigateCommand<FormatViewModel>(navigationToFormatService);
@@ -76,18 +91,12 @@ namespace QuikFormatDesktop.ViewModels
 
                 if (_selectedItem != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        IsPopupOpen = true;
-
-                        if (System.Windows.Interop.BrowserInteropHelper.IsBrowserHosted == false)
-                        {
-                            var focusedElement = System.Windows.Input.Keyboard.FocusedElement;
-                        }
-                    }), System.Windows.Threading.DispatcherPriority.Input);
+                    CreatePopupViewModel(_selectedItem);
+                    IsPopupOpen = true;
                 }
             }
         }
+        
 
         public ObservableCollection<StyleObject> Items
         {
@@ -106,6 +115,16 @@ namespace QuikFormatDesktop.ViewModels
             {
                 _groupBoxHeader = value;
                 OnPropertyChanged(nameof(GroupBoxHeader));
+            }
+        }
+
+        public object? PopupViewModel
+        {
+            get => _popupViewModel;
+            set
+            {
+                _popupViewModel = value;
+                OnPropertyChanged(nameof(PopupViewModel));
             }
         }
 
@@ -262,6 +281,40 @@ namespace QuikFormatDesktop.ViewModels
             }
 
             UpdateGrouping();
+        }
+
+        private void CreatePopupViewModel(StyleObject style)
+        {
+            switch (style)
+            {
+                case TextStyle text:
+                    PopupViewModel = new TextShortMenuViewModel(text, _textService, _fontService);
+                    break;
+
+                case ParagraphStyle paragraph:
+                    PopupViewModel = new ParagraphShortMenuViewModel(paragraph, _paragraphService, _alignmentService);
+                    break;
+
+                case TableStyle table:
+                    PopupViewModel = new TableShortMenuViewModel(table, _tableService, _alignmentService, _textService, _paragraphService);
+                    break;
+
+                case NumberingStyle numbering:
+                    PopupViewModel = new NumberingShortMenuViewModel(numbering, _numberingService, _markerService);
+                    break;
+
+                case PictureStyle picture:
+                    PopupViewModel = new PictureShortMenuViewModel(picture, _pictureService, _paragraphService);
+                    break;
+
+                case FormulaStyle formula:
+                    PopupViewModel = new FormulaShortMenuViewModel(formula, _formulaService, _positionService, _markerService);
+                    break;
+
+                default:
+                    PopupViewModel = null;
+                    break;
+            }
         }
     }
 }

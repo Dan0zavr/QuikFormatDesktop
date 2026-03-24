@@ -143,6 +143,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 {
                     Name = FormulaStyleName,
                     EmptyLineAround = InsertBlankLines,
+                    Numeration = IsNumberingEnabled,
                     Marker = SelectedNumberingFormat.Id,
                     Position = positionId
                 };

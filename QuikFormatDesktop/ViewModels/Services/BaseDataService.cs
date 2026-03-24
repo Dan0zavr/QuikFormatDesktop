@@ -49,7 +49,7 @@ namespace QuikFormatDesktop.ViewModels.Services
             return await context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetById(string id)
+        public async Task<T> GetById(int id)
         {
             await using var context = await _factory.CreateDbContextAsync();
 

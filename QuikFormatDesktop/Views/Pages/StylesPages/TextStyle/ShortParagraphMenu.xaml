@@ -14,7 +14,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
@@ -56,37 +55,34 @@
                                Style="{StaticResource BaseText}"
                                FontSize="12"/>
                     <TextBlock Margin="5,0,0,0"
-                               Text="{Binding IntervalInText}"
+                               Text="{Binding Interval}"
                                Style="{StaticResource BaseText}"
                                FontSize="12"/>
                 </StackPanel>
 
             </StackPanel>
 
-            <TextBlock Grid.Row="2"
-                       Margin="0,8,0,0"
-                       HorizontalAlignment="Left"
-                       Cursor="Hand"
-                       Foreground="{StaticResource ForeColor}"
-                       FontSize="12"
-                       TextDecorations="Underline">
-                Подробнее
-            </TextBlock>
+            <Grid Grid.Row="2" Margin="0,15,0,0">
 
-            <UniformGrid Grid.Row="3"
-                         Margin="0,15,0,0"
-                         Columns="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
 
-                <Button Content="Удалить"
+                <Button Grid.Column="0"
+                        Content="Удалить"
                         Style="{StaticResource DangerButton}"
                         FontSize="12"
-                        Margin="2"/>
+                        Margin="2"
+                        Command="{Binding DeleteParagraphStyleCommand}"/>
 
-                <Button Content="Обновить"
+                <Button Grid.Column="2"
+                        Content="Подробнее"
                         Style="{StaticResource BaseButton}"
                         FontSize="12"
                         Margin="2"/>
-            </UniformGrid>
+            </Grid>
 
         </Grid>
     </Border>

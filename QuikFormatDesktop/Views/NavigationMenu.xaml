@@ -6,7 +6,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:QuikFormatDesktop.Views"
              xmlns:shortmenu="clr-namespace:QuikFormatDesktop.ViewModels.ShortMenuViewModels"
-             xmlns:models="clr-namespace:QuikFormatDesktop.Models"
+             xmlns:vm="clr-namespace:QuikFormatDesktop.ViewModels.ShortMenuViewModels"
              xmlns:pages="clr-namespace:QuikFormatDesktop.Views.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="160"
@@ -15,27 +15,27 @@
     <UserControl.Resources>
         <Style TargetType="ScrollBar" BasedOn="{StaticResource MyScrollBar}"/>
 
-        <DataTemplate DataType="{x:Type models:TextStyle}">
+        <DataTemplate DataType="{x:Type vm:TextShortMenuViewModel}">
             <pages:ShortTextMenu/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type models:ParagraphStyle}">
+        <DataTemplate DataType="{x:Type vm:ParagraphShortMenuViewModel}">
             <pages:ShortParagraphMenu/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type models:TableStyle}">
+        <DataTemplate DataType="{x:Type vm:TableShortMenuViewModel}">
             <pages:ShortTableMenu/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type models:NumberingStyle}">
+        <DataTemplate DataType="{x:Type vm:NumberingShortMenuViewModel}">
             <pages:ShortNumberingMenu/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type models:PictureStyle}">
+        <DataTemplate DataType="{x:Type vm:PictureShortMenuViewModel}">
             <pages:ShortPictureMenu/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type models:FormulaStyle}">
+        <DataTemplate DataType="{x:Type vm:FormulaShortMenuViewModel}">
             <pages:ShortFormulaMenu/>
         </DataTemplate>
     </UserControl.Resources>
@@ -96,7 +96,7 @@
                             <local:ClosePopupOnOutsideClickBehavior />
                         </i:Interaction.Behaviors>
 
-                        <ContentControl x:Name="PopupContent" Content="{Binding SelectedItem}"/>
+                        <ContentControl x:Name="PopupContent" Content="{Binding PopupViewModel}"/>
 
                     </Popup>
 
