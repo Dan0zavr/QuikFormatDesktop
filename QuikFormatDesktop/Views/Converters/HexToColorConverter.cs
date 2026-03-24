@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace QuikFormatDesktop.View.Converters
+namespace QuikFormatDesktop.Views.Converters
 {
     public class HexToColorConverter : IValueConverter
     {

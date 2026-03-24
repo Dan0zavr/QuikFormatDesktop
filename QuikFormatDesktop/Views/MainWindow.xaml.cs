@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuikFormatDesktop.View
+namespace QuikFormatDesktop.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

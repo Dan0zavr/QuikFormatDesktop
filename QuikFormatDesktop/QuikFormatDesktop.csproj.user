@@ -14,64 +14,61 @@
     <Compile Update="Views\Pages\FormatPage\SelectorCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\FormulaStyle\FormulaCard.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\FormulaStyle\FormulaCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\FormulaStyle\FormulaPage.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\FormulaStyle\FormulaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\FormulaStyle\ShortFormulaMenu.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\FormulaStyle\ShortFormulaMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\NumberingStyle\MarkedNumberingStyle.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\NumberingStyle\MarkedNumberingStyle.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\NumberingStyle\NumberingPage.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\NumberingStyle\NumberingPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\NumberingStyle\ShortNumberingMenu.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\NumberingStyle\ShortNumberingMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\PictureStyle\PictureCard.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\PictureStyle\PictureCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\PictureStyle\PicturePage.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\PictureStyle\PicturePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\PictureStyle\ShortPictureModel.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\PictureStyle\ShortPictureMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\StylesPage.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\StylesPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\NumberingStyle\NumberedNumberingCard.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\NumberingStyle\NumberedNumberingCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TableStyle\ShortTableMenu.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TableStyle\ShortTableMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TableStyle\TableCard.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TableStyle\TableCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TableStyle\TablePage.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TableStyle\TablePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TextStyle\ParagraphCard.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TextStyle\ParagraphCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TextStyle\ShortParagraphMenu.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TextStyle\ShortParagraphMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TextStyle\ShortTexMenu.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TextStyle\ShortTexMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TextStyle\TextCard.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TextStyle\TextCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPage\TextStyle\TextStylePage.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Pages\TemplatePreview.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\TextStyle\TextStylePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

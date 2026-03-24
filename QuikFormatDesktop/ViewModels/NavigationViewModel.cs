@@ -10,6 +10,9 @@ using System.ComponentModel;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm;
+using CommunityToolkit.Mvvm.Input;
+using System.Windows;
 
 namespace QuikFormatDesktop.ViewModels
 {
@@ -28,6 +31,7 @@ namespace QuikFormatDesktop.ViewModels
         private StyleObject _selectedItem;
         private ObservableCollection<StyleObject> _items = new ObservableCollection<StyleObject>();
         private string _groupBoxHeader;
+        private bool _isPopupOpen;
 
         private StylesViewModel? _currentStylesViewModel;
 
@@ -65,8 +69,23 @@ namespace QuikFormatDesktop.ViewModels
             get => _selectedItem;
             set
             {
+                if (_selectedItem == value) return;
+
                 _selectedItem = value;
                 OnPropertyChanged(nameof(SelectedItem));
+
+                if (_selectedItem != null)
+                {
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        IsPopupOpen = true;
+
+                        if (System.Windows.Interop.BrowserInteropHelper.IsBrowserHosted == false)
+                        {
+                            var focusedElement = System.Windows.Input.Keyboard.FocusedElement;
+                        }
+                    }), System.Windows.Threading.DispatcherPriority.Input);
+                }
             }
         }
 
@@ -87,6 +106,23 @@ namespace QuikFormatDesktop.ViewModels
             {
                 _groupBoxHeader = value;
                 OnPropertyChanged(nameof(GroupBoxHeader));
+            }
+        }
+
+        public bool IsPopupOpen
+        {
+            get => _isPopupOpen;
+            set
+            {
+                if (_isPopupOpen == value)
+                    return;
+
+                _isPopupOpen = value;
+                OnPropertyChanged(nameof(IsPopupOpen));
+                if (!_isPopupOpen && SelectedItem != null)
+                {
+                    SelectedItem = null;
+                }
             }
         }
 

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Data;
 
-namespace QuikFormatDesktop.View.Converters
+namespace QuikFormatDesktop.Views.Converters
 {
     public class CodeToStringConverter : IValueConverter
     {

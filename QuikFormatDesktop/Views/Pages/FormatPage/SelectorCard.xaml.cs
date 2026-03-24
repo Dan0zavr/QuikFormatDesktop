@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuikFormatDesktop.View.Pages
+namespace QuikFormatDesktop.Views.Pages
 {
     /// <summary>
     /// Логика взаимодействия для SelectorCard.xaml

@@ -301,8 +301,7 @@ public partial class QfDbContext : DbContext
             new Alignment { Id = 3, Alignment1 = AlignmentType.Center.ToString().ToLower()},
             new Alignment { Id = 4, Alignment1 = AlignmentType.Both.ToString().ToLower()},
             new Alignment { Id = 5, Alignment1 = AlignmentType.Top.ToString().ToLower()},
-            new Alignment { Id = 6, Alignment1 = AlignmentType.Bottom.ToString().ToLower()},
-            new Alignment { Id = 7, Alignment1 = AlignmentType.Center.ToString().ToLower()}
+            new Alignment { Id = 6, Alignment1 = AlignmentType.Bottom.ToString().ToLower()}
         );
 
         modelBuilder.Entity<MarkerType>().HasData(

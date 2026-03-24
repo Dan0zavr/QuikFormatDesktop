@@ -16,13 +16,21 @@ using System.Windows.Shapes;
 namespace QuikFormatDesktop.Views.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для FormatWindow.xaml
+    /// Логика взаимодействия для TableCard.xaml
     /// </summary>
-    public partial class FormatPage : UserControl
+    public partial class TableCard : UserControl
     {
-        public FormatPage()
+        public TableCard()
         {
             InitializeComponent();
+        }
+
+        private void ClrPcker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (ClrPcker_Background.SelectedColor.HasValue)
+            {
+                Color selectedColor = ClrPcker_Background.SelectedColor.Value;
+            }
         }
     }
 }

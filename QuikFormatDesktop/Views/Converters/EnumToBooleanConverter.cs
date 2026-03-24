@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace QuikFormatDesktop.View.Converters
+namespace QuikFormatDesktop.Views.Converters
 {
     public class EnumToBooleanConverter : IValueConverter
     {

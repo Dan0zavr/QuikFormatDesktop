@@ -1,12 +1,8 @@
-﻿using QuikFormatDesktop.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -15,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuikFormatDesktop.Views
+namespace QuikFormatDesktop.Views.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для NavigationMenu.xaml
+    /// Логика взаимодействия для ShortFormulaMenu.xaml
     /// </summary>
-    public partial class NavigationMenu : UserControl
+    public partial class ShortFormulaMenu : UserControl
     {
-        public NavigationMenu()
+        public ShortFormulaMenu()
         {
             InitializeComponent();
         }

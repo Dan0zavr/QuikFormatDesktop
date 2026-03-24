@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuikFormatDesktop.Database;
 using QuikFormatDesktop.Models.SupportModels;
-using QuikFormatDesktop.View;
+using QuikFormatDesktop.Views;
 using QuikFormatDesktop.ViewModels;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Navigation;

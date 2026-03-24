@@ -1,0 +1,177 @@
+﻿<UserControl x:Class="QuikFormatDesktop.Views.Pages.TableCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
+             xmlns:enums="clr-namespace:QuikFormatDesktop.ViewModels.Enums"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <converters:HexToColorConverter x:Key="HexToColorConverter"/>
+    </UserControl.Resources>
+
+    <GroupBox Header="Стиль таблицы" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
+                <TextBox Text="{Binding TableStyleName}" FontSize="12"/>
+            </StackPanel>
+
+            <!-- Стили текста -->
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Стили текста" FontSize="12" Margin="0,0,5,5"/>
+                        <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Стиль абзаца -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Стиль абзаца:" FontSize="12"/>
+                        <ComboBox FontSize="12" ItemsSource="{Binding ParagraphStyles}" 
+                                 DisplayMemberPath="Name"
+                                 SelectedItem="{Binding SelectedParagraphStyle}"/>
+                    </StackPanel>
+
+                    <!-- Стиль текста -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Стиль шрифта:" FontSize="12"/>
+                        <ComboBox FontFamily="12" ItemsSource="{Binding TextStyles}" 
+                                 DisplayMemberPath="Name"
+                                 SelectedItem="{Binding SelectedTextStyle}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Параметры ячеек" FontSize="12" Margin="0,0,5,5"/>
+                        <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+
+                <!-- Параметры ячеек -->
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="Вертикальное выравнивание:" FontSize="12"/>
+                    <UniformGrid Rows="1">
+                        <RadioButton GroupName="VerticalAlign" Style="{StaticResource TopAlignment}"
+                                                                              IsChecked="{Binding SelectedAlignment,
+                                                                              Converter={StaticResource EnumToBooleanConverter},
+                                                                              ConverterParameter={x:Static enums:AlignmentType.Top}}"/>
+                        <RadioButton GroupName="VerticalAlign" Style="{StaticResource CenterAlignment}"
+                                                                               IsChecked="{Binding SelectedAlignment,
+                                                                               Converter={StaticResource EnumToBooleanConverter},
+                                                                               ConverterParameter={x:Static enums:AlignmentType.Center}}"/>
+                        <RadioButton GroupName="VerticalAlign" Style="{StaticResource BottomAlignment}"
+                                                                              IsChecked="{Binding SelectedAlignment,
+                                                                              Converter={StaticResource EnumToBooleanConverter},
+                                                                              ConverterParameter={x:Static enums:AlignmentType.Bottom}}"/>
+                    </UniformGrid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                        <TextBlock Text="Отступы внутри ячеек (см):" FontSize="12"/>
+                        <TextBox FontSize="12" Margin="10, 0, 0, 0" Width="200" VerticalAlignment="Center" Text="{Binding Padding}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Параметры границ" FontSize="12" Margin="0,0,5,5"/>
+                        <Border Grid.Column="1" Height="1" Background="{StaticResource InnerBorderColor}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+
+                <!-- Границы таблицы -->
+                <StackPanel Grid.Row="1">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Толщина(пиксели):" FontSize="12" VerticalAlignment="Center"/>
+                        <TextBox FontSize="12" Margin="10, 0, 0, 0" MinWidth="40" Text="{Binding BorderThikness}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0, 10, 0, 0" Orientation="Horizontal">
+                        <TextBlock Text="Цвет:" FontSize="12" VerticalAlignment="Center"/>
+                        <xctk:ColorPicker FontSize="12" Margin="10, 0, 0, 0" Name="ClrPcker_Background" 
+                        SelectedColorChanged="ClrPcker_Background_SelectedColorChanged"
+                                          Width="100" SelectedColor="{Binding BorderColor, Converter={StaticResource HexToColorConverter}, Mode=TwoWay}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="8" Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding PStatusMessage}" 
+                            Foreground="Green" 
+                            FontWeight="Bold"
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Сброс" 
+                            Width="100" 
+                            Margin="0,0,10,0" 
+                Command="{Binding TextDeleteCommand}"/>
+                    <Button Content="Сохранить" 
+                            Width="100" 
+                            Command="{Binding AddTableCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </GroupBox>
+</UserControl>
