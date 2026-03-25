@@ -10,22 +10,22 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class MarkedNumberingStyleViewModel : ViewModelBase, INumbering
+    public class MarkedNumberingStyleViewModel : ViewModelBase, INumbering, IResetable, ILoadable
     {
-        public readonly NumberingService numberingService;
-        public readonly MarkerService markerService;
-        public readonly IDialogService dialogService;
+        public readonly NumberingService _numberingService;
+        public readonly MarkerService _markerService;
+        public readonly IDialogService _dialogService;
 
         private string _numberingStyleName;
         private List<Marker> _markers = new List<Marker>();
         private Marker _selectedMarker;
         private string _pStatusMessage;
 
-        public MarkedNumberingStyleViewModel(NumberingService DiNumberingService, MarkerService DiMarkerService, IDialogService DiDialogService)
+        public MarkedNumberingStyleViewModel(NumberingService numberingService, MarkerService markerService, IDialogService dialogService)
         {
-            numberingService = DiNumberingService;
-            markerService = DiMarkerService;
-            dialogService = DiDialogService;
+            _numberingService = numberingService;
+            _markerService = markerService;
+            _dialogService = dialogService;
             LoadMarkers();
 
             AddNumberingCommand = new AddNumberingStyleCommand(this, numberingService, dialogService);
@@ -33,6 +33,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public ICommand NumberingDeleteCommand { get; }
         public ICommand AddNumberingCommand { get; }
+
+        public bool IsEdit { get; private set; } = false;
 
         public string NumberingStyleName
         {
@@ -77,10 +79,27 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public MarkerTypeEnum MarkerType => MarkerTypeEnum.Marked;
 
+        public void Load(object parametr, bool isEdit = false)
+        {
+            IsEdit = isEdit;
+
+            if (parametr is NumberingStyle numberingStyle)
+            {
+                NumberingStyleName = numberingStyle.Name;
+                SelectedMarker = _markerService.GetById(numberingStyle.Marker).GetAwaiter().GetResult();
+            }
+        }
+
+        public void Reset()
+        {
+            NumberingStyleName = null;
+            SelectedMarker = _markers.FirstOrDefault();
+        }
+
         private async Task LoadMarkers()
         {
             _markers.Clear();
-            _markers = await markerService.GetByType(MarkerTypeEnum.Marked);
+            _markers = await _markerService.GetByType(MarkerTypeEnum.Marked);
             _selectedMarker = _markers.FirstOrDefault();
         }
     }

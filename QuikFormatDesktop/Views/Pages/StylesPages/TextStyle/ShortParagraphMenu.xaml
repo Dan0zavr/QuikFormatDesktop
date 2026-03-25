@@ -81,7 +81,9 @@
                         Content="Подробнее"
                         Style="{StaticResource BaseButton}"
                         FontSize="12"
-                        Margin="2"/>
+                        Margin="2"
+                        Command="{Binding DetailCommand}"
+                        CommandParameter="{Binding Style}"/>
             </Grid>
 
         </Grid>

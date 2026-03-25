@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class FontStyleViewModel : ViewModelBase
+    public class FontStyleViewModel : ViewModelBase, IResetable
     {
         public readonly TextService textStyleService;
         public readonly FontService fontService;
@@ -38,6 +38,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddTextStyle = new AsyncRelayCommand(AddTextStyleAsync, CanAddTextStyle);
         }
+
+        public bool IsEdit { get; set; } = false;
 
         public string StyleName
         {
@@ -144,6 +146,22 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
+        }
+
+        public void Reset()
+        {
+            StyleName = null;
+            SelectedFont = Fonts.FirstOrDefault();
+            SelectedFontSize = 14;
+        }
+
+        public void Load(TextStyle textStyle, bool isEdit)
+        {
+            IsEdit = isEdit;
+
+            StyleName = textStyle.Name;
+            SelectedFont = textStyle.FontNavigation;
+            SelectedFontSize = textStyle.FontSize;
         }
     }
 }

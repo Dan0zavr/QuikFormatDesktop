@@ -32,6 +32,12 @@ namespace QuikFormatDesktop.ViewModels
             {
                 _selectedTabIndex = value;
                 OnPropertyChanged(nameof(SelectedTabIndex));
+
+                TextStyleViewModel.Reset();
+                TableStyleViewModel.Reset();
+                PictureStyleViewModel.Reset();
+                NumberingStyleViewModel.Reset();
+                FormulaStyleViewModel.Reset();
             }
         }
 

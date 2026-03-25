@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class FormulaStyleViewModel : ViewModelBase
+    public class FormulaStyleViewModel : ViewModelBase, ILoadable, IResetable
     {
         private readonly FormulaService _formulaService;
         private readonly PositionService _positionService;
@@ -42,6 +42,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public ICommand FormulaDeleteCommand { get; }
         public ICommand AddFormulaCommand {  get; }
+
+        public bool IsEdit { get; set; } = false;
 
         public string FormulaStyleName
         {
@@ -163,6 +165,31 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
             
+        }
+
+        public void Load(object parametr, bool isEdit)
+        {
+            IsEdit = isEdit;
+
+            Reset();
+
+            if (parametr is FormulaStyle formulaStyle)
+            {
+                FormulaStyleName = formulaStyle.Name;
+                Enum.TryParse(_positionService.GetById(formulaStyle.Position).GetAwaiter().GetResult().Position1, true, out PositionType position);
+                SelectedPosition = position;
+                InsertBlankLines = formulaStyle.EmptyLineAround;
+                IsNumberingEnabled = formulaStyle.Numeration;
+                if (IsNumberingEnabled)
+                {
+                    SelectedNumberingFormat = _markerService.GetById((int)formulaStyle.Marker).GetAwaiter().GetResult();
+                }
+            }
+        }
+
+        public void Reset()
+        {
+            SetDefault();
         }
     }
 }

@@ -5,7 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="650" Loaded="UserControl_Loaded">
+             d:DesignHeight="400" d:DesignWidth="650">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
     <Grid Background="{StaticResource MainBackground}">
         <Grid Margin="20">
             <Grid.ColumnDefinitions>
@@ -13,9 +18,13 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <local:NumberedNumberingCard Grid.Column="0" MaxHeight="600" MaxWidth="500" DataContext="{Binding NumberedNumberingStyle}"/>
+            <local:NumberedNumberingCard Grid.Column="0" MaxHeight="600" MaxWidth="500" 
+                                         DataContext="{Binding NumberedNumberingStyle}" 
+                                         Visibility="{Binding IsNumberedStyleVisible, Converter={StaticResource BoolToVis}}"/>
 
-            <local:MarkedNumberingStyle Grid.Column="2" MaxHeight="600" MaxWidth="500" DataContext="{Binding MarkedNumberingStyle}"/>
+            <local:MarkedNumberingStyle Grid.Column="2" MaxHeight="600" MaxWidth="500" 
+                                        DataContext="{Binding MarkedNumberingStyle}" 
+                                        Visibility="{Binding IsMarkedStyleVisible, Converter={StaticResource BoolToVis}}"/>
         </Grid>
     </Grid>
 </UserControl>

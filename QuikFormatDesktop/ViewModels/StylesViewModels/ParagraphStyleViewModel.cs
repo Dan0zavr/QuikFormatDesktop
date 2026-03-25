@@ -13,11 +13,11 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class ParagraphStyleViewModel : ViewModelBase
+    public class ParagraphStyleViewModel : ViewModelBase, IResetable
     {
-        public IDialogService dialogService;
-        public readonly ParagraphService paragraphService;
-        public readonly AlignmentService alignmentService;
+        public IDialogService _dialogService;
+        public readonly ParagraphService _paragraphService;
+        public readonly AlignmentService _alignmentService;
 
         private string _paragraphStyleName;
         private AlignmentType _selectedAlignment;
@@ -32,11 +32,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private List<double> _intervals;
 
-        public ParagraphStyleViewModel(IOptions<ParagraphSettings> options, ParagraphService DiParagraphService, AlignmentService DiAlignmentService, IDialogService DiDialogService)
+        public ParagraphStyleViewModel(IOptions<ParagraphSettings> options, ParagraphService paragraphService, AlignmentService alignmentService, IDialogService dialogService)
         {
-            dialogService = DiDialogService;
-            paragraphService = DiParagraphService;
-            alignmentService = DiAlignmentService;
+            _dialogService = dialogService;
+            _paragraphService = paragraphService;
+            _alignmentService = alignmentService;
             Intervals = options.Value.AllowedIntervals;
             SelectedAlignment = AlignmentType.Both;
             SelectedInterval = options.Value.DefaultInterval;
@@ -177,7 +177,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         {
             try
             {
-                int alignmentId = await alignmentService.GetIdByType(SelectedAlignment);
+                int alignmentId = await _alignmentService.GetIdByType(SelectedAlignment);
 
                 var paragraphStyle = new ParagraphStyle
                 {
@@ -192,9 +192,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                     ContextualSpacing = ContextualSpacing,
                 };
 
-                if (await paragraphService.IsUnique(paragraphStyle.Name))
+                if (await _paragraphService.IsUnique(paragraphStyle.Name))
                 {
-                    await paragraphService.Add(paragraphStyle);
+                    await _paragraphService.Add(paragraphStyle);
                     PStatusMessage = "Стиль успешно добавлен";
                 }
                 else
@@ -204,12 +204,40 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
             catch (AlignmentNotFoundException aex)
             {
-                dialogService.ShowError(aex.Message);
+                _dialogService.ShowError(aex.Message);
             }
             catch (Exception ex)
             {
-                dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
+        }
+
+        public void Reset()
+        {
+            ParagraphStyleName = null;
+            SelectedAlignment = AlignmentType.Both;
+            FirstLineIndent = 0;
+            LeftIndent = 0;
+            RightIndent = 0;
+            SelectedInterval = 1.5;
+            BeforeInterval = 0;
+            AfterInterval = 0;
+            ContextualSpacing = false;
+        }
+
+        public void Load(ParagraphStyle paragraphStyle, bool isEdit)
+        {  
+            ParagraphStyleName = paragraphStyle.Name;
+            string alName = _alignmentService.GetById(paragraphStyle.Alignment).GetAwaiter().GetResult().Alignment1;
+            Enum.TryParse(alName, true, out AlignmentType alignment);
+            SelectedAlignment = alignment;
+            FirstLineIndent = (double)paragraphStyle.FirstLineIndent;
+            LeftIndent = (double)paragraphStyle.LeftIndent;
+            RightIndent = (double)paragraphStyle.RightIndent;
+            SelectedInterval = paragraphStyle.IntervalInText;
+            BeforeInterval = (double)paragraphStyle.BeforeInterval;
+            AfterInterval =(double)paragraphStyle.AfterInterval;
+            ContextualSpacing = paragraphStyle.ContextualSpacing;
         }
     }
 }

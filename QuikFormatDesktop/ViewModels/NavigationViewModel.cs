@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm;
-using CommunityToolkit.Mvvm.Input;
+﻿using Microsoft.Extensions.DependencyInjection;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Enums;
@@ -20,6 +19,7 @@ namespace QuikFormatDesktop.ViewModels
     public class NavigationViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
+        private readonly IServiceProvider _serviceProvider;
 
         private readonly TemplateService _templateService;
         private readonly TextService _textService;
@@ -50,9 +50,11 @@ namespace QuikFormatDesktop.ViewModels
             NavigationService<FormatViewModel> navigationToFormatService,
             FontService fontService,
             AlignmentService alignmentService,
-            PositionService positionService, MarkerService markerService)
+            PositionService positionService, MarkerService markerService, IServiceProvider serviceProvider)
         {
             _navigationStore = navigationStore;
+            _serviceProvider = serviceProvider;
+
             _templateService = templateService;
             _textService = textService;
             _paragraphService = paragraphService;
@@ -160,6 +162,10 @@ namespace QuikFormatDesktop.ViewModels
                 _currentStylesViewModel = stylesVM;
                 stylesVM.PropertyChanged += OnStylesPropertyChanged;
             }
+            if(_navigationStore.CurrentViewModel is IResetable resetable)
+            {
+                resetable.Reset();
+            }
         }
         private async void OnStylesPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -260,7 +266,10 @@ namespace QuikFormatDesktop.ViewModels
 
                     var tables = await _tableService.GetAll();
                     foreach (var item in tables)
+                    {
+                        item.Type= StyleType.Table;
                         Items.Add(item);
+                    }
                     break;
 
                 case TabItemIndex.Picture:
@@ -268,7 +277,10 @@ namespace QuikFormatDesktop.ViewModels
 
                     var pictures = await _pictureService.GetAll();
                     foreach (var item in pictures)
+                    {
+                        item.Type = StyleType.Picture;
                         Items.Add(item);
+                    }
                     break;
 
                 case TabItemIndex.Formula:
@@ -276,7 +288,10 @@ namespace QuikFormatDesktop.ViewModels
 
                     var formulas = await _formulaService.GetAll();
                     foreach (var item in formulas)
+                    {
+                        item.Type = StyleType.Formula;
                         Items.Add(item);
+                    }
                     break;
             }
 
@@ -288,27 +303,48 @@ namespace QuikFormatDesktop.ViewModels
             switch (style)
             {
                 case TextStyle text:
-                    PopupViewModel = new TextShortMenuViewModel(text, _textService, _fontService);
+                    var textVm = _serviceProvider.GetRequiredService<TextShortMenuViewModel>();
+                    textVm.Load(text);
+                    PopupViewModel = textVm;
                     break;
 
                 case ParagraphStyle paragraph:
-                    PopupViewModel = new ParagraphShortMenuViewModel(paragraph, _paragraphService, _alignmentService);
+                    var paragraphVm = _serviceProvider.GetRequiredService<ParagraphShortMenuViewModel>();
+                    paragraphVm.Load(paragraph);
+                    PopupViewModel = paragraphVm;
                     break;
 
                 case TableStyle table:
-                    PopupViewModel = new TableShortMenuViewModel(table, _tableService, _alignmentService, _textService, _paragraphService);
+                    var tableVm = _serviceProvider.GetRequiredService<TableShortMenuViewModel>();
+                    tableVm.Load(table);
+                    PopupViewModel = tableVm;
                     break;
 
                 case NumberingStyle numbering:
-                    PopupViewModel = new NumberingShortMenuViewModel(numbering, _numberingService, _markerService);
+                    if (numbering.Type == StyleType.NumberedNumbering)
+                    {
+                        var numberedVm = _serviceProvider.GetRequiredService<NumberedNumberingShortMenuViewModel>();
+                        numberedVm.Load(numbering);
+                        PopupViewModel = numberedVm;
+                    }
+                    else
+                    {
+                        var markedVm = _serviceProvider.GetRequiredService<MarkedNumberingShortMenuViewModel>();
+                        markedVm.Load(numbering);
+                        PopupViewModel = markedVm;
+                    }
                     break;
 
                 case PictureStyle picture:
-                    PopupViewModel = new PictureShortMenuViewModel(picture, _pictureService, _paragraphService);
+                    var pictureVm = _serviceProvider.GetRequiredService<PictureShortMenuViewModel>();
+                    pictureVm.Load(picture);
+                    PopupViewModel = pictureVm;
                     break;
 
                 case FormulaStyle formula:
-                    PopupViewModel = new FormulaShortMenuViewModel(formula, _formulaService, _positionService, _markerService);
+                    var formulaVm = _serviceProvider.GetRequiredService<FormulaShortMenuViewModel>();
+                    formulaVm.Load(formula);
+                    PopupViewModel = formulaVm;
                     break;
 
                 default:

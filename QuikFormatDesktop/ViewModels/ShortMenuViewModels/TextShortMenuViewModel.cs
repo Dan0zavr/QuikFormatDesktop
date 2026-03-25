@@ -1,6 +1,8 @@
 ﻿using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
+using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,19 +13,24 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
     public class TextShortMenuViewModel : ViewModelBase
     {
-        private readonly TextStyle _textStyle;
+        private TextStyle _textStyle;
         private readonly TextService _textService;
         private readonly FontService _fontService;
 
-        public TextShortMenuViewModel(TextStyle textStyle, TextService textService, FontService fontService)
+        private readonly IServiceProvider _provider;
+        private readonly NavigationStore _navigationStore;
+
+        public TextShortMenuViewModel(TextService textService, FontService fontService, IServiceProvider provider, NavigationStore navigationStore)
         {
-            _textStyle = textStyle;
             _textService = textService;
             _fontService = fontService;
+            _provider = provider;
+            _navigationStore = navigationStore;
             DeleteTextStyleCommand = new AsyncRelayCommand(DeleteTextStyle, CanDelete);
-            
+            DetailCommand = new GoToDetailsCommand<TextStyleViewModel>(_provider, _navigationStore);
         }
 
+        public TextStyle Style => _textStyle;
         public string Name => _textStyle.Name;
         public string FontName
         {
@@ -35,7 +42,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         public int FontSize => _textStyle.FontSize;
 
         public ICommand DeleteTextStyleCommand { get; }
-
+        public ICommand DetailCommand { get; }
 
         private bool CanDelete(object? parametr)
         {
@@ -45,6 +52,14 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         private async Task DeleteTextStyle(object? parametr)
         {
             await _textService.Delete(_textStyle);
+        }
+
+        public void Load(TextStyle style)
+        {
+            if (style != null)
+            {
+                _textStyle = style;
+            }
         }
 
     }

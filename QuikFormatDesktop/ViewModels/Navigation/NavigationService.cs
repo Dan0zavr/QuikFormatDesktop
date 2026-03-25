@@ -14,6 +14,7 @@ namespace QuikFormatDesktop.ViewModels.Navigation
         {
             _navigationStore = navigationStore;
             _serviceProvider = serviceProvider;
+
         }
 
         public void Navigate()

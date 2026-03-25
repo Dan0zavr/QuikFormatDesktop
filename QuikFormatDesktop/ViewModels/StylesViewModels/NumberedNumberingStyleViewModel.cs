@@ -10,10 +10,10 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class NumberedNumberingStyleViewModel : ViewModelBase, INumbering
+    public class NumberedNumberingStyleViewModel : ViewModelBase, INumbering, IResetable, ILoadable
     {
-        public readonly NumberingService numberingService;
-        public readonly MarkerService markerService;
+        public readonly NumberingService _numberingService;
+        public readonly MarkerService _markerService;
         public readonly IDialogService dialogService;
 
         private string _numberingStyleName;
@@ -21,10 +21,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private Marker _selectedMarker;
         private string _pStatusMessage;
 
-        public NumberedNumberingStyleViewModel(NumberingService DiNumberingService, MarkerService DiMarkerService, IDialogService DiDialogService)
+        public NumberedNumberingStyleViewModel(NumberingService numberingService, MarkerService markerService, IDialogService DiDialogService)
         {
-            numberingService = DiNumberingService;
-            markerService = DiMarkerService;
+            _numberingService = numberingService;
+            _markerService = markerService;
             dialogService = DiDialogService;
             LoadMarkers();
 
@@ -33,6 +33,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public ICommand NumberingDeleteCommand { get; }
         public ICommand AddNumberingCommand { get; }
+
+        public bool IsEdit { get; private set; } = false;
 
         public string NumberingStyleName
         {
@@ -75,10 +77,27 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
+        public void Load(object paramter, bool isEdit = false)
+        {
+            IsEdit = isEdit;
+
+            if (paramter is NumberingStyle numberingStyle)
+            {
+                NumberingStyleName = numberingStyle.Name;
+                SelectedMarker = _markerService.GetById(numberingStyle.Marker).GetAwaiter().GetResult();
+            }
+        }
+
+        public void Reset()
+        {
+            NumberingStyleName = null;
+            SelectedMarker = _markers.FirstOrDefault();
+        }
+
         private async Task LoadMarkers()
         {
             _markers.Clear();
-            _markers = await markerService.GetByType(MarkerTypeEnum.Numberd);
+            _markers = await _markerService.GetByType(MarkerTypeEnum.Numberd);
             _selectedMarker = _markers.FirstOrDefault();
         }
     }

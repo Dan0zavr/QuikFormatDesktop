@@ -14,6 +14,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Windows;
+using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
 
 namespace QuikFormatDesktop
 {
@@ -62,6 +63,14 @@ namespace QuikFormatDesktop
                     services.AddTransient<NumberedNumberingStyleViewModel>();
                     services.AddTransient<MarkedNumberingStyleViewModel>();
                     services.AddTransient<FormulaStyleViewModel>();
+
+                    services.AddTransient<TextShortMenuViewModel>();
+                    services.AddTransient<ParagraphShortMenuViewModel>();
+                    services.AddTransient<TableShortMenuViewModel>();
+                    services.AddTransient<PictureShortMenuViewModel>();
+                    services.AddTransient<FormulaShortMenuViewModel>();
+                    services.AddTransient<MarkedNumberingShortMenuViewModel>();
+                    services.AddTransient<NumberedNumberingShortMenuViewModel>();
 
                     //сервисы стилей
                     services.AddTransient<TextService>();

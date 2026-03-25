@@ -27,7 +27,11 @@
             <pages:ShortTableMenu/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type vm:NumberingShortMenuViewModel}">
+        <DataTemplate DataType="{x:Type vm:NumberedNumberingShortMenuViewModel}">
+            <pages:ShortNumberingMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:MarkedNumberingShortMenuViewModel}">
             <pages:ShortNumberingMenu/>
         </DataTemplate>
 

@@ -12,8 +12,9 @@ using QuikFormatDesktop.ViewModels.Commands;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class PictureStyleViewModel : ViewModelBase
+    public class PictureStyleViewModel : ViewModelBase, ILoadable, IResetable
     {
+        private ParagraphStyle _paragraphStyle;
         private readonly PictureService _pictureService;
         private readonly ParagraphService _paragraphService;
         private readonly AlignmentService _alignmentService;
@@ -32,6 +33,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _captionText;
         private bool _insertBlankLines;
         private string _pStatusMessage;
+        private IOptions<ParagraphSettings> _options;
 
         private List<double> _intervals;
 
@@ -41,7 +43,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _paragraphService = paragraphService;
             _dialogService = dialogService;
             _alignmentService = alignmentService;
-            SetDefault(options);
+            _options = options;
+            SetDefault(_options);
 
             AddPictureCommand = new AsyncRelayCommand(AddPictureStyle, CanAddPictureStyle);
         }
@@ -295,6 +298,39 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
 
             return uniqueName;
+        }
+
+        public void Reset()
+        {
+            SetDefault(_options);
+        }
+
+        public void Load(object parametr, bool isEdit = false)
+        {
+            Reset();
+            if (parametr is PictureStyle pictureStyle)
+            {
+                _paragraphStyle = _paragraphService.GetById(pictureStyle.ParagraphStyle).GetAwaiter().GetResult();
+
+                PictureStyleName = pictureStyle.Name;
+                Enum.TryParse(_alignmentService.GetById(pictureStyle.ParagraphStyle).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
+
+                SelectedAlignment = alignment;
+                FirstLineIndent = (double)_paragraphStyle.FirstLineIndent;
+                LeftIndent = (double)_paragraphStyle.LeftIndent;
+                RightIndent = (double)_paragraphStyle.RightIndent;
+                Interval = _paragraphStyle.IntervalInText;
+                BeforeInterval = (double)_paragraphStyle.BeforeInterval;
+                AfterInterval = (double)_paragraphStyle.AfterInterval;
+                ContextualSpacing = _paragraphStyle.ContextualSpacing;
+
+                AutoGenerateCaption = pictureStyle.GenerateLabel;
+                if (AutoGenerateCaption)
+                {
+                    CaptionText = pictureStyle.LabelValue;
+                }
+                InsertBlankLines = pictureStyle.EmptyLineAround;
+            }
         }
     }
 }

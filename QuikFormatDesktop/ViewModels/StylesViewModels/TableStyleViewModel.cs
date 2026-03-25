@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
-    public class TableStyleViewModel : ViewModelBase
+    public class TableStyleViewModel : ViewModelBase, ILoadable, IResetable
     {
         private readonly TextService _textService;
         private readonly ParagraphService _paragraphService;
@@ -31,16 +31,19 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private int _borderThikness;
         private string _borderColor;
         private string _pStatusMessage;
+        private IOptions<TableSettings> _options;
 
         private ObservableCollection<ParagraphStyle> _paragraphStyles = new ObservableCollection<ParagraphStyle>();
         private ObservableCollection<TextStyle> _textStyles = new ObservableCollection<TextStyle>();
-        public TableStyleViewModel(TableService tableService, AlignmentService alignmentService, IDialogService dialogService, TextService textService, ParagraphService paragraphService, IOptions<TableSettings> options)
+        public TableStyleViewModel(TableService tableService, AlignmentService alignmentService, IDialogService dialogService, 
+            TextService textService, ParagraphService paragraphService, IOptions<TableSettings> options)
         {
             _textService = textService;
             _paragraphService = paragraphService;
             _tableService = tableService;
             _alignmentService = alignmentService;
             _dialogService = dialogService;
+            _options = options;
 
             AddTableCommand = new AsyncRelayCommand(AddTableStyleAsync, CanAddTableStyle);
 
@@ -231,5 +234,28 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SelectedAlignment = AlignmentType.Center;
         }
 
+        public void Reset()
+        {
+            SetDefault(_options);
+        }
+
+        public void Load(object parametr, bool isEdit = false)
+        {
+            Reset();
+
+            if (parametr is TableStyle tableStyle)
+            {
+                TableStyleName = tableStyle.Name;
+                Enum.TryParse(_alignmentService.GetById(tableStyle.Alignment).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
+
+                SelectedAlignment = alignment;
+                Padding = tableStyle.CellPadding;
+                BorderThikness = tableStyle.BorderThikness;
+                BorderColor = tableStyle.BorderColor;
+
+                SelectedTextStyle = _textService.GetById(tableStyle.TextStyle).GetAwaiter().GetResult();
+                SelectedParagraphStyle = _paragraphService.GetById(tableStyle.ParagraphStyle).GetAwaiter().GetResult();
+            }
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Enums;
+using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
+using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,20 +13,29 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
     public class ParagraphShortMenuViewModel : ViewModelBase
     {
-        private readonly ParagraphStyle _paragraphStyle;
+        private ParagraphStyle _paragraphStyle;
         private readonly ParagraphService _paragraphService;
         private readonly AlignmentService _alignmentService;
 
-        public ParagraphShortMenuViewModel(ParagraphStyle paragraphStyle, ParagraphService paragraphService, AlignmentService alignmentService)
+        private readonly IServiceProvider _provider;
+        private readonly NavigationStore _navigationStore;
+
+        public ParagraphShortMenuViewModel(ParagraphService paragraphService, AlignmentService alignmentService, 
+            IServiceProvider provider, NavigationStore navigationStore)
         {
-            _paragraphStyle = paragraphStyle;
             _paragraphService = paragraphService;
             _alignmentService = alignmentService;
+            _provider = provider;
+            _navigationStore = navigationStore;
+
             DeleteParagraphStyleCommand = new AsyncRelayCommand(DeleteParagraphStyle, CanDelete);
+            DetailCommand = new GoToDetailsCommand<ParagraphStyleViewModel>(_provider, _navigationStore);   
         }
 
         public ICommand DeleteParagraphStyleCommand { get; }
+        public ICommand DetailCommand { get; }
 
+        public ParagraphStyle Style => _paragraphStyle;
         public string Name => _paragraphStyle.Name;
         public string Alignment => AlignmentToString(_alignmentService.GetById(_paragraphStyle.Alignment).GetAwaiter().GetResult().Alignment1);
         public double? LeftIndent => _paragraphStyle.LeftIndent;
@@ -57,6 +68,14 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         private async Task DeleteParagraphStyle(object? parametr)
         {
             await _paragraphService.Delete(_paragraphStyle);
+        }
+
+        public void Load(ParagraphStyle style)
+        {
+            if (style != null)
+            {
+                _paragraphStyle = style;
+            }
         }
     }
 }

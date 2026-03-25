@@ -1,6 +1,8 @@
 ﻿using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
+using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,22 +12,32 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
     public class FormulaShortMenuViewModel : ViewModelBase
     {
-        private readonly FormulaStyle _formulaStyle;
+        private FormulaStyle _formulaStyle;
         private readonly FormulaService _formulaService;
         private readonly PositionService _positionService;
         private readonly MarkerService _markerService;
 
-        public FormulaShortMenuViewModel(FormulaStyle formulaStyle, FormulaService formulaService, PositionService positionService, MarkerService markerService)
+        private readonly IServiceProvider _serviceProvider;
+        private readonly NavigationStore _navigationStore;
+
+        public FormulaShortMenuViewModel(FormulaService formulaService, PositionService positionService, MarkerService markerService, 
+            IServiceProvider serviceProvider, NavigationStore navigationStore)
         {
-            _formulaStyle = formulaStyle;
             _formulaService = formulaService;
             _positionService = positionService;
             _markerService = markerService;
+            _serviceProvider = serviceProvider;
+            _navigationStore = navigationStore;
+
             DeleteFormulaStyleCommand = new AsyncRelayCommand(DeleteFormulaStyle);
+            DetailCommand = new GoToDetailsCommand<FormulaStyleViewModel>(_serviceProvider, _navigationStore);
+            
         }
 
         public ICommand DeleteFormulaStyleCommand { get; }
+        public ICommand DetailCommand { get; }
 
+        public FormulaStyle Style => _formulaStyle; 
         public string Name => _formulaStyle.Name;
         public bool Numeration => _formulaStyle.Numeration;
         public bool EmptyLineAround => _formulaStyle.EmptyLineAround;
@@ -55,6 +67,14 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
                     return "Формула справа, номер слева";
                 default:
                     return "";
+            }
+        }
+
+        public void Load(FormulaStyle style)
+        {
+            if (style != null)
+            {
+                _formulaStyle = style;
             }
         }
 
