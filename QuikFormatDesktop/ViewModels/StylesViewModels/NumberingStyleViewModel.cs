@@ -14,6 +14,14 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         {
             MarkedNumberingStyle = markedNumberingStyle;
             NumberedNumberingStyle = numberedNumberingStyle;
+
+            MarkedNumberingStyle.RequestReset += OnStyleViewModelRequestReset;
+            NumberedNumberingStyle.RequestReset += OnStyleViewModelRequestReset;
+        }
+
+        private void OnStyleViewModelRequestReset()
+        {
+            Reset();
         }
 
         public MarkedNumberingStyleViewModel MarkedNumberingStyle { get; set; }

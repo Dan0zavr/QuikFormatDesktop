@@ -15,7 +15,7 @@
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
     </UserControl.Resources>
 
-    <GroupBox Header="Стиль таблицы" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
+    <GroupBox Header="{Binding CardName}" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -165,10 +165,10 @@
                             Margin="0,0,10,0" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="Сброс" 
-                            Width="100" 
-                            Margin="0,0,10,0" 
-                            Command="{Binding TextDeleteCommand}"/>
+                    <StackPanel>
+                        <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding ResetCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
+                        <Button Content="Отмена" Width="100" Margin="0,0,10,0" Command="{Binding ResetCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Добавить" Width="100" Command="{Binding AddTableCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>

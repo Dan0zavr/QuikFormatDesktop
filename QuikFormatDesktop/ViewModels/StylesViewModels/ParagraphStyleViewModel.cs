@@ -30,6 +30,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private bool _contextualSpacing = false;
         private string _pStatusMessage;
 
+        private bool _isEdit = false;
+
         private List<double> _intervals;
 
         public ParagraphStyleViewModel(IOptions<ParagraphSettings> options, ParagraphService paragraphService, AlignmentService alignmentService, IDialogService dialogService)
@@ -43,13 +45,37 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddParagraphCommand = new AsyncRelayCommand(AddParagraphStyleAsync, CanAddParagraphStyle);
             UpdateParagraphCommand = new AsyncRelayCommand(UpdateParagraphStyleAsync, CanAddParagraphStyle);
+            ResetCommand = new RelayCommand(Reset);
+            CancelCommand = new RelayCommand(_ => RequestReset?.Invoke());
         }
 
-        public ICommand TextDeleteCommand;
+        public event Action RequestReset;
+
+        public ICommand CancelCommand { get; }
+
+        public ICommand ResetCommand;
         public ICommand AddParagraphCommand { get; }
         public ICommand UpdateParagraphCommand { get; }
 
-        public bool IsEdit { get; set; } = false;
+        public string CardName
+        {
+            get
+            {
+                return IsEdit ? "Редактирование стиля абзаца" : "Новый стиль абзаца";
+            }
+        }
+
+        public bool IsEdit
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(nameof(IsEdit));
+                OnPropertyChanged(nameof(CardName));
+            }
+
+        }
 
         private int StyleId { get; set; }
 
@@ -270,6 +296,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Reset()
         {
+            IsEdit = false;
             ParagraphStyleName = string.Empty;
             SelectedAlignment = AlignmentType.Both;
             FirstLineIndent = 0;
@@ -279,6 +306,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             BeforeInterval = 0;
             AfterInterval = 0;
             ContextualSpacing = false;
+        }
+
+        public void Reset(object? parameter)
+        {
+            Reset();
         }
 
         public void Load(ParagraphStyle paragraphStyle, bool isEdit)

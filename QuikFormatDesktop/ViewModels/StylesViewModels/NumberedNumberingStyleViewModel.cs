@@ -1,4 +1,5 @@
 ﻿using QuikFormatDesktop.Models;
+using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands;
 using QuikFormatDesktop.ViewModels.Enums;
@@ -22,6 +23,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private Marker _selectedMarker;
         private string _pStatusMessage;
 
+        private bool _isEdit = false;
+
         public NumberedNumberingStyleViewModel(NumberingService numberingService, MarkerService markerService, IDialogService dialogService)
         {
             _numberingService = numberingService;
@@ -31,13 +34,36 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddNumberingCommand = new AddNumberingStyleCommand(this, _numberingService, _dialogService);
             UpdateNumberingCommand = new UpdateNumberingStyleCommand(this, _numberingService, _dialogService);
+            ResetCommand = new RelayCommand(Reset);
+            CancelCommand = new RelayCommand(_ => RequestReset?.Invoke());
         }
 
-        public ICommand NumberingDeleteCommand { get; }
+        public event Action RequestReset;
+
+        public ICommand CancelCommand { get; }
+        public ICommand ResetCommand { get; }
         public ICommand AddNumberingCommand { get; }
         public ICommand UpdateNumberingCommand { get; }
 
-        public bool IsEdit { get; private set; } = false;
+        public string CardName
+        {
+            get
+            {
+                return IsEdit ? "Редактирование стиля нумерованного списка" : "Новый стиль нумерованного списка";
+            }
+        }
+
+        public bool IsEdit
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(nameof(IsEdit));
+                OnPropertyChanged(nameof(CardName));
+            }
+
+        }
 
         public int StyleId { get; set; }
         public string NumberingStyleName
@@ -99,8 +125,14 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Reset()
         {
+            IsEdit = false;
             NumberingStyleName = string.Empty;
             SelectedMarker = _markers.FirstOrDefault();
+        }
+
+        public void Reset(object? parameter)
+        {
+            Reset();
         }
 
         private async Task LoadMarkers()

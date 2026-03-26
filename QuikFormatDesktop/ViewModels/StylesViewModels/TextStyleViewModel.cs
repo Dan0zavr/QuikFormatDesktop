@@ -19,6 +19,14 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         {
             FontStyleViewModel = fontStyleViewModel;
             ParagraphStyleViewModel = paragraphStyleViewModel;
+
+            FontStyleViewModel.RequestReset += OnStyleViewModelRequestReset;
+            ParagraphStyleViewModel.RequestReset += OnStyleViewModelRequestReset;
+        }
+
+        private void OnStyleViewModelRequestReset()
+        {
+            Reset();
         }
 
         public bool IsFontStyleVisible 

@@ -35,6 +35,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _pStatusMessage;
         private IOptions<ParagraphSettings> _options;
 
+        private bool _isEdit = false;
+
         private List<double> _intervals;
 
         public PictureStyleViewModel(PictureService pictureService, ParagraphService paragraphService, IOptions<ParagraphSettings> options, IDialogService dialogService, AlignmentService alignmentService)
@@ -48,11 +50,30 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddPictureCommand = new AsyncRelayCommand(AddPictureStyle, CanAddPictureStyle);
             UpdatePictureCommand = new AsyncRelayCommand(UpdatePictureStyle, CanAddPictureStyle);
+            ResetCommand = new RelayCommand(Reset);
         }
 
-        public bool IsEdit { get; private set; } = false;
+        public string CardName
+        {
+            get
+            {
+                return IsEdit ? "Редактирование стиля рисунка" : "Новый стиль рисунка";
+            }
+        }
 
-        public ICommand PictureDeleteCommand { get; }
+        public bool IsEdit
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(nameof(IsEdit));
+                OnPropertyChanged(nameof(CardName));
+            }
+
+        }
+
+        public ICommand ResetCommand { get; }
         public ICommand AddPictureCommand { get; }
         public ICommand UpdatePictureCommand { get; }
 
@@ -207,6 +228,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private void SetDefault(IOptions<ParagraphSettings> options)
         {
+            IsEdit = false;
+
             Intervals = options.Value.AllowedIntervals;
 
             PictureStyleName = null;
@@ -381,6 +404,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public void Reset()
         {
             SetDefault(_options);
+        }
+
+        public void Reset(object? parameter)
+        {
+            Reset();
         }
 
         public void Load(object parametr, bool isEdit = false)

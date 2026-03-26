@@ -24,11 +24,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private int _selectedFontSize;
         private string _pStatusMessage;
 
+        private bool _isEdit = false;
+
         private List<Font> _fonts = new List<Font>();
         private List<int> _fontSizes = new List<int>();
 
         public ICommand AddTextCommand { get; }
         public ICommand UpdateTextCommand{ get; }
+        public ICommand ResetCommand { get; }
+        public ICommand CancelCommand { get; }
 
         public FontStyleViewModel(TextService textStyleService, FontService fontService, IDialogService dialogService, IOptions<FontSettings> options)
         {
@@ -39,9 +43,32 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddTextCommand = new AsyncRelayCommand(AddTextStyleAsync, CanAddTextStyle);
             UpdateTextCommand= new AsyncRelayCommand(UpdateTextStyleAsync, CanAddTextStyle);
+            ResetCommand = new RelayCommand(Reset);
+            CancelCommand = new RelayCommand( _ => RequestReset?.Invoke());
+            
         }
 
-        public bool IsEdit { get; set; } = false;
+        public event Action RequestReset;
+
+        public string CardName
+        {
+            get
+            {
+                return IsEdit ? "Редактирование стиля шрифта" : "Новый стиль шрифта";
+            }
+        }
+
+        public bool IsEdit 
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(nameof(IsEdit));
+                OnPropertyChanged(nameof(CardName));
+            }
+                
+        }
 
         private int StyleId { get; set; }
 
@@ -197,9 +224,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Reset()
         {
+            IsEdit = false;
             StyleName = string.Empty;
             SelectedFont = Fonts.FirstOrDefault();
             SelectedFontSize = 14;
+        }
+
+        public void Reset(object? parameter)
+        {
+            Reset();
         }
 
         public void Load(TextStyle textStyle, bool isEdit)

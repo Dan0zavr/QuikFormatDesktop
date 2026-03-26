@@ -27,6 +27,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private Marker _selectedNumberingFormat;
         private string _pStatusMessage;
 
+        private bool _isEdit = false;
 
         public FormulaStyleViewModel(FormulaService formulaService, PositionService positionService, MarkerService markerService, IDialogService dialogService)
         {
@@ -39,13 +40,32 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddFormulaCommand = new AsyncRelayCommand(AddFormulaStyle, CanAddFormulaStyle);
             UpdateFormulaCommand = new AsyncRelayCommand(UpdateFormulaStyle,CanAddFormulaStyle);
+            ResetCommand = new RelayCommand(Reset);
         }
 
-        public ICommand FormulaDeleteCommand { get; }
+        public ICommand ResetCommand { get; }
         public ICommand AddFormulaCommand {  get; }
         public ICommand UpdateFormulaCommand { get; }
 
-        public bool IsEdit { get; set; } = false;
+        public string CardName
+        {
+            get
+            {
+                return IsEdit ? "Редактирование стиля формулы" : "Новый стиль формулы";
+            }
+        }
+
+        public bool IsEdit
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(nameof(IsEdit));
+                OnPropertyChanged(nameof(CardName));
+            }
+
+        }
 
         private int StyleId { get; set; }
         public string FormulaStyleName
@@ -123,6 +143,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private async Task SetDefault()
         {
+            IsEdit = false;
             FormulaStyleName = string.Empty;
             SelectedPosition = PositionType.CenterRight;
             InsertBlankLines = false;
@@ -213,9 +234,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Load(object parametr, bool isEdit)
         {
-            IsEdit = isEdit;
-
             Reset();
+            IsEdit = isEdit;
 
             if (parametr is FormulaStyle formulaStyle)
             {
@@ -236,6 +256,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public void Reset()
         {
             SetDefault();
+        }
+
+        public void Reset(object? parameter)
+        {
+            Reset();
         }
     }
 }

@@ -33,6 +33,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _pStatusMessage;
         private IOptions<TableSettings> _options;
 
+        private bool _isEdit = false;
+
         private ObservableCollection<ParagraphStyle> _paragraphStyles = new ObservableCollection<ParagraphStyle>();
         private ObservableCollection<TextStyle> _textStyles = new ObservableCollection<TextStyle>();
         public TableStyleViewModel(TableService tableService, AlignmentService alignmentService, IDialogService dialogService, 
@@ -52,13 +54,32 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddTableCommand = new AsyncRelayCommand(AddTableStyleAsync, CanAddTableStyle);
             UpdateTableCommand = new AsyncRelayCommand(UpdateTableStyleAsync, CanAddTableStyle);
+            ResetCommand = new RelayCommand(Reset);
         }
 
-        public ICommand TextDeleteCommand { get; }
+        public ICommand ResetCommand { get; }
         public ICommand AddTableCommand { get; }
         public ICommand UpdateTableCommand { get; }
 
-        public bool IsEdit { get; set; } = false;
+        public string CardName
+        {
+            get
+            {
+                return IsEdit ? "Редактирование стиля таблицы" : "Новый стиль таблицы";
+            }
+        }
+
+        public bool IsEdit
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+                OnPropertyChanged(nameof(IsEdit));
+                OnPropertyChanged(nameof(CardName));
+            }
+
+        }
 
         private int StyleId { get; set; }
         public string TableStyleName
@@ -267,6 +288,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private void SetDefault(IOptions<TableSettings> options)
         {
+            IsEdit = false;
+
             TableStyleName = string.Empty;
             SelectedParagraphStyle = ParagraphStyles.FirstOrDefault();
             SelectedTextStyle = TextStyles.FirstOrDefault();
@@ -281,6 +304,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public void Reset()
         {
             SetDefault(_options);
+        }
+
+        public void Reset(object? parameter)
+        {
+            Reset();
         }
 
         public void Load(object parametr, bool isEdit = false)
