@@ -182,7 +182,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 IsNumberingEnabled = formulaStyle.Numeration;
                 if (IsNumberingEnabled)
                 {
-                    SelectedNumberingFormat = _markerService.GetById((int)formulaStyle.Marker).GetAwaiter().GetResult();
+                    SelectedNumberingFormat = _numberingFormats.Where(x => x.Id == formulaStyle.Marker).FirstOrDefault();
                 }
             }
         }

@@ -32,11 +32,11 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         public TextStyle Style => _textStyle;
         public string Name => _textStyle.Name;
-        public string FontName
+        public Font Font
         {
             get
             {
-                return _fontService.GetById(_textStyle.Font).GetAwaiter().GetResult()?.FontName;
+                return _fontService.GetById(_textStyle.Font).GetAwaiter().GetResult();
             }
         }
         public int FontSize => _textStyle.FontSize;

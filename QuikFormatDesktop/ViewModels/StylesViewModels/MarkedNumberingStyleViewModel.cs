@@ -86,7 +86,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             if (parametr is NumberingStyle numberingStyle)
             {
                 NumberingStyleName = numberingStyle.Name;
-                SelectedMarker = _markerService.GetById(numberingStyle.Marker).GetAwaiter().GetResult();
+                SelectedMarker = _markers.Where(x => x.Id == numberingStyle.Marker).FirstOrDefault();
             }
         }
 

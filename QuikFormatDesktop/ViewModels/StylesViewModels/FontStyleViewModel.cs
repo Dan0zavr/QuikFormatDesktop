@@ -15,9 +15,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
     public class FontStyleViewModel : ViewModelBase, IResetable
     {
-        public readonly TextService textStyleService;
-        public readonly FontService fontService;
-        public readonly IDialogService dialogService;
+        public readonly TextService _textStyleService;
+        public readonly FontService _fontService;
+        public readonly IDialogService _dialogService;
 
         private string _styleName;
         private Font _selectedFont;
@@ -29,11 +29,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public ICommand AddTextStyle { get; }
 
-        public FontStyleViewModel(TextService DiTextStyleService, FontService DiFontService, IDialogService DiDialogService, IOptions<FontSettings> options)
+        public FontStyleViewModel(TextService textStyleService, FontService fontService, IDialogService dialogService, IOptions<FontSettings> options)
         {
-            textStyleService = DiTextStyleService;
-            fontService = DiFontService;
-            dialogService = DiDialogService;
+            _textStyleService = textStyleService;
+            _fontService = fontService;
+            _dialogService = dialogService;
             LoadFonts(options);
 
             AddTextStyle = new AsyncRelayCommand(AddTextStyleAsync, CanAddTextStyle);
@@ -106,7 +106,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _fontSizes = options.Value.AllowedSizes;
             _selectedFontSize = options.Value.DefaultSize;
 
-            _fonts = await fontService.GetAll();
+            _fonts = await _fontService.GetAll();
             _selectedFont = _fonts.FirstOrDefault(f => f.FontName == options.Value.DefaultName);
         }
 
@@ -119,7 +119,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         {
             try
             {
-                int fontId = await fontService.GetIdByName(SelectedFont.FontName);
+                int fontId = await _fontService.GetIdByName(SelectedFont.FontName);
 
                 var textStyle = new TextStyle
                 {
@@ -128,9 +128,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                     FontSize = SelectedFontSize
                 };
 
-                if (await textStyleService.IsUnique(textStyle.Name))
+                if (await _textStyleService.IsUnique(textStyle.Name))
                 {
-                    await textStyleService.Add(textStyle);
+                    await _textStyleService.Add(textStyle);
                     PStatusMessage = "Стиль успешно добавлен";
                 }
                 else
@@ -140,11 +140,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
             catch (FontNotFoundException fex)
             {
-                dialogService.ShowError(fex.Message);
+                _dialogService.ShowError(fex.Message);
             }
             catch (Exception ex)
             {
-                dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
         }
 
@@ -160,7 +160,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             IsEdit = isEdit;
 
             StyleName = textStyle.Name;
-            SelectedFont = textStyle.FontNavigation;
+            SelectedFont = Fonts.Where(x => x.Id == textStyle.Font).FirstOrDefault();
             SelectedFontSize = textStyle.FontSize;
         }
     }

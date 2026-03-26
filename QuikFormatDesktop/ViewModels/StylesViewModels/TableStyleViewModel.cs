@@ -253,8 +253,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 BorderThikness = tableStyle.BorderThikness;
                 BorderColor = tableStyle.BorderColor;
 
-                SelectedTextStyle = _textService.GetById(tableStyle.TextStyle).GetAwaiter().GetResult();
-                SelectedParagraphStyle = _paragraphService.GetById(tableStyle.ParagraphStyle).GetAwaiter().GetResult();
+                SelectedTextStyle = _textStyles.Where(x => x.Id == tableStyle.TextStyle).FirstOrDefault();
+                SelectedParagraphStyle = _paragraphStyles.Where(x => x.Id == tableStyle.ParagraphStyle).FirstOrDefault();
             }
         }
     }

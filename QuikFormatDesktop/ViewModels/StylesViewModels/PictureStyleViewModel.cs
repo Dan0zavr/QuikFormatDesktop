@@ -313,7 +313,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _paragraphStyle = _paragraphService.GetById(pictureStyle.ParagraphStyle).GetAwaiter().GetResult();
 
                 PictureStyleName = pictureStyle.Name;
-                Enum.TryParse(_alignmentService.GetById(pictureStyle.ParagraphStyle).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
+                Enum.TryParse(_alignmentService.GetById(_paragraphStyle.Alignment).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
 
                 SelectedAlignment = alignment;
                 FirstLineIndent = (double)_paragraphStyle.FirstLineIndent;
