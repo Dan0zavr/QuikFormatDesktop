@@ -42,10 +42,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SelectedInterval = options.Value.DefaultInterval;
 
             AddParagraphCommand = new AsyncRelayCommand(AddParagraphStyleAsync, CanAddParagraphStyle);
+            UpdateParagraphCommand = new AsyncRelayCommand(UpdateParagraphStyleAsync, CanAddParagraphStyle);
         }
 
         public ICommand TextDeleteCommand;
         public ICommand AddParagraphCommand { get; }
+        public ICommand UpdateParagraphCommand { get; }
+
+        public bool IsEdit { get; set; } = false;
+
+        private int StyleId { get; set; }
 
         public string ParagraphStyleName
         {
@@ -55,8 +61,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _paragraphStyleName = value;
                 OnPropertyChanged(nameof(ParagraphStyleName));
                 (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (UpdateParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+
+        public string OldStyleName { get; set; }
 
         public AlignmentType SelectedAlignment
         {
@@ -212,9 +221,56 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
+        private async Task UpdateParagraphStyleAsync(object? parameter)
+        {
+            try
+            {
+                int alignmentId = await _alignmentService.GetIdByType(SelectedAlignment);
+
+                var paragraphStyle = new ParagraphStyle
+                {
+                    Id = StyleId,
+                    Name = ParagraphStyleName,
+                    Alignment = alignmentId,
+                    LeftIndent = LeftIndent,
+                    RightIndent = RightIndent,
+                    FirstLineIndent = FirstLineIndent,
+                    IntervalInText = SelectedInterval,
+                    BeforeInterval = BeforeInterval,
+                    AfterInterval = AfterInterval,
+                    ContextualSpacing = ContextualSpacing,
+                };
+
+                bool isUnique = true;
+
+                if(OldStyleName != paragraphStyle.Name)
+                {
+                    isUnique = await _paragraphService.IsUnique(paragraphStyle.Name);
+                }
+
+                if (isUnique)
+                {
+                    await _paragraphService.Update(paragraphStyle);
+                    PStatusMessage = "Стиль успешно обновлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (AlignmentNotFoundException aex)
+            {
+                _dialogService.ShowError(aex.Message);
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+        }
+
         public void Reset()
         {
-            ParagraphStyleName = null;
+            ParagraphStyleName = string.Empty;
             SelectedAlignment = AlignmentType.Both;
             FirstLineIndent = 0;
             LeftIndent = 0;
@@ -227,7 +283,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Load(ParagraphStyle paragraphStyle, bool isEdit)
         {  
+            IsEdit = isEdit;
+
+            StyleId = paragraphStyle.Id;
             ParagraphStyleName = paragraphStyle.Name;
+            OldStyleName = paragraphStyle.Name;
             string alName = _alignmentService.GetById(paragraphStyle.Alignment).GetAwaiter().GetResult().Alignment1;
             Enum.TryParse(alName, true, out AlignmentType alignment);
             SelectedAlignment = alignment;

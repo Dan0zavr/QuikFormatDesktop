@@ -6,15 +6,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand
+namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands
 {
-    public class AddNumberingStyleCommand : ICommand
+    public class UpdateNumberingStyleCommand : ICommand
     {
         private readonly INumbering _viewModel;
         private readonly NumberingService _numberingService;
         private readonly IDialogService _dialogService;
 
-        public AddNumberingStyleCommand(INumbering viewModel, NumberingService numberingService, IDialogService dialogService)
+        public UpdateNumberingStyleCommand(INumbering viewModel, NumberingService numberingService, IDialogService dialogService)
         {
             _viewModel = viewModel;
             _numberingService = numberingService;
@@ -41,12 +41,18 @@ namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand
             {
                 NumberingStyle numberingStyle = new NumberingStyle
                 {
-                    Id = _viewModel.StyleId,
                     Name = _viewModel.NumberingStyleName,
                     Marker = _viewModel.SelectedMarker.Id
                 };
 
-                if (await _numberingService.IsUnique(numberingStyle.Name))
+                bool isUnique = true;
+
+                if (_viewModel.OldStyleName != numberingStyle.Name)
+                {
+                    isUnique = await _numberingService.IsUnique(numberingStyle.Name);
+                }
+
+                if (isUnique)
                 {
                     await _numberingService.Add(numberingStyle);
                     _viewModel.PStatusMessage = "Стиль успешно обновлен";

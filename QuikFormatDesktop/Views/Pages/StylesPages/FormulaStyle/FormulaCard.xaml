@@ -12,6 +12,7 @@
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <converters:CodeToStringConverter x:Key="CodeToStringConverter"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
     </UserControl.Resources>
 
     <GroupBox Header="Стиль формулы" FontSize="12" Background="{StaticResource MainBackground}">
@@ -130,8 +131,11 @@
             Margin="0,0,0,10" />
                 <StackPanel Orientation="Horizontal" >
                     <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding FormulaDeleteCommand}"/>
-                    <Button Content="Сохранить" Width="100" Command="{Binding AddFormulaCommand}"/>
-
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Добавить" Width="100" Command="{Binding AddFormulaCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
+                        <Button Content="Обновить" Width="100" Command="{Binding UpdateFormulaCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Grid>

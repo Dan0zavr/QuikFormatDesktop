@@ -45,18 +45,22 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _dialogService = dialogService;
             _options = options;
 
-            AddTableCommand = new AsyncRelayCommand(AddTableStyleAsync, CanAddTableStyle);
-
             LoadTextStyles();
             LoadParagraphStyles();
 
-            SetDefault(options);
+            SetDefault(_options);
+
+            AddTableCommand = new AsyncRelayCommand(AddTableStyleAsync, CanAddTableStyle);
+            UpdateTableCommand = new AsyncRelayCommand(UpdateTableStyleAsync, CanAddTableStyle);
         }
 
         public ICommand TextDeleteCommand { get; }
         public ICommand AddTableCommand { get; }
+        public ICommand UpdateTableCommand { get; }
 
+        public bool IsEdit { get; set; } = false;
 
+        private int StyleId { get; set; }
         public string TableStyleName
         {
             get => _tableStyleName;
@@ -65,6 +69,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _tableStyleName = value;
                 OnPropertyChanged(nameof(TableStyleName));
                 (AddTableCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (UpdateTableCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -180,12 +185,12 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        private bool CanAddTableStyle(object? parametr)
+        private bool CanAddTableStyle(object? parameter)
         {
             return !string.IsNullOrWhiteSpace(TableStyleName);
         }
 
-        private async Task AddTableStyleAsync(object? parametr)
+        private async Task AddTableStyleAsync(object? parameter)
         {
             try
             {
@@ -222,8 +227,47 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
+        private async Task UpdateTableStyleAsync(object? parameter)
+        {
+            try
+            {
+                int alignmentId = await _alignmentService.GetIdByType(_selectedAlignment);
+
+                TableStyle tableStyle = new TableStyle
+                {
+                    Id = StyleId,
+                    Name = TableStyleName,
+                    TextStyle = SelectedTextStyle.Id,
+                    ParagraphStyle = SelectedParagraphStyle.Id,
+                    Alignment = alignmentId,
+                    BorderThikness = this.BorderThikness,
+                    BorderColor = this.BorderColor,
+                    CellPadding = Padding
+                };
+
+                if (await _tableService.IsUnique(tableStyle.Name))
+                {
+                    await _tableService.Update(tableStyle);
+                    PStatusMessage = "Стиль успешно обновлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (AlignmentNotFoundException fex)
+            {
+                _dialogService.ShowError(fex.Message);
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+        }
+
         private void SetDefault(IOptions<TableSettings> options)
         {
+            TableStyleName = string.Empty;
             SelectedParagraphStyle = ParagraphStyles.FirstOrDefault();
             SelectedTextStyle = TextStyles.FirstOrDefault();
 
@@ -241,10 +285,13 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Load(object parametr, bool isEdit = false)
         {
+            IsEdit = isEdit;
+
             Reset();
 
             if (parametr is TableStyle tableStyle)
             {
+                StyleId = tableStyle.Id;
                 TableStyleName = tableStyle.Name;
                 Enum.TryParse(_alignmentService.GetById(tableStyle.Alignment).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
 
@@ -253,8 +300,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 BorderThikness = tableStyle.BorderThikness;
                 BorderColor = tableStyle.BorderColor;
 
-                SelectedTextStyle = _textService.GetById(tableStyle.TextStyle).GetAwaiter().GetResult();
-                SelectedParagraphStyle = _paragraphService.GetById(tableStyle.ParagraphStyle).GetAwaiter().GetResult();
+                SelectedTextStyle = _textStyles.Where(x => x.Id == tableStyle.TextStyle).FirstOrDefault();
+                SelectedParagraphStyle = _paragraphStyles.Where(x => x.Id == tableStyle.ParagraphStyle).FirstOrDefault();
             }
         }
     }

@@ -23,7 +23,7 @@
     <Compile Update="Views\Pages\StylesPages\FormulaStyle\ShortFormulaMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Pages\StylesPages\NumberingStyle\MarkedNumberingStyle.xaml.cs">
+    <Compile Update="Views\Pages\StylesPages\NumberingStyle\MarkedNumberingCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\StylesPages\NumberingStyle\NumberingPage.xaml.cs">

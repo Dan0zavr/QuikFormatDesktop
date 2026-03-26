@@ -47,11 +47,17 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SetDefault(_options);
 
             AddPictureCommand = new AsyncRelayCommand(AddPictureStyle, CanAddPictureStyle);
+            UpdatePictureCommand = new AsyncRelayCommand(UpdatePictureStyle, CanAddPictureStyle);
         }
+
+        public bool IsEdit { get; private set; } = false;
 
         public ICommand PictureDeleteCommand { get; }
         public ICommand AddPictureCommand { get; }
+        public ICommand UpdatePictureCommand { get; }
 
+        private int StyleId { get; set; }
+        private int ParagraphStyleId { get; set; }
         public string PictureStyleName
         {
             get => _pictureStyleName;
@@ -60,8 +66,12 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _pictureStyleName = value;
                 OnPropertyChanged(nameof(PictureStyleName));
                 (AddPictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (UpdatePictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+
+        private string OldPictureStyleName { get; set; }
+        private string OldParagraphStyleName { get; set; }
 
         public AlignmentType SelectedAlignment
         {
@@ -161,6 +171,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _captionText = value;
                 OnPropertyChanged(nameof(CaptionText));
                 (AddPictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (UpdatePictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -196,10 +207,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private void SetDefault(IOptions<ParagraphSettings> options)
         {
-            _intervals = options.Value.AllowedIntervals;
+            Intervals = options.Value.AllowedIntervals;
 
-            _pictureStyleName = null;
-            _selectedAlignment = AlignmentType.Center;
+            PictureStyleName = null;
+            SelectedAlignment = AlignmentType.Center;
             FirstLineIndent = 0;
             LeftIndent = 0;
             RightIndent = 0;
@@ -211,7 +222,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             InsertBlankLines = false;
         }
 
-        private bool CanAddPictureStyle(object? parametr)
+        private bool CanAddPictureStyle(object? parameter)
         {
             if (!string.IsNullOrWhiteSpace(PictureStyleName))
             {
@@ -234,7 +245,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             return false;
         }
 
-        private async Task AddPictureStyle(object? parametr)
+        private async Task AddPictureStyle(object? parameter)
         {
             try
             {
@@ -252,6 +263,39 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                     };
 
                     await _pictureService.Add(pictureStyle);
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+        }
+        private async Task UpdatePictureStyle(object? parameter)
+        {
+            try
+            {
+                bool isUnique = true;
+
+                if(OldPictureStyleName != PictureStyleName)
+                {
+                    isUnique = await _pictureService.IsUnique(PictureStyleName);
+                }
+
+                if (isUnique)
+                {
+                    await UpdateParagraphStyle();
+
+                    PictureStyle pictureStyle = new PictureStyle
+                    {
+                        Id = StyleId,
+                        Name = PictureStyleName,
+                        ParagraphStyle = ParagraphStyleId,
+                        GenerateLabel = AutoGenerateCaption,
+                        LabelValue = CaptionText,
+                        EmptyLineAround = InsertBlankLines
+                    };
+
+                    await _pictureService.Update(pictureStyle);
                 }
             }
             catch (Exception ex)
@@ -286,6 +330,40 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             return await _paragraphService.GetIdByName(styleName);
         }
 
+        private async Task UpdateParagraphStyle()
+        {
+            int alignmentId = await _alignmentService.GetIdByType(SelectedAlignment);
+            string styleName = "Для рисунка " + $"\"{PictureStyleName}\"" + "(Generated)";
+            ParagraphStyle style = new ParagraphStyle
+            {
+                Id = ParagraphStyleId,
+                Name = styleName,
+                Alignment = alignmentId,
+                FirstLineIndent = this.FirstLineIndent,
+                LeftIndent = this.LeftIndent,
+                RightIndent = this.RightIndent,
+                IntervalInText = Interval,
+                BeforeInterval = this.BeforeInterval,
+                AfterInterval = this.AfterInterval,
+                ContextualSpacing = this.ContextualSpacing
+            };
+
+            bool isUnique = true;
+
+            if (OldParagraphStyleName != style.Name)
+            {
+                isUnique = await _paragraphService.IsUnique(styleName);
+            }
+
+            if (!isUnique)
+            {
+                styleName = await EnsureUniqueParagraphName(styleName);
+                style.Name = styleName;
+            }
+
+            await _paragraphService.Update(style);
+        }
+
         private async Task<string> EnsureUniqueParagraphName(string name)
         {
             List<string> usedNames = await _paragraphService.GetLikeNames(name);
@@ -308,13 +386,19 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public void Load(object parametr, bool isEdit = false)
         {
             Reset();
+            IsEdit = isEdit;
+
             if (parametr is PictureStyle pictureStyle)
             {
                 _paragraphStyle = _paragraphService.GetById(pictureStyle.ParagraphStyle).GetAwaiter().GetResult();
 
+                StyleId = pictureStyle.Id;
+                ParagraphStyleId = pictureStyle.ParagraphStyle;
                 PictureStyleName = pictureStyle.Name;
-                Enum.TryParse(_alignmentService.GetById(pictureStyle.ParagraphStyle).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
+                OldPictureStyleName = pictureStyle.Name;
+                Enum.TryParse(_alignmentService.GetById(_paragraphStyle.Alignment).GetAwaiter().GetResult().Alignment1, true, out AlignmentType alignment);
 
+                OldParagraphStyleName = _paragraphStyle.Name;
                 SelectedAlignment = alignment;
                 FirstLineIndent = (double)_paragraphStyle.FirstLineIndent;
                 LeftIndent = (double)_paragraphStyle.LeftIndent;

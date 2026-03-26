@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
     </UserControl.Resources>
 
     <GroupBox Header="Стиль картинки" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
@@ -216,8 +217,11 @@
                         Margin="0,0,0,10" />
                 <StackPanel Orientation="Horizontal" >
                     <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding PictureDeleteCommand}"/>
-                    <Button Content="Сохранить" Width="100" Command="{Binding AddPictureCommand}"/>
-
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Добавить" Width="100" Command="{Binding AddPictureCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
+                        <Button Content="Обновить" Width="100" Command="{Binding UpdatePictureCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Grid>

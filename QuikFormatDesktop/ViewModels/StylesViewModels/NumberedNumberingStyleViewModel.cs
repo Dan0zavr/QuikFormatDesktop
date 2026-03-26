@@ -1,5 +1,6 @@
 ﻿using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand;
+using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
@@ -14,28 +15,31 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
     {
         public readonly NumberingService _numberingService;
         public readonly MarkerService _markerService;
-        public readonly IDialogService dialogService;
+        public readonly IDialogService _dialogService;
 
         private string _numberingStyleName;
         private List<Marker> _markers = new List<Marker>();
         private Marker _selectedMarker;
         private string _pStatusMessage;
 
-        public NumberedNumberingStyleViewModel(NumberingService numberingService, MarkerService markerService, IDialogService DiDialogService)
+        public NumberedNumberingStyleViewModel(NumberingService numberingService, MarkerService markerService, IDialogService dialogService)
         {
             _numberingService = numberingService;
             _markerService = markerService;
-            dialogService = DiDialogService;
+            _dialogService = dialogService;
             LoadMarkers();
 
-            AddNumberingCommand = new AddNumberingStyleCommand(this, numberingService, dialogService);
+            AddNumberingCommand = new AddNumberingStyleCommand(this, _numberingService, _dialogService);
+            UpdateNumberingCommand = new UpdateNumberingStyleCommand(this, _numberingService, _dialogService);
         }
 
         public ICommand NumberingDeleteCommand { get; }
         public ICommand AddNumberingCommand { get; }
+        public ICommand UpdateNumberingCommand { get; }
 
         public bool IsEdit { get; private set; } = false;
 
+        public int StyleId { get; set; }
         public string NumberingStyleName
         {
             get => _numberingStyleName;
@@ -44,8 +48,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _numberingStyleName = value;
                 OnPropertyChanged(nameof(NumberingStyleName));
                 (AddNumberingCommand as AddNumberingStyleCommand)?.RaiseCanExecuteChanged();
+                (UpdateNumberingCommand as UpdateNumberingStyleCommand)?.RaiseCanExecuteChanged();
             }
         }
+
+        public string OldStyleName { get; set; }
 
         public List<Marker> Markers
         {
@@ -83,14 +90,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             if (paramter is NumberingStyle numberingStyle)
             {
+                StyleId = numberingStyle.Id;
                 NumberingStyleName = numberingStyle.Name;
-                SelectedMarker = _markerService.GetById(numberingStyle.Marker).GetAwaiter().GetResult();
+                OldStyleName = numberingStyle.Name;
+                SelectedMarker = _markers.Where(x => x.Id == numberingStyle.Marker).FirstOrDefault() ;
             }
         }
 
         public void Reset()
         {
-            NumberingStyleName = null;
+            NumberingStyleName = string.Empty;
             SelectedMarker = _markers.FirstOrDefault();
         }
 

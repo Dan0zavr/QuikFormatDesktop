@@ -11,6 +11,8 @@
     <UserControl.Resources>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
         <converters:HexToColorConverter x:Key="HexToColorConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
     </UserControl.Resources>
 
     <GroupBox Header="Стиль таблицы" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
@@ -166,10 +168,12 @@
                     <Button Content="Сброс" 
                             Width="100" 
                             Margin="0,0,10,0" 
-                Command="{Binding TextDeleteCommand}"/>
-                    <Button Content="Сохранить" 
-                            Width="100" 
-                            Command="{Binding AddTableCommand}"/>
+                            Command="{Binding TextDeleteCommand}"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Добавить" Width="100" Command="{Binding AddTableCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
+                        <Button Content="Обновить" Width="100" Command="{Binding UpdateTableCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Grid>

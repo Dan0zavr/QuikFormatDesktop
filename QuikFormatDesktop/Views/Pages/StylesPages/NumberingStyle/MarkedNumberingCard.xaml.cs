@@ -18,9 +18,9 @@ namespace QuikFormatDesktop.Views.Pages
     /// <summary>
     /// Логика взаимодействия для MarkedNumberingStyle.xaml
     /// </summary>
-    public partial class MarkedNumberingStyle : UserControl
+    public partial class MarkedNumberingCard : UserControl
     {
-        public MarkedNumberingStyle()
+        public MarkedNumberingCard()
         {
             InitializeComponent();
         }

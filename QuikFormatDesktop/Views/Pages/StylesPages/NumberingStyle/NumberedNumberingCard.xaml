@@ -9,6 +9,8 @@
 
     <UserControl.Resources>
         <converters:CodeToStringConverter x:Key="CodeToStringConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
     </UserControl.Resources>
 
     <GroupBox Header="Стиль нумерованного списка" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
@@ -80,9 +82,10 @@
                         Width="100" 
                         Margin="0,0,10,0" 
                         Command="{Binding FormulaDeleteCommand}"/>
-                    <Button Content="Сохранить" 
-                        Width="100" 
-                        Command="{Binding AddNumberingCommand}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Добавить" Width="100" Command="{Binding AddNumberingCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
+                        <Button Content="Обновить" Width="100" Command="{Binding UpdateNumberingCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Grid>

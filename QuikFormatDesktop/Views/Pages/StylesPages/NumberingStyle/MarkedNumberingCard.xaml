@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="QuikFormatDesktop.Views.Pages.MarkedNumberingStyle"
+﻿<UserControl x:Class="QuikFormatDesktop.Views.Pages.MarkedNumberingCard"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,6 +9,8 @@
     
     <UserControl.Resources>
         <converters:UnicodeToCharConverter x:Key="UnicodeToCharConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
     </UserControl.Resources>
 
     <GroupBox Header="Стиль маркированного списка" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
@@ -79,9 +81,10 @@
                     Width="100" 
                     Margin="0,0,10,0" 
                     Command="{Binding NumberingDeleteCommand}"/>
-                    <Button Content="Сохранить" 
-                    Width="100" 
-                    Command="{Binding AddNumberingCommand}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Добавить" Width="100" Command="{Binding AddNumberingCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
+                        <Button Content="Обновить" Width="100" Command="{Binding UpdateNumberingCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Grid>

@@ -12,19 +12,14 @@
     </UserControl.Resources>
 
     <Grid Background="{StaticResource MainBackground}">
-        <Grid Margin="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <UniformGrid Rows="1" Margin="20">
             <local:NumberedNumberingCard Grid.Column="0" MaxHeight="600" MaxWidth="500" 
                                          DataContext="{Binding NumberedNumberingStyle}" 
-                                         Visibility="{Binding IsNumberedStyleVisible, Converter={StaticResource BoolToVis}}"/>
+                                         Visibility="{Binding DataContext.IsNumberedStyleVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"/>
 
-            <local:MarkedNumberingStyle Grid.Column="2" MaxHeight="600" MaxWidth="500" 
+            <local:MarkedNumberingCard Grid.Column="2" MaxHeight="600" MaxWidth="500" 
                                         DataContext="{Binding MarkedNumberingStyle}" 
-                                        Visibility="{Binding IsMarkedStyleVisible, Converter={StaticResource BoolToVis}}"/>
-        </Grid>
+                                        Visibility="{Binding DataContext.IsMarkedStyleVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"/>
+        </UniformGrid>
     </Grid>
 </UserControl>

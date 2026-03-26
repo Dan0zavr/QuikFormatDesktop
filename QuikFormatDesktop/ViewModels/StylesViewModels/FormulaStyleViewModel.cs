@@ -38,13 +38,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SetDefault();
 
             AddFormulaCommand = new AsyncRelayCommand(AddFormulaStyle, CanAddFormulaStyle);
+            UpdateFormulaCommand = new AsyncRelayCommand(UpdateFormulaStyle,CanAddFormulaStyle);
         }
 
         public ICommand FormulaDeleteCommand { get; }
         public ICommand AddFormulaCommand {  get; }
+        public ICommand UpdateFormulaCommand { get; }
 
         public bool IsEdit { get; set; } = false;
 
+        private int StyleId { get; set; }
         public string FormulaStyleName
         {
             get => _formulaStyleName;
@@ -53,8 +56,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 _formulaStyleName = value;
                 OnPropertyChanged(nameof(FormulaStyleName));
                 (AddFormulaCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (UpdateFormulaCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+        private string OldStyleName { get; set; }
 
         public PositionType SelectedPosition
         {
@@ -118,15 +123,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private async Task SetDefault()
         {
-            _formulaStyleName = null;
-            _selectedPosition = PositionType.CenterRight;
-            _insertBlankLines = false;
-            _isNumberingEnabled = true;
-            _numberingFormats = await _markerService.GetByType(MarkerTypeEnum.Numberd);
-            _selectedNumberingFormat = _numberingFormats.FirstOrDefault();
+            FormulaStyleName = string.Empty;
+            SelectedPosition = PositionType.CenterRight;
+            InsertBlankLines = false;
+            IsNumberingEnabled = true;
+            NumberingFormats = await _markerService.GetByType(MarkerTypeEnum.Numberd);
+            SelectedNumberingFormat = _numberingFormats.FirstOrDefault();
         }
 
-        private bool CanAddFormulaStyle(object? parametr)
+        private bool CanAddFormulaStyle(object? parameter)
         {
             if (!string.IsNullOrWhiteSpace(FormulaStyleName))
             {
@@ -135,7 +140,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             return false;
         }
 
-        private async Task AddFormulaStyle(object? parametr)
+        private async Task AddFormulaStyle(object? parameter)
         {
             try
             {
@@ -167,6 +172,45 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             
         }
 
+        private async Task UpdateFormulaStyle(object? parameter)
+        {
+            try
+            {
+                int positionId = await _positionService.GetIdByType(_selectedPosition);
+
+                FormulaStyle formulaStyle = new FormulaStyle
+                {
+                    Id = StyleId,
+                    Name = FormulaStyleName,
+                    EmptyLineAround = InsertBlankLines,
+                    Numeration = IsNumberingEnabled,
+                    Marker = SelectedNumberingFormat.Id,
+                    Position = positionId
+                };
+
+                bool isUnique = true;
+
+                if (OldStyleName != formulaStyle.Name)
+                {
+                    isUnique = await _formulaService.IsUnique(formulaStyle.Name);
+                }
+
+                if (isUnique)
+                {
+                    await _formulaService.Update(formulaStyle);
+                    PStatusMessage = "Стиль успешно обновлен";
+                }
+                else
+                {
+                    PStatusMessage = "Стиль с таким именем уже существует";
+                }
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+        }
+
         public void Load(object parametr, bool isEdit)
         {
             IsEdit = isEdit;
@@ -175,14 +219,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             if (parametr is FormulaStyle formulaStyle)
             {
+                StyleId = formulaStyle.Id;
                 FormulaStyleName = formulaStyle.Name;
+                OldStyleName = formulaStyle.Name;
                 Enum.TryParse(_positionService.GetById(formulaStyle.Position).GetAwaiter().GetResult().Position1, true, out PositionType position);
                 SelectedPosition = position;
                 InsertBlankLines = formulaStyle.EmptyLineAround;
                 IsNumberingEnabled = formulaStyle.Numeration;
                 if (IsNumberingEnabled)
                 {
-                    SelectedNumberingFormat = _markerService.GetById((int)formulaStyle.Marker).GetAwaiter().GetResult();
+                    SelectedNumberingFormat = _numberingFormats.Where(x => x.Id == formulaStyle.Marker).FirstOrDefault();
                 }
             }
         }
