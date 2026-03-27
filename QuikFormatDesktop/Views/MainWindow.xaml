@@ -6,8 +6,14 @@
         xmlns:local="clr-namespace:QuikFormatDesktop.Views"
         xmlns:pages="clr-namespace:QuikFormatDesktop.Views.Pages"
         xmlns:vms="clr-namespace:QuikFormatDesktop.ViewModels"
+        xmlns:stylesvms="clr-namespace:QuikFormatDesktop.ViewModels.StylesViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="490" Width="880">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type vms:FormatViewModel}">
@@ -16,6 +22,10 @@
 
             <DataTemplate DataType="{x:Type vms:StylesViewModel}">
                 <pages:StylesPage1/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type stylesvms:TemplateViewModel}">
+                <pages:TemplateModalWindow/>
             </DataTemplate>
         </Grid.Resources>
 
@@ -30,5 +40,14 @@
 
         <local:NavigationMenu Grid.Column="0" DataContext="{Binding NavigationViewModel}"/>
         <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}"/>
+
+        <Grid Grid.ColumnSpan="2" Visibility="{Binding IsModalOpen, Converter={StaticResource BoolToVis}}">
+
+            <Border Background="#80000000" />
+
+            <ContentControl Content="{Binding CurrentModalViewModel}" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center" />
+        </Grid>
     </Grid>
 </Window>

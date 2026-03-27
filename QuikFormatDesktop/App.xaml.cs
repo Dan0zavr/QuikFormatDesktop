@@ -64,6 +64,8 @@ namespace QuikFormatDesktop
                     services.AddTransient<MarkedNumberingStyleViewModel>();
                     services.AddTransient<FormulaStyleViewModel>();
 
+                    services.AddTransient<TemplateViewModel>();
+
                     services.AddTransient<TextShortMenuViewModel>();
                     services.AddTransient<ParagraphShortMenuViewModel>();
                     services.AddTransient<TableShortMenuViewModel>();
@@ -93,6 +95,8 @@ namespace QuikFormatDesktop
 
                     services.AddSingleton<NavigationService<FormatViewModel>>();
                     services.AddSingleton<NavigationService<StylesViewModel>>();
+
+                    services.AddScoped<ModalNavigationService<TemplateViewModel>>();
                 });
         }
 

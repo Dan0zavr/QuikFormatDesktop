@@ -1,0 +1,241 @@
+﻿<UserControl x:Class="QuikFormatDesktop.Views.Pages.TemplateModalWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
+             mc:Ignorable="d" 
+             xmlns:pages="clr-namespace:QuikFormatDesktop.Views.Pages"
+             xmlns:svm="clr-namespace:QuikFormatDesktop.ViewModels.ShortMenuViewModels"
+             xmlns:behaviors="clr-namespace:QuikFormatDesktop.Views.Behaviors"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="Window_Loaded">
+    
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Style TargetType="TextBlock" x:Key="LabelStyle">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Foreground" Value="#444444"/>
+        </Style>
+
+        <DataTemplate DataType="{x:Type svm:TextShortMenuViewModel}">
+            <pages:ShortTextMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type svm:ParagraphShortMenuViewModel}">
+            <pages:ShortParagraphMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type svm:TableShortMenuViewModel}">
+            <pages:ShortTableMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type svm:NumberedNumberingShortMenuViewModel}">
+            <pages:ShortNumberingMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type svm:MarkedNumberingShortMenuViewModel}">
+            <pages:ShortNumberingMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type svm:PictureShortMenuViewModel}">
+            <pages:ShortPictureMenu/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type svm:FormulaShortMenuViewModel}">
+            <pages:ShortFormulaMenu/>
+        </DataTemplate>
+
+        <Style x:Key="PreviewComboBoxItem" TargetType="ComboBoxItem">
+
+            <Setter Property="behaviors:HoverPopupBehavior.Enable" Value="True"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+
+                        <Grid>
+
+                            <Border x:Name="ItemBorder"
+                            Background="Transparent"
+                            Padding="5">
+                                <ContentPresenter/>
+                            </Border>
+
+                            <Popup Placement="Right"
+                           StaysOpen="False"
+                           AllowsTransparency="True">
+
+                                <Border Margin="10,0,0,0"
+                                Background="Transparent">
+
+                                    <ContentControl Content="{Binding}"
+                                            MaxWidth="250"/>
+
+                                </Border>
+
+                            </Popup>
+
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder"
+                                Property="Background"
+                                Value="{StaticResource HoverBackColor}"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PreviewComboBox" TargetType="ComboBox">
+            <Setter Property="ItemContainerStyle" Value="{StaticResource PreviewComboBoxItem}"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="#80000000">
+        <Border Background="{StaticResource MainBackground}"
+            BorderBrush="{StaticResource BorderColor}"
+            BorderThickness="2"
+            CornerRadius="8"
+            Width="420"
+            MaxHeight="650"
+            Padding="0">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="15" ShadowDepth="4"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="{StaticResource BackColor}" CornerRadius="6,6,0,0" Padding="15,12">
+                    <Grid>
+                        <TextBlock Text="{Binding ModalTitle, FallbackValue='Создание шаблона'}" 
+                               Foreground="{StaticResource ForeColor}" 
+                               FontSize="16" 
+                               FontWeight="Bold" 
+                               VerticalAlignment="Center"/>
+                        <Button Content="✕" 
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Center" 
+                            Background="Transparent" 
+                            BorderThickness="0" 
+                            Foreground="{StaticResource ForeColor}" 
+                            FontSize="16" 
+                            Command="{Binding CloseModalCommand}"
+                            Cursor="Hand"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Row="1" Margin="20,15,20,15" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0, 0, 5, 0">
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Название шаблона:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding TemplateName, UpdateSourceTrigger=PropertyChanged}" Height="22" Padding="4, 2"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,20">
+                            <TextBlock Text="Описание:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding TemplateDescription, UpdateSourceTrigger=PropertyChanged}" 
+                     Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="4"/>
+                        </StackPanel>
+
+                        <Border Height="1" Background="{StaticResource InnerBorderColor}" Margin="0,0,0,20"/>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль текста:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding TextStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedTextStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль абзаца:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding ParagraphStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedParagraphStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль таблицы:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding TableStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedTableStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль изображений:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding PictureStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedPictureStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль маркированного списка:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding MarkedNumberingStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedMarkedNumberingStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль нумерованного списка:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding NumberedNumberingStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedNumberedNumberingStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Стиль формул:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                      ItemsSource="{Binding FormulaStyleItems}" 
+                      DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedFormulaStyle}"
+                      Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Background="{StaticResource MainBackground}" BorderThickness="0,1,0,0" BorderBrush="{StaticResource InnerBorderColor}" CornerRadius="0,0,6,6" Padding="15">
+                    <Grid>
+                        <TextBlock Text="{Binding StatusMessage}" 
+                               Foreground="Green" 
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Left"
+                               FontWeight="SemiBold"/>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="Отмена" 
+                                Width="90" Height="28" Margin="0,0,10,0" 
+                                Command="{Binding CloseModalCommand}"
+                                Background="Transparent"
+                                BorderBrush="{StaticResource BorderColor}"
+                                Foreground="{StaticResource BorderColor}"/>
+
+                            <Button Content="Сохранить" 
+                                Width="110" Height="28" FontSize="14"
+                                Style="{StaticResource BaseButton}" 
+                                Command="{Binding AddTemplateCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

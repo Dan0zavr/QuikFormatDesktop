@@ -11,6 +11,7 @@
     <Color x:Key="LightOcean">#205f7d</Color>
     <Color x:Key="LightLime">#ebf2b3</Color>
     <Color x:Key="DarkOcean">#143a4d</Color>
+    <Color x:Key="DisabledDerkPcean">#29414d</Color>
 
     <Color x:Key="White">#f9fafb</Color>
 

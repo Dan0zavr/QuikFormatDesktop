@@ -71,5 +71,8 @@
     <Compile Update="Views\Pages\StylesPages\TextStyle\TextStylePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Pages\TemplateWindow\TemplateModalWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -22,8 +22,6 @@ public partial class Template : StyleObject
 
     public int? NumberedNumberingStyle { get; set; }
 
-    public int? Formula { get; set; }
-
     public virtual FormulaStyle? FormulaStyleNavigation { get; set; }
 
     public virtual TextStyle? MarkedNumberingStyleNavigation { get; set; }

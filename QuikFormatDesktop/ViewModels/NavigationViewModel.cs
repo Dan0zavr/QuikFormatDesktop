@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
+using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,9 +51,11 @@ namespace QuikFormatDesktop.ViewModels
             FormulaService formulaService,
             NavigationService<StylesViewModel> navigationToStylesService,
             NavigationService<FormatViewModel> navigationToFormatService,
+            ModalNavigationService<TemplateViewModel> modalNavigationService,
             FontService fontService,
             AlignmentService alignmentService,
-            PositionService positionService, MarkerService markerService, IServiceProvider serviceProvider)
+            PositionService positionService, MarkerService markerService, 
+            IServiceProvider serviceProvider)
         {
             _navigationStore = navigationStore;
             _serviceProvider = serviceProvider;
@@ -71,6 +75,7 @@ namespace QuikFormatDesktop.ViewModels
 
             GoToStyles = new NavigateCommand<StylesViewModel>(navigationToStylesService);
             GoToFormat = new NavigateCommand<FormatViewModel>(navigationToFormatService);
+            OpenTemplateModal = new OpenTemplateModalCommand(modalNavigationService);
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
@@ -88,6 +93,7 @@ namespace QuikFormatDesktop.ViewModels
 
         public ICommand GoToStyles { get; }
         public ICommand GoToFormat { get; }
+        public ICommand OpenTemplateModal { get; }
 
         public ICollectionView ItemsView { get; }
 
@@ -109,7 +115,6 @@ namespace QuikFormatDesktop.ViewModels
             }
         }
         
-
         public ObservableCollection<StyleObject> Items
         {
             get => _items;

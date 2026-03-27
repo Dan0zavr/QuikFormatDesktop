@@ -28,6 +28,11 @@
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource HoverBackColor}"/>
                                 <Setter Property="Foreground" Value="{StaticResource HoverForeColor}"/>
                             </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource DisabledColor}"/>
+                                <Setter Property="Foreground" Value="{StaticResource DisabledForeColor}"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>

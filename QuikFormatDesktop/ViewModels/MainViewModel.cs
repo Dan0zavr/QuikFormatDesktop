@@ -10,6 +10,9 @@ namespace QuikFormatDesktop.ViewModels
         private NavigationStore _navigationStore;
 
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
+        public ViewModelBase? CurrentModalViewModel => _navigationStore.CurrentModalViewModel;
+
+        public bool IsModalOpen => _navigationStore.CurrentModalViewModel != null;
 
         public NavigationViewModel NavigationViewModel { get; }
 
@@ -18,11 +21,18 @@ namespace QuikFormatDesktop.ViewModels
             _navigationStore = navigationStore;
             NavigationViewModel = navigationViewModel;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+            _navigationStore.CurrentModalViewModelChanged += OnCurrentModalViewModelChanged;
         }
 
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));
+        }
+
+        private void OnCurrentModalViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentModalViewModel));
+            OnPropertyChanged(nameof(IsModalOpen));
         }
     }
 }

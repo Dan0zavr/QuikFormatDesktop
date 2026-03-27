@@ -12,5 +12,18 @@ namespace QuikFormatDesktop.ViewModels.Services
     public class TemplateService : BaseDataService<Template>
     {
         public TemplateService(IDbContextFactory<QfDbContext> factory) : base(factory) { }
+
+        public async Task<bool> IsUnique(string name)
+        {
+            await using var context = await _factory.CreateDbContextAsync();
+
+            Template template = await context.Templates.Where(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (template == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -242,9 +242,6 @@ public partial class QfDbContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnName("id");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Formula)
-                .HasColumnType("style integer")
-                .HasColumnName("formula");
             entity.Property(e => e.FormulaStyle).HasColumnName("formula_style");
             entity.Property(e => e.MarkedNumberingStyle).HasColumnName("marked_numbering_style");
             entity.Property(e => e.Name)

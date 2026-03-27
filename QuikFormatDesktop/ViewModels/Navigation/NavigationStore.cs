@@ -17,6 +17,24 @@ namespace QuikFormatDesktop.ViewModels.Navigation
             }
         }
 
+        private ViewModelBase? _currentModalViewModel;
+        public ViewModelBase? CurrentModalViewModel
+        {
+            get => _currentModalViewModel;
+            set
+            {
+                _currentModalViewModel = value;
+                CurrentModalViewModelChanged?.Invoke();
+            }
+        }
+
+        public event Action? CurrentModalViewModelChanged;
+
+        public void CloseModal()
+        {
+            CurrentModalViewModel = null;
+        }
+
         public event Action CurrentViewModelChanged;
 
         private void OnCurrentViewModelChanged()
