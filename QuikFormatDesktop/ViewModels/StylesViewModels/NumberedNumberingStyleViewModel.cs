@@ -1,4 +1,4 @@
-﻿using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands;
