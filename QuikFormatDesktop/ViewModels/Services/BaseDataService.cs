@@ -11,11 +11,11 @@ namespace QuikFormatDesktop.ViewModels.Services
     public abstract class BaseDataService<T> where T : class
     {
         protected readonly IDbContextFactory<QfDbContext> _factory;
+        public event Action? StylesChanged;
 
         protected  BaseDataService(IDbContextFactory<QfDbContext> factory)
         {
             _factory = factory;
-            
         }
 
         public async Task Add(T entity)
@@ -24,6 +24,7 @@ namespace QuikFormatDesktop.ViewModels.Services
 
             await context.Set<T>().AddAsync(entity);
             await context.SaveChangesAsync();
+            StylesChanged?.Invoke();
         }
 
         public async Task Update(T entity)
@@ -32,6 +33,7 @@ namespace QuikFormatDesktop.ViewModels.Services
 
             context.Set<T>().Update(entity);
             await context.SaveChangesAsync();
+            StylesChanged?.Invoke();
         }
 
         public async Task Delete(T entity)
@@ -40,6 +42,7 @@ namespace QuikFormatDesktop.ViewModels.Services
 
             context.Set<T>().Remove(entity);
             await context.SaveChangesAsync();
+            StylesChanged?.Invoke();
         }
 
         public async Task<List<T>> GetAll()

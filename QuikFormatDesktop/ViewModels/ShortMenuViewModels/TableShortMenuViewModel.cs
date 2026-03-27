@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
-    public class TableShortMenuViewModel : ViewModelBase
+    public class TableShortMenuViewModel : ShortMenuViewModelBase
     {
         private TableStyle _tableStyle;
         private readonly TableService _tableService;
@@ -34,8 +34,8 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _provider = provider;
             _navigationStore = navigationStore;
 
-            DeleteTableStyleCommand = new AsyncRelayCommand(DeleteTableStyle, CanDelete);
-            DetailCommand = new GoToDetailsCommand<TableStyleViewModel>(_provider, _navigationStore);
+            DeleteTableStyleCommand = new AsyncRelayCommand(DeleteTableStyle);
+            DetailCommand = new RelayCommand(GoToDetailsWithAction);
         }
 
         public ICommand DeleteTableStyleCommand { get; }
@@ -49,14 +49,10 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         public int BorderThikness => _tableStyle.BorderThikness;
         public string BorderColor => _tableStyle.BorderColor;
 
-        public bool CanDelete(object? parametr)
-        {
-            return true;
-        }
-
         public async Task DeleteTableStyle(object? paeametr)
         {
             await _tableService.Delete(_tableStyle);
+            ClosePopup?.Invoke();
         }
 
         private string AlignmentToView(string alignment)
@@ -81,6 +77,12 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             {
                 _tableStyle = style;
             }
+        }
+
+        private void GoToDetailsWithAction(object? parameter)
+        {
+            new GoToDetailsCommand<TableStyleViewModel>(_provider, _navigationStore).Execute(parameter);
+            ClosePopup?.Invoke();
         }
     }
 }

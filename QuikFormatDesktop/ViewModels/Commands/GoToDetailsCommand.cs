@@ -2,6 +2,7 @@
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Navigation;
+using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;

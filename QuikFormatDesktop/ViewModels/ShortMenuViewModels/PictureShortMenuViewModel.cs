@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
-    public class PictureShortMenuViewModel : ViewModelBase
+    public class PictureShortMenuViewModel : ShortMenuViewModelBase
     {
         private PictureStyle _pictureStyle;
         private readonly PictureService _pictureService;
@@ -27,8 +27,8 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _provider = provider;
             _navigationStore = navigationStore;
 
-            DeletePictureStyleCommand = new AsyncRelayCommand(DeletePictureStyle, CanDelete);
-            DetailCommand = new GoToDetailsCommand<PictureStyleViewModel>(_provider, _navigationStore);
+            DeletePictureStyleCommand = new AsyncRelayCommand(DeletePictureStyle);
+            DetailCommand = new RelayCommand(GoToDetailsWithAction);
         }
 
         public ICommand DeletePictureStyleCommand { get; }
@@ -41,14 +41,10 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         public string LabelValue => _pictureStyle.LabelValue;
         public bool EmptyLineAround => _pictureStyle.EmptyLineAround;
 
-        private bool CanDelete(object? parametr)
-        {
-            return true;
-        }
-
         private async Task DeletePictureStyle(object? parametr)
         {
             await _pictureService.Delete(_pictureStyle);
+            ClosePopup?.Invoke();
         }
 
         public void Load(PictureStyle style)
@@ -57,6 +53,12 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             {
                 _pictureStyle = style;
             }
+        }
+
+        private void GoToDetailsWithAction(object? parameter)
+        {
+            new GoToDetailsCommand<PictureStyleViewModel>(_provider, _navigationStore).Execute(parameter);
+            ClosePopup?.Invoke();
         }
     }
 }

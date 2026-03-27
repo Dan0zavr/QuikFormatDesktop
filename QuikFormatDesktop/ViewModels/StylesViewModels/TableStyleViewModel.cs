@@ -246,6 +246,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
+            finally
+            {
+                Reset();
+            }
         }
 
         private async Task UpdateTableStyleAsync(object? parameter)
@@ -284,6 +288,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
+            finally
+            {
+                Reset();
+            }
         }
 
         private void SetDefault(IOptions<TableSettings> options)
@@ -313,9 +321,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void Load(object parametr, bool isEdit = false)
         {
-            IsEdit = isEdit;
-
             Reset();
+
+            IsEdit = isEdit;
 
             if (parametr is TableStyle tableStyle)
             {

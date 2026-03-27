@@ -38,6 +38,7 @@ namespace QuikFormatDesktop.ViewModels
         private ObservableCollection<StyleObject> _items = new ObservableCollection<StyleObject>();
         private string _groupBoxHeader;
         private bool _isPopupOpen;
+        private bool _isFormat = false;
 
         private StylesViewModel? _currentStylesViewModel;
 
@@ -72,6 +73,15 @@ namespace QuikFormatDesktop.ViewModels
             GoToFormat = new NavigateCommand<FormatViewModel>(navigationToFormatService);
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            _templateService.StylesChanged += OnStylesChanged;
+            _textService.StylesChanged += OnStylesChanged;
+            _paragraphService.StylesChanged += OnStylesChanged;
+            _tableService.StylesChanged += OnStylesChanged;
+            _numberingService.StylesChanged += OnStylesChanged;
+            _pictureService.StylesChanged += OnStylesChanged;
+            _formulaService.StylesChanged += OnStylesChanged;
+
 
             ItemsView = CollectionViewSource.GetDefaultView(Items);
         }
@@ -120,6 +130,16 @@ namespace QuikFormatDesktop.ViewModels
             }
         }
 
+        public bool IsFormat
+        {
+            get => _isFormat;
+            set
+            {
+                _isFormat = value;
+                OnPropertyChanged(nameof(IsFormat));
+            }
+        }
+
         public object? PopupViewModel
         {
             get => _popupViewModel;
@@ -145,6 +165,11 @@ namespace QuikFormatDesktop.ViewModels
                     SelectedItem = null;
                 }
             }
+        }
+
+        private async void OnStylesChanged()
+        {
+            await UpdateContent();
         }
 
         private async void OnCurrentViewModelChanged()
@@ -185,6 +210,7 @@ namespace QuikFormatDesktop.ViewModels
             if (_navigationStore.CurrentViewModel is FormatViewModel)
             {
                 GroupBoxHeader = "Шаблоны";
+                IsFormat = true;
 
                 var templates = await _templateService.GetAll();
 
@@ -196,6 +222,7 @@ namespace QuikFormatDesktop.ViewModels
             }
             else if (_navigationStore.CurrentViewModel is StylesViewModel stylesVM)
             {
+                IsFormat = false;
                 await UpdateStyles(stylesVM);
             }
 
@@ -300,24 +327,29 @@ namespace QuikFormatDesktop.ViewModels
 
         private void CreatePopupViewModel(StyleObject style)
         {
+            ShortMenuViewModelBase vm = null;
+
             switch (style)
             {
                 case TextStyle text:
                     var textVm = _serviceProvider.GetRequiredService<TextShortMenuViewModel>();
                     textVm.Load(text);
                     PopupViewModel = textVm;
+                    vm = textVm;
                     break;
 
                 case ParagraphStyle paragraph:
                     var paragraphVm = _serviceProvider.GetRequiredService<ParagraphShortMenuViewModel>();
                     paragraphVm.Load(paragraph);
                     PopupViewModel = paragraphVm;
+                    vm = paragraphVm;
                     break;
 
                 case TableStyle table:
                     var tableVm = _serviceProvider.GetRequiredService<TableShortMenuViewModel>();
                     tableVm.Load(table);
                     PopupViewModel = tableVm;
+                    vm = tableVm;
                     break;
 
                 case NumberingStyle numbering:
@@ -326,12 +358,14 @@ namespace QuikFormatDesktop.ViewModels
                         var numberedVm = _serviceProvider.GetRequiredService<NumberedNumberingShortMenuViewModel>();
                         numberedVm.Load(numbering);
                         PopupViewModel = numberedVm;
+                        vm = numberedVm;
                     }
                     else
                     {
                         var markedVm = _serviceProvider.GetRequiredService<MarkedNumberingShortMenuViewModel>();
                         markedVm.Load(numbering);
                         PopupViewModel = markedVm;
+                        vm = markedVm;
                     }
                     break;
 
@@ -339,17 +373,24 @@ namespace QuikFormatDesktop.ViewModels
                     var pictureVm = _serviceProvider.GetRequiredService<PictureShortMenuViewModel>();
                     pictureVm.Load(picture);
                     PopupViewModel = pictureVm;
+                    vm = pictureVm;
                     break;
 
                 case FormulaStyle formula:
                     var formulaVm = _serviceProvider.GetRequiredService<FormulaShortMenuViewModel>();
                     formulaVm.Load(formula);
                     PopupViewModel = formulaVm;
+                    vm = formulaVm;
                     break;
 
                 default:
                     PopupViewModel = null;
                     break;
+            }
+            if (vm != null)
+            {
+                vm.ClosePopup = () => IsPopupOpen = false;
+                PopupViewModel = vm;
             }
         }
     }

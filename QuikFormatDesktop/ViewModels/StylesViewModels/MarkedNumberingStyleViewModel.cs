@@ -38,6 +38,12 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             CancelCommand = new RelayCommand(_ => RequestReset?.Invoke());
         }
         public event Action RequestReset;
+
+        public void RaiseRequestReset()
+        {
+            RequestReset?.Invoke();
+        }
+
         public ICommand CancelCommand { get; }
         public ICommand ResetCommand { get; }
         public ICommand AddNumberingCommand { get; }

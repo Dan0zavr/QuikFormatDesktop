@@ -180,6 +180,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
             }
+            finally
+            {
+                RequestReset?.Invoke();
+            }
         }
 
         private async Task UpdateTextStyleAsync(object? parametr)
@@ -219,6 +223,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             catch (Exception ex)
             {
                 _dialogService.ShowError($"Ошибка. Код: {ex.HResult}");
+            }
+            finally
+            {
+                RequestReset?.Invoke();
             }
         }
 

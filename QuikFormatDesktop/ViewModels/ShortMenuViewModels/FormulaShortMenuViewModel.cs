@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
-    public class FormulaShortMenuViewModel : ViewModelBase
+    public class FormulaShortMenuViewModel : ShortMenuViewModelBase
     {
         private FormulaStyle _formulaStyle;
         private readonly FormulaService _formulaService;
@@ -30,7 +30,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _navigationStore = navigationStore;
 
             DeleteFormulaStyleCommand = new AsyncRelayCommand(DeleteFormulaStyle);
-            DetailCommand = new GoToDetailsCommand<FormulaStyleViewModel>(_serviceProvider, _navigationStore);
+            DetailCommand = new RelayCommand(GoToDetailsWithAction);
             
         }
 
@@ -49,7 +49,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
                 {
                     return _markerService.GetById((int)_formulaStyle.Marker).GetAwaiter().GetResult().Marker1;
                 }
-                return "";
+                return string.Empty;
             }
         }
         public string Position => PositionToView(_positionService.GetById(_formulaStyle.Position).GetAwaiter().GetResult().Position1);
@@ -78,9 +78,16 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             }
         }
 
-        private async Task DeleteFormulaStyle(object? parametr)
+        private async Task DeleteFormulaStyle(object? parameter)
         {
             await _formulaService.Delete(_formulaStyle);
+            ClosePopup?.Invoke();
+        }
+
+        private void GoToDetailsWithAction(object? parameter)
+        {
+            new GoToDetailsCommand<FormulaStyleViewModel>(_serviceProvider, _navigationStore).Execute(parameter);
+            ClosePopup?.Invoke();
         }
     }
 }

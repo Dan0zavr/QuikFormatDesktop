@@ -66,6 +66,11 @@ namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands
             {
                 _dialogService.ShowError($"Произошла неизвестная ошибка. Код: {ex.HResult}");
             }
+            finally
+            {
+                _viewModel.RaiseRequestReset();
+            }
+
         }
 
         public void RaiseCanExecuteChanged()

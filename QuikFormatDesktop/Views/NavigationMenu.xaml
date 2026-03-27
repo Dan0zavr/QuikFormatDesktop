@@ -42,6 +42,8 @@
         <DataTemplate DataType="{x:Type vm:FormulaShortMenuViewModel}">
             <pages:ShortFormulaMenu/>
         </DataTemplate>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
 
 
@@ -104,23 +106,8 @@
 
                     </Popup>
 
-                    <Button Grid.Row="1" Content="+ Добавить шаблон" Margin="0,5,0,0" Style="{StaticResource BaseButton}" FontSize="12" Height="20">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="15"/>
-                            </Style>
-                        </Button.Resources>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}"
-                                        CornerRadius="3"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="1">
-                                    <ContentPresenter HorizontalAlignment="Center"
-                                  VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
+                    <Button Grid.Row="1" Content="+ Добавить шаблон" Margin="0,5,0,0" Style="{StaticResource BaseButton}" FontSize="12" Height="20" Visibility="{Binding IsFormat, Converter={StaticResource BoolToVis}}">
+                        
                     </Button>
                 </Grid>
             </GroupBox>

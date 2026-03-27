@@ -1,4 +1,5 @@
-﻿using QuikFormatDesktop.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
@@ -11,7 +12,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
-    public class TextShortMenuViewModel : ViewModelBase
+    public class TextShortMenuViewModel : ShortMenuViewModelBase
     {
         private TextStyle _textStyle;
         private readonly TextService _textService;
@@ -26,8 +27,8 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _fontService = fontService;
             _provider = provider;
             _navigationStore = navigationStore;
-            DeleteTextStyleCommand = new AsyncRelayCommand(DeleteTextStyle, CanDelete);
-            DetailCommand = new GoToDetailsCommand<TextStyleViewModel>(_provider, _navigationStore);
+            DeleteTextStyleCommand = new AsyncRelayCommand(DeleteTextStyle);
+            DetailCommand = new RelayCommand(GoToDetailsWithAction);
         }
 
         public TextStyle Style => _textStyle;
@@ -44,14 +45,10 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         public ICommand DeleteTextStyleCommand { get; }
         public ICommand DetailCommand { get; }
 
-        private bool CanDelete(object? parametr)
-        {
-            return true;
-        }
-
         private async Task DeleteTextStyle(object? parametr)
         {
             await _textService.Delete(_textStyle);
+            ClosePopup?.Invoke();
         }
 
         public void Load(TextStyle style)
@@ -60,6 +57,12 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             {
                 _textStyle = style;
             }
+        }
+
+        private void GoToDetailsWithAction(object? parameter)
+        {
+            new GoToDetailsCommand<FontStyleViewModel>(_provider, _navigationStore).Execute(parameter);
+            ClosePopup?.Invoke();
         }
 
     }

@@ -14,5 +14,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public List<Marker> Markers { get; set; }
         public Marker SelectedMarker { get; set; }
         public string PStatusMessage { get; set; }
+        public event Action RequestReset;
+        void RaiseRequestReset();
     }
 }

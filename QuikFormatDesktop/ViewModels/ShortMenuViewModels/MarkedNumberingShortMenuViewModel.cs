@@ -1,4 +1,5 @@
-﻿using QuikFormatDesktop.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
@@ -10,7 +11,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
-    public class MarkedNumberingShortMenuViewModel : ViewModelBase
+    public class MarkedNumberingShortMenuViewModel : ShortMenuViewModelBase
     {
         private NumberingStyle _numberingStyle;
         private readonly NumberingService _numberingService;
@@ -27,8 +28,8 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _provider = provider;
             _navigationStore = navigationStore;
 
-            DeleteNumberingStyleCommand = new AsyncRelayCommand(DeleteNumberingStyle, CanDelete);
-            DetailCommand = new GoToDetailsCommand<NumberingStyleViewModel>(_provider, _navigationStore);
+            DeleteNumberingStyleCommand = new AsyncRelayCommand(DeleteNumberingStyle);
+            DetailCommand = new RelayCommand(GoToDetailsWithAction);
             
         }
 
@@ -47,6 +48,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         private async Task DeleteNumberingStyle(object? parametr)
         {
             await _numberingService.Delete(_numberingStyle);
+            ClosePopup?.Invoke();
         }
 
         public void Load(NumberingStyle style)
@@ -55,6 +57,12 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             {
                 _numberingStyle = style;
             }
+        }
+
+        private void GoToDetailsWithAction(object? parameter)
+        {
+            new GoToDetailsCommand<MarkedNumberingStyleViewModel>(_provider, _navigationStore).Execute(parameter);
+            ClosePopup?.Invoke();
         }
     }
 }

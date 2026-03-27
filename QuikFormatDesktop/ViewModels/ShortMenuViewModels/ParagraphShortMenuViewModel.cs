@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
-    public class ParagraphShortMenuViewModel : ViewModelBase
+    public class ParagraphShortMenuViewModel : ShortMenuViewModelBase
     {
         private ParagraphStyle _paragraphStyle;
         private readonly ParagraphService _paragraphService;
@@ -28,8 +28,8 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _provider = provider;
             _navigationStore = navigationStore;
 
-            DeleteParagraphStyleCommand = new AsyncRelayCommand(DeleteParagraphStyle, CanDelete);
-            DetailCommand = new GoToDetailsCommand<ParagraphStyleViewModel>(_provider, _navigationStore);   
+            DeleteParagraphStyleCommand = new AsyncRelayCommand(DeleteParagraphStyle);
+            DetailCommand = new RelayCommand(GoToDetailsWithAction);
         }
 
         public ICommand DeleteParagraphStyleCommand { get; }
@@ -60,14 +60,10 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             }
         }
 
-        private bool CanDelete(object? parametr)
-        {
-            return true;
-        }
-
         private async Task DeleteParagraphStyle(object? parametr)
         {
             await _paragraphService.Delete(_paragraphStyle);
+            ClosePopup?.Invoke();
         }
 
         public void Load(ParagraphStyle style)
@@ -76,6 +72,12 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             {
                 _paragraphStyle = style;
             }
+        }
+
+        private void GoToDetailsWithAction(object? parameter)
+        {
+            new GoToDetailsCommand<ParagraphStyleViewModel>(_provider, _navigationStore).Execute(parameter);
+            ClosePopup?.Invoke();
         }
     }
 }
