@@ -31,7 +31,7 @@
 
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox Text="{Binding TableStyleName}" FontSize="12"/>
+                <TextBox Text="{Binding TableStyleName, UpdateSourceTrigger=PropertyChanged}" FontSize="12"/>
             </StackPanel>
 
             <!-- Стили текста -->
@@ -114,7 +114,7 @@
 
                     <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
                         <TextBlock Text="Отступы внутри ячеек (см):" FontSize="12"/>
-                        <TextBox FontSize="12" Margin="10, 0, 0, 0" Width="200" VerticalAlignment="Center" Text="{Binding Padding}"/>
+                        <TextBox FontSize="12" Margin="10, 0, 0, 0" Width="200" VerticalAlignment="Center" Text="{Binding Padding, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

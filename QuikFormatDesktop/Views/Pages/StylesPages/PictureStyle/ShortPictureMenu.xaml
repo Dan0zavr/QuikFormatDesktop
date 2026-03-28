@@ -88,19 +88,19 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="Удалить"
-                        Style="{StaticResource DangerButton}"
-                        FontSize="12"
-                        Margin="2"
-                        Command="{Binding DeletePictureStyleCommand}"/>
-
-                <Button Grid.Column="2"
-                        Content="Подробнее"
+                        Content="Обновить"
                         Style="{StaticResource BaseButton}"
                         FontSize="12"
                         Margin="2"
                         Command="{Binding DetailCommand}"
                         CommandParameter="{Binding Style}"/>
+
+                <Button Grid.Column="2"
+                        Content="Удалить"
+                        Style="{StaticResource DangerButton}"
+                        FontSize="12"
+                        Margin="2"
+                        Command="{Binding DeletePictureStyleCommand}"/>
             </Grid>
 
         </Grid>

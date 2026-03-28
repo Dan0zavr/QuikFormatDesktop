@@ -70,20 +70,21 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0"
-                        Content="Удалить"
-                        Style="{StaticResource DangerButton}"
-                        FontSize="12"
-                        Margin="2"
-                        Command="{Binding DeleteParagraphStyleCommand}"/>
 
-                <Button Grid.Column="2"
-                        Content="Подробнее"
+                <Button Grid.Column="0"
+                        Content="Обновить"
                         Style="{StaticResource BaseButton}"
                         FontSize="12"
                         Margin="2"
                         Command="{Binding DetailCommand}"
                         CommandParameter="{Binding Style}"/>
+
+                <Button Grid.Column="2"
+                        Content="Удалить"
+                        Style="{StaticResource DangerButton}"
+                        FontSize="12"
+                        Margin="2"
+                        Command="{Binding DeleteParagraphStyleCommand}"/>
             </Grid>
 
         </Grid>

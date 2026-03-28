@@ -33,7 +33,7 @@
             <!--Имя стиля-->
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox x:Name="PictureStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding PictureStyleName}"/>
+                <TextBox x:Name="PictureStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding PictureStyleName, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
             <!--Блок выравнивания-->
@@ -100,17 +100,17 @@
 
                     <StackPanel Grid.Column="0" Width="100">
                         <TextBlock Text="Первая строка:" FontSize="12"/>
-                        <TextBox HorizontalAlignment="Left" Width="90" Margin="0,0,5,0" Text="{Binding FirstLineIndent}"/>
+                        <TextBox HorizontalAlignment="Left" Width="90" Margin="0,0,5,0" Text="{Binding FirstLineIndent, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" DockPanel.Dock="Right">
                         <TextBlock Margin="2, 0, 0, 0" Text="Слева:" FontSize="12" VerticalAlignment="Center"/>
-                        <TextBox Margin="2,0,0,0" Width="25" Height="20" Text="{Binding LeftIndent}"/>
+                        <TextBox Margin="2,0,0,0" Width="25" Height="20" Text="{Binding LeftIndent, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="4" Orientation="Horizontal" DockPanel.Dock="Right">
                         <TextBlock Margin="7, 0, 0, 0" Text="Справа:" FontSize="12" VerticalAlignment="Center"/>
-                        <TextBox Margin="2,0,0,0" Width="25" Height="20" Text="{Binding RightIndent}"/>
+                        <TextBox Margin="2,0,0,0" Width="25" Height="20" Text="{Binding RightIndent, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -149,12 +149,12 @@
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" DockPanel.Dock="Right">
                         <TextBlock Margin="10, 0, 0, 0" Text="Перед:" FontSize="12" VerticalAlignment="Center"/>
-                        <TextBox Margin="2,0,0,0" Width="30" Height="20" Text="{Binding AfterInterval}"/>
+                        <TextBox Margin="2,0,0,0" Width="30" Height="20" Text="{Binding AfterInterval, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="4" Orientation="Horizontal" DockPanel.Dock="Right">
                         <TextBlock Margin="10, 0, 0, 0" Text="После:" FontSize="12" VerticalAlignment="Center"/>
-                        <TextBox Margin="2,0,0,0" Width="30" Height="20" Text="{Binding BeforeInterval}"/>
+                        <TextBox Margin="2,0,0,0" Width="30" Height="20" Text="{Binding BeforeInterval, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="5" Margin="0, 3, 0, 0">
@@ -200,7 +200,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Текст подписи" FontSize="12" Margin="0, 0, 5, 0"/>
-                            <TextBox Grid.Column="1" FontSize="12" Text="{Binding CaptionText}"/>
+                            <TextBox Grid.Column="1" FontSize="12" Text="{Binding CaptionText, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                         <StackPanel Margin="0, 5, 0, 0" Orientation="Horizontal">
                             <TextBlock Text="Пустые строки перед и после рисунка" FontSize="12" Margin="0, 0, 5, 0"/>

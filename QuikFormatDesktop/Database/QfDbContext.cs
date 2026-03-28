@@ -198,7 +198,7 @@ public partial class QfDbContext : DbContext
 
             entity.HasOne(d => d.ParagraphStyleNavigation).WithMany(p => p.PictureStyles)
                 .HasForeignKey(d => d.ParagraphStyle)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Position>(entity =>

@@ -30,7 +30,7 @@
             <!--Имя стиля-->
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Имя стиля:" FontSize="12" Margin="0,0,0,5"/>
-                <TextBox x:Name="FormulaStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding FormulaStyleName}"/>
+                <TextBox x:Name="FormulaStyleName" FontSize="12" Margin="0,0,0,5" Text="{Binding FormulaStyleName, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
             <Grid Grid.Row="2">
