@@ -73,6 +73,7 @@ namespace QuikFormatDesktop
                     services.AddTransient<FormulaShortMenuViewModel>();
                     services.AddTransient<MarkedNumberingShortMenuViewModel>();
                     services.AddTransient<NumberedNumberingShortMenuViewModel>();
+                    services.AddTransient<TemplateShortMenuViewModel>();
 
                     //сервисы стилей
                     services.AddSingleton<TextService>();

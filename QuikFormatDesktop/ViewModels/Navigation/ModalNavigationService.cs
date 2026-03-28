@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +20,11 @@ namespace QuikFormatDesktop.ViewModels.Navigation
         public void Navigate()
         {
             _navigationStore.CurrentModalViewModel = _serviceProvider.GetRequiredService<T>();
+
+            if (_navigationStore.CurrentModalViewModel is TemplateViewModel templateViewModel)
+            {
+                templateViewModel.InitializeAsync();
+            }
         }
     }
 }

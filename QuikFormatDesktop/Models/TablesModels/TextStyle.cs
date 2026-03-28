@@ -13,9 +13,5 @@ public partial class TextStyle : StyleObject
 
     public virtual ICollection<TableStyle> TableStyles { get; set; } = new List<TableStyle>();
 
-    public virtual ICollection<Template> TemplateMarkedNumberingStyleNavigations { get; set; } = new List<Template>();
-
-    public virtual ICollection<Template> TemplateNumberedNumberingStyleNavigations { get; set; } = new List<Template>();
-
     public virtual ICollection<Template> TemplateTextStyleNavigations { get; set; } = new List<Template>();
 }

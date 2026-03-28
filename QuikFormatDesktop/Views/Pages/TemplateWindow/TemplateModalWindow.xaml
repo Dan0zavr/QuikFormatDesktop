@@ -8,11 +8,13 @@
              xmlns:pages="clr-namespace:QuikFormatDesktop.Views.Pages"
              xmlns:svm="clr-namespace:QuikFormatDesktop.ViewModels.ShortMenuViewModels"
              xmlns:behaviors="clr-namespace:QuikFormatDesktop.Views.Behaviors"
-             d:DesignHeight="450" d:DesignWidth="800"
-             Loaded="Window_Loaded">
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
+             d:DesignHeight="450" d:DesignWidth="800">
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InversBoolToVis"/>
+
         <Style TargetType="TextBlock" x:Key="LabelStyle">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="Medium"/>
@@ -120,7 +122,7 @@
 
                 <Border Grid.Row="0" Background="{StaticResource BackColor}" CornerRadius="6,6,0,0" Padding="15,12">
                     <Grid>
-                        <TextBlock Text="{Binding ModalTitle, FallbackValue='Создание шаблона'}" 
+                        <TextBlock Text="{Binding Title}" 
                                Foreground="{StaticResource ForeColor}" 
                                FontSize="16" 
                                FontWeight="Bold" 
@@ -228,10 +230,12 @@
                                 BorderBrush="{StaticResource BorderColor}"
                                 Foreground="{StaticResource BorderColor}"/>
 
-                            <Button Content="Сохранить" 
-                                Width="110" Height="28" FontSize="14"
-                                Style="{StaticResource BaseButton}" 
-                                Command="{Binding AddTemplateCommand}"/>
+                            <StackPanel>
+                                <Button Content="Сохранить" Width="110" Height="28" FontSize="14" Style="{StaticResource BaseButton}" Command="{Binding AddTemplateCommand}"
+                                        Visibility="{Binding IsEdit, Converter={StaticResource InversBoolToVis}}"/>
+                                <Button Content="Обновить" Width="110" Height="28" FontSize="14" Style="{StaticResource BaseButton}" Command="{Binding UpdateTemplateCommand}"
+                                        Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Border>

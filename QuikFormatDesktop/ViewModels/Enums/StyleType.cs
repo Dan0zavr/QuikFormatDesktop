@@ -13,6 +13,7 @@ namespace QuikFormatDesktop.ViewModels.Enums
         NumberedNumbering,
         Table,
         Picture,
-        Formula
+        Formula,
+        Template
     }
 }

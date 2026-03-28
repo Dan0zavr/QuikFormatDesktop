@@ -18,6 +18,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         private string _templateName;
         private string _templateDescription;
+        private bool _isEdit;
 
         private TextStyle _selectedTextStyle;
         private ParagraphStyle _selectedParagraphStyle;
@@ -62,10 +63,28 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             CloseModalCommand = new RelayCommand(CloseModal);
             AddTemplateCommand = new AsyncRelayCommand(AddTemplate, CanAdd);
+            UpdateTemplateCommand = new AsyncRelayCommand(UpdateTemplate, CanAdd);
         }
 
         public ICommand CloseModalCommand { get; }
         public ICommand AddTemplateCommand { get; }
+        public ICommand UpdateTemplateCommand { get; }
+
+        public bool IsLoading { get; private set; }
+
+        public bool IsEdit
+        {
+            get => _isEdit;
+            set
+            {
+                _isEdit = value;
+
+            }
+        }
+
+        public string Title => IsEdit ? "Редактирование шаблона" : "Создание шаблона";
+
+        private int TemplateId { get; set; }
 
         public string TemplateName {
             get => _templateName;
@@ -76,6 +95,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 (AddTemplateCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+
+        private string OldTemplateName { get; set; }
 
         public string TemplateDescription { 
             get => _templateDescription; 
@@ -197,7 +218,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             FillCollection(FormulaStyleItems, styles, includeEmpty: true);
         }
 
-        public async Task LoadData()
+        public async Task LoadStylesData()
         {
             await Task.WhenAll(
                 LoadTextStyles(),
@@ -210,22 +231,25 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
         public void SetDefault()
         {
-            TemplateName = string.Empty;
-            TemplateDescription = string.Empty;
+            if (!IsEdit)
+            {
+                TemplateName = string.Empty;
+                TemplateDescription = string.Empty;
 
-            SelectedTextStyle = TextStyleItems.FirstOrDefault()?.Style as TextStyle;
+                SelectedTextStyle = TextStyleItems.FirstOrDefault()?.Style as TextStyle;
 
-            SelectedParagraphStyle = ParagraphStyleItems.FirstOrDefault()?.Style as ParagraphStyle;
+                SelectedParagraphStyle = ParagraphStyleItems.FirstOrDefault()?.Style as ParagraphStyle;
 
-            SelectedTableStyle = TableStyleItems.FirstOrDefault()?.Style as TableStyle;
+                SelectedTableStyle = TableStyleItems.FirstOrDefault()?.Style as TableStyle;
 
-            SelectedPictureStyle = PictureStyleItems.FirstOrDefault()?.Style as PictureStyle;
+                SelectedPictureStyle = PictureStyleItems.FirstOrDefault()?.Style as PictureStyle;
 
-            SelectedMarkedNumberingStyle = MarkedNumberingStyleItems.FirstOrDefault()?.Style as NumberingStyle;
+                SelectedMarkedNumberingStyle = MarkedNumberingStyleItems.FirstOrDefault()?.Style as NumberingStyle;
 
-            SelectedNumberedNumberingStyle = NumberedNumberingStyleItems.FirstOrDefault()?.Style as NumberingStyle;
+                SelectedNumberedNumberingStyle = NumberedNumberingStyleItems.FirstOrDefault()?.Style as NumberingStyle;
 
-            SelectedFormulaStyle = FormulaStyleItems.FirstOrDefault()?.Style as FormulaStyle;
+                SelectedFormulaStyle = FormulaStyleItems.FirstOrDefault()?.Style as FormulaStyle;
+            }
         }
 
         private void FillCollection<T>(ObservableCollection<StyleItem> collection, IEnumerable<T> styles, bool includeEmpty = false) where T : StyleObject
@@ -292,5 +316,84 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
+        private async Task UpdateTemplate(object? parameter)
+        {
+            try
+            {
+                Template template = new Template
+                {
+                    Id = TemplateId,
+                    Name = TemplateName,
+                    Description = TemplateDescription,
+                    TextStyle = SelectedTextStyle.Id,
+                    ParagraphStyle = SelectedParagraphStyle.Id,
+                    TableStyle = SelectedTableStyle?.Id,
+                    NumberedNumberingStyle = SelectedNumberedNumberingStyle?.Id,
+                    MarkedNumberingStyle = SelectedMarkedNumberingStyle?.Id,
+                    PictureStyle = SelectedPictureStyle?.Id,
+                    FormulaStyle = SelectedFormulaStyle?.Id
+                };
+
+                bool isUniqe = true;
+
+                if(OldTemplateName != template.Name)
+                {
+                    isUniqe = await _templateService.IsUnique(template.Name);
+                }
+
+                if (isUniqe)
+                {
+                    await _templateService.Update(template);
+                }
+            }
+            finally
+            {
+                CloseModal(parameter);
+            }
+        }
+
+        public void LoadTemplateData(object parametr, bool isEdit = false)
+        {
+            if(parametr is Template template)
+            {
+                IsEdit = isEdit;
+                TemplateId = template.Id;
+                TemplateName = template.Name;
+                OldTemplateName = template.Name;
+                TemplateDescription = template.Description;
+                SelectedTextStyle = TextStyleItems.FirstOrDefault(x => x.Style?.Id == template.TextStyle)?.Style as TextStyle;
+                SelectedParagraphStyle = ParagraphStyleItems.FirstOrDefault(x => x.Style?.Id == template.ParagraphStyle)?.Style as ParagraphStyle;
+                SelectedTableStyle = TableStyleItems.FirstOrDefault(x => x.Style?.Id == template.TableStyle)?.Style as TableStyle;
+                SelectedPictureStyle = PictureStyleItems.FirstOrDefault(x => x.Style?.Id == template.PictureStyle)?.Style as PictureStyle;
+                SelectedMarkedNumberingStyle = MarkedNumberingStyleItems.FirstOrDefault(x => x.Style?.Id == template.MarkedNumberingStyle)?.Style as NumberingStyle;
+                SelectedNumberedNumberingStyle = NumberedNumberingStyleItems.FirstOrDefault(x => x.Style?.Id == template.NumberedNumberingStyle)?.Style as NumberingStyle;
+                SelectedFormulaStyle = FormulaStyleItems.FirstOrDefault(x => x.Style?.Id == template.FormulaStyle)?.Style as FormulaStyle;
+            }
+        }
+
+        public async Task InitializeAsync(Template template = null, bool isEdit = false)
+        {
+            IsLoading = true;
+            OnPropertyChanged(nameof(IsLoading));
+
+            try
+            {
+                await LoadStylesData();
+
+                if (template != null)
+                {
+                    LoadTemplateData(template, isEdit);
+                }
+                else
+                {
+                    SetDefault();
+                }
+            }
+            finally
+            {
+                IsLoading = false;
+                OnPropertyChanged(nameof(IsLoading));
+            }
+        }
     }
 }

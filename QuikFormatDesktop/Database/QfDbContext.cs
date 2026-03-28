@@ -89,6 +89,8 @@ public partial class QfDbContext : DbContext
                 .HasColumnName("numeration");
             entity.Property(e => e.Position).HasColumnName("position");
 
+            entity.Ignore(e => e.Type);
+
             entity.HasOne(d => d.MarkerNavigation).WithMany(p => p.FormulaStyles)
                 .HasForeignKey(d => d.Marker)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -140,6 +142,8 @@ public partial class QfDbContext : DbContext
                 .HasColumnType("varchar(32)")
                 .HasColumnName("name");
 
+            entity.Ignore(e => e.Type);
+
             entity.HasOne(d => d.MarkerNavigation).WithMany(p => p.NumberingStyles).HasForeignKey(d => d.Marker);
         });
 
@@ -164,6 +168,8 @@ public partial class QfDbContext : DbContext
                 .HasColumnType("varchar(32)")
                 .HasColumnName("name");
             entity.Property(e => e.RightIndent).HasColumnName("right_indent");
+
+            entity.Ignore(e => e.Type);
         });
 
         modelBuilder.Entity<PictureStyle>(entity =>
@@ -187,6 +193,8 @@ public partial class QfDbContext : DbContext
                 .HasColumnType("varchar(32)")
                 .HasColumnName("name");
             entity.Property(e => e.ParagraphStyle).HasColumnName("paragraph_style");
+
+            entity.Ignore(e => e.Type);
 
             entity.HasOne(d => d.ParagraphStyleNavigation).WithMany(p => p.PictureStyles)
                 .HasForeignKey(d => d.ParagraphStyle)
@@ -226,6 +234,8 @@ public partial class QfDbContext : DbContext
             entity.Property(e => e.ParagraphStyle).HasColumnName("paragraph_style");
             entity.Property(e => e.TextStyle).HasColumnName("text_style");
 
+            entity.Ignore(e => e.Type);
+
             entity.HasOne(d => d.AlignmentNavigation).WithMany(p => p.TableStyles).HasForeignKey(d => d.Alignment);
 
             entity.HasOne(d => d.ParagraphStyleNavigation).WithMany(p => p.TableStyles).HasForeignKey(d => d.ParagraphStyle);
@@ -252,6 +262,8 @@ public partial class QfDbContext : DbContext
             entity.Property(e => e.PictureStyle).HasColumnName("picture_style");
             entity.Property(e => e.TableStyle).HasColumnName("table_style");
             entity.Property(e => e.TextStyle).HasColumnName("text_style");
+
+            entity.Ignore(e => e.Type);
 
             entity.HasOne(d => d.FormulaStyleNavigation).WithMany(p => p.Templates).HasForeignKey(d => d.FormulaStyle);
 
@@ -281,6 +293,8 @@ public partial class QfDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasColumnType("varchar(32)")
                 .HasColumnName("name");
+
+            entity.Ignore(e => e.Type);
 
             entity.HasOne(d => d.FontNavigation).WithMany(p => p.TextStyles).HasForeignKey(d => d.Font);
         });

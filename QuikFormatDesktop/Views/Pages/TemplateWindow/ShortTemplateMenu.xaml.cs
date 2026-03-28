@@ -1,6 +1,4 @@
-﻿using QuikFormatDesktop.ViewModels;
-using QuikFormatDesktop.ViewModels.StylesViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -16,11 +14,11 @@ using System.Windows.Shapes;
 namespace QuikFormatDesktop.Views.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для TemplateModalWindow.xaml
+    /// Логика взаимодействия для ShortTemplateMenu.xaml
     /// </summary>
-    public partial class TemplateModalWindow : UserControl
+    public partial class ShortTemplateMenu : UserControl
     {
-        public TemplateModalWindow()
+        public ShortTemplateMenu()
         {
             InitializeComponent();
         }

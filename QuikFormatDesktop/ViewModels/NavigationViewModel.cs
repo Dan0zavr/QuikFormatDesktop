@@ -221,7 +221,7 @@ namespace QuikFormatDesktop.ViewModels
 
                 foreach (var t in templates)
                 {
-                    t.Type = StyleType.None;
+                    t.Type = StyleType.Template;
                     Items.Add(t);
                 }
             }
@@ -386,6 +386,11 @@ namespace QuikFormatDesktop.ViewModels
                     formulaVm.Load(formula);
                     PopupViewModel = formulaVm;
                     vm = formulaVm;
+                    break;
+                case Template template:
+                    var templateVm = _serviceProvider.GetRequiredService<TemplateShortMenuViewModel>();
+                    templateVm.Load(template);
+                    vm = templateVm;
                     break;
 
                 default:
