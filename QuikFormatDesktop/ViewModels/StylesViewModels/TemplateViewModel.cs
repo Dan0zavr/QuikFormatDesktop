@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Web.WebView2.Core;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
 using QuikFormatDesktop.ViewModels.Commands;
@@ -61,9 +62,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _markerService = markerService;
             _navigationStore = navigationStore;
 
-            CloseModalCommand = new RelayCommand(CloseModal);
-            AddTemplateCommand = new AsyncRelayCommand(AddTemplate, CanAdd);
-            UpdateTemplateCommand = new AsyncRelayCommand(UpdateTemplate, CanAdd);
+            CloseModalCommand = new RelayCommand<object?>(CloseModal);
+            AddTemplateCommand = new AsyncRelayCommand<object?>(AddTemplate, CanAdd);
+            UpdateTemplateCommand = new AsyncRelayCommand<object?>(UpdateTemplate, CanAdd);
         }
 
         public ICommand CloseModalCommand { get; }
@@ -78,7 +79,6 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             set
             {
                 _isEdit = value;
-
             }
         }
 
@@ -92,7 +92,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _templateName = value;
                 OnPropertyChanged(nameof(TemplateName));
-                (AddTemplateCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddTemplateCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Options;
 using QuikFormatDesktop.Exceptions;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
@@ -41,10 +42,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _dialogService = dialogService;
             LoadFonts(options);
 
-            AddTextCommand = new AsyncRelayCommand(AddTextStyleAsync, CanAddTextStyle);
-            UpdateTextCommand= new AsyncRelayCommand(UpdateTextStyleAsync, CanAddTextStyle);
-            ResetCommand = new RelayCommand(Reset);
-            CancelCommand = new RelayCommand( _ => RequestReset?.Invoke());
+            AddTextCommand = new AsyncRelayCommand<object?>(AddTextStyleAsync, CanAddTextStyle);
+            UpdateTextCommand= new AsyncRelayCommand<object?>(UpdateTextStyleAsync, CanAddTextStyle);
+            ResetCommand = new RelayCommand<object?>(Reset);
+            CancelCommand = new RelayCommand<object?>( _ => RequestReset?.Invoke());
             
         }
 
@@ -79,8 +80,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _styleName = value;
                 OnPropertyChanged(nameof(StyleName));
-                (AddTextCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
-                (UpdateTextCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddTextCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
+                (UpdateTextCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 

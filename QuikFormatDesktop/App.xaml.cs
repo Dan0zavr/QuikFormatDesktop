@@ -75,6 +75,8 @@ namespace QuikFormatDesktop
                     services.AddTransient<NumberedNumberingShortMenuViewModel>();
                     services.AddTransient<TemplateShortMenuViewModel>();
 
+                    services.AddTransient<DeleteWarningViewModel>();
+
                     //сервисы стилей
                     services.AddSingleton<TextService>();
                     services.AddSingleton<ParagraphService>();
@@ -98,6 +100,7 @@ namespace QuikFormatDesktop
                     services.AddSingleton<NavigationService<StylesViewModel>>();
 
                     services.AddScoped<ModalNavigationService<TemplateViewModel>>();
+                    services.AddScoped<ModalNavigationService<DeleteWarningViewModel>>();
                 });
         }
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
@@ -19,18 +21,19 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private readonly IServiceProvider _provider;
         private readonly NavigationStore _navigationStore;
+        private ModalNavigationService<DeleteWarningViewModel> _warningService;
         public MarkedNumberingShortMenuViewModel(NumberingService numberingService,
-            MarkerService markerService, IServiceProvider provider, NavigationStore navigationStore)
+            MarkerService markerService, IServiceProvider provider, NavigationStore navigationStore, ModalNavigationService<DeleteWarningViewModel> warningService)
         {
             _numberingService = numberingService;
             _markerService = markerService;
 
             _provider = provider;
             _navigationStore = navigationStore;
+            _warningService = warningService;
 
-            DeleteNumberingStyleCommand = new AsyncRelayCommand(DeleteNumberingStyle);
-            DetailCommand = new RelayCommand(GoToDetailsWithAction);
-            
+            DeleteNumberingStyleCommand = new RelayCommand<object?>(OpenDeleteWarning);
+            DetailCommand = new RelayCommand<object?>(GoToDetailsWithAction);
         }
 
         public ICommand DeleteNumberingStyleCommand { get; }
@@ -39,11 +42,6 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         public NumberingStyle Style => _numberingStyle; 
         public string Name => _numberingStyle.Name;
         public string Marker => _markerService.GetById(_numberingStyle.Marker).GetAwaiter().GetResult().Marker1;
-
-        private bool CanDelete(object? parametr)
-        {
-            return true;
-        }
 
         private async Task DeleteNumberingStyle(object? parametr)
         {
@@ -63,6 +61,17 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         {
             new GoToDetailsCommand<MarkedNumberingStyleViewModel>(_provider, _navigationStore).Execute(parameter);
             ClosePopup?.Invoke();
+        }
+
+        private void OpenDeleteWarning(object? parameter)
+        {
+            new OpenDeleteWarningCommand(_warningService).Execute(parameter);
+            if (_navigationStore.CurrentModalViewModel is DeleteWarningViewModel deleteWarning)
+            {
+                ClosePopup?.Invoke();
+                deleteWarning.Load(_numberingStyle);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteNumberingStyle);
+            }
         }
     }
 }

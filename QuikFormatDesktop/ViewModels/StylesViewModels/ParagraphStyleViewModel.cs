@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Options;
 using QuikFormatDesktop.Exceptions;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
@@ -43,10 +44,10 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SelectedAlignment = AlignmentType.Both;
             SelectedInterval = options.Value.DefaultInterval;
 
-            AddParagraphCommand = new AsyncRelayCommand(AddParagraphStyleAsync, CanAddParagraphStyle);
-            UpdateParagraphCommand = new AsyncRelayCommand(UpdateParagraphStyleAsync, CanAddParagraphStyle);
-            ResetCommand = new RelayCommand(Reset);
-            CancelCommand = new RelayCommand(_ => RequestReset?.Invoke());
+            AddParagraphCommand = new AsyncRelayCommand<object?>(AddParagraphStyleAsync, CanAddParagraphStyle);
+            UpdateParagraphCommand = new AsyncRelayCommand<object?>(UpdateParagraphStyleAsync, CanAddParagraphStyle);
+            ResetCommand = new RelayCommand<object?>(Reset);
+            CancelCommand = new RelayCommand<object?>(_ => RequestReset?.Invoke());
         }
 
         public event Action RequestReset;
@@ -86,8 +87,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _paragraphStyleName = value;
                 OnPropertyChanged(nameof(ParagraphStyleName));
-                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
-                (UpdateParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
+                (UpdateParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -110,7 +111,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _firstLineIndent = value;
                 OnPropertyChanged(nameof(FirstLineIndent));
-                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -121,7 +122,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _leftIndent = value;
                 OnPropertyChanged(nameof(LeftIndent));
-                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -132,7 +133,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _rightIndent = value;
                 OnPropertyChanged(nameof(RightIndent));
-                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -153,7 +154,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _beforeInterval = value;
                 OnPropertyChanged(nameof(BeforeInterval));
-                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -164,7 +165,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _afterInterval = value;
                 OnPropertyChanged(nameof(AfterInterval));
-                (AddParagraphCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddParagraphCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 

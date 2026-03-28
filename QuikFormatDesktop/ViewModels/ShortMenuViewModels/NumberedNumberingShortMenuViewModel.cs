@@ -1,5 +1,7 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
@@ -18,18 +20,19 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private readonly IServiceProvider _serviceProvider;
         private readonly NavigationStore _navigationStore;
+        private ModalNavigationService<DeleteWarningViewModel> _warningService;
         public NumberedNumberingShortMenuViewModel(NumberingService numberingService, MarkerService markerService,
-            IServiceProvider serviceProvider, NavigationStore navigationStore)
+            IServiceProvider serviceProvider, NavigationStore navigationStore, ModalNavigationService<DeleteWarningViewModel> warningService)
         {
             _numberingService = numberingService;
             _markerService = markerService;
 
             _serviceProvider = serviceProvider;
             _navigationStore = navigationStore;
+            _warningService = warningService;
 
-            DeleteNumberingStyleCommand = new AsyncRelayCommand(DeleteNumberingStyle);
-            DetailCommand = new RelayCommand(GoToDetailsWithAction);
-            
+            DeleteNumberingStyleCommand = new RelayCommand<object?>(OpenDeleteWarning);
+            DetailCommand = new RelayCommand<object?>(GoToDetailsWithAction);
         }
 
         public ICommand DeleteNumberingStyleCommand { get; }
@@ -57,6 +60,17 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         {
             new GoToDetailsCommand<NumberedNumberingStyleViewModel>(_serviceProvider, _navigationStore).Execute(parameter);
             ClosePopup?.Invoke();
+        }
+
+        private void OpenDeleteWarning(object? parameter)
+        {
+            new OpenDeleteWarningCommand(_warningService).Execute(parameter);
+            if (_navigationStore.CurrentModalViewModel is DeleteWarningViewModel deleteWarning)
+            {
+                ClosePopup?.Invoke();
+                deleteWarning.Load(_numberingStyle);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteNumberingStyle);
+            }
         }
     }
 }

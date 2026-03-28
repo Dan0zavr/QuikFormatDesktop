@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Options;
 using QuikFormatDesktop.Exceptions;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
@@ -52,9 +53,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             SetDefault(_options);
 
-            AddTableCommand = new AsyncRelayCommand(AddTableStyleAsync, CanAddTableStyle);
-            UpdateTableCommand = new AsyncRelayCommand(UpdateTableStyleAsync, CanAddTableStyle);
-            ResetCommand = new RelayCommand(Reset);
+            AddTableCommand = new AsyncRelayCommand<object?>(AddTableStyleAsync, CanAddTableStyle);
+            UpdateTableCommand = new AsyncRelayCommand<object?>(UpdateTableStyleAsync, CanAddTableStyle);
+            ResetCommand = new RelayCommand<object?>(Reset);
         }
 
         public ICommand ResetCommand { get; }
@@ -89,8 +90,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _tableStyleName = value;
                 OnPropertyChanged(nameof(TableStyleName));
-                (AddTableCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
-                (UpdateTableCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddTableCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
+                (UpdateTableCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 

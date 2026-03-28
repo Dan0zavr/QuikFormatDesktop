@@ -1,5 +1,7 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
@@ -19,17 +21,19 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private readonly IServiceProvider _provider;
         private readonly NavigationStore _navigationStore;
+        private ModalNavigationService<DeleteWarningViewModel> _warningService;
 
-        public ParagraphShortMenuViewModel(ParagraphService paragraphService, AlignmentService alignmentService, 
-            IServiceProvider provider, NavigationStore navigationStore)
+        public ParagraphShortMenuViewModel(ParagraphService paragraphService, AlignmentService alignmentService,
+            IServiceProvider provider, NavigationStore navigationStore, ModalNavigationService<DeleteWarningViewModel> warningService)
         {
             _paragraphService = paragraphService;
             _alignmentService = alignmentService;
             _provider = provider;
             _navigationStore = navigationStore;
+            _warningService = warningService;
 
-            DeleteParagraphStyleCommand = new AsyncRelayCommand(DeleteParagraphStyle);
-            DetailCommand = new RelayCommand(GoToDetailsWithAction);
+            DeleteParagraphStyleCommand = new RelayCommand<object?>(OpenDeleteWarning);
+            DetailCommand = new RelayCommand<object?>(GoToDetailsWithAction);
         }
 
         public ICommand DeleteParagraphStyleCommand { get; }
@@ -78,6 +82,17 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         {
             new GoToDetailsCommand<ParagraphStyleViewModel>(_provider, _navigationStore).Execute(parameter);
             ClosePopup?.Invoke();
+        }
+
+        private void OpenDeleteWarning(object? parameter)
+        {
+            new OpenDeleteWarningCommand(_warningService).Execute(parameter);
+            if (_navigationStore.CurrentModalViewModel is DeleteWarningViewModel deleteWarning)
+            {
+                ClosePopup?.Invoke();
+                deleteWarning.Load(_paragraphStyle);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteParagraphStyle);
+            }
         }
     }
 }

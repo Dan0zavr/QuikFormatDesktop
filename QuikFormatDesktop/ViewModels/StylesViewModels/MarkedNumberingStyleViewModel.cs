@@ -1,4 +1,5 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommand;
 using QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands;
@@ -34,8 +35,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             AddNumberingCommand = new AddNumberingStyleCommand(this, _numberingService, _dialogService);
             UpdateNumberingCommand = new UpdateNumberingStyleCommand(this, _numberingService, _dialogService);
-            ResetCommand = new RelayCommand(Reset);
-            CancelCommand = new RelayCommand(_ => RequestReset?.Invoke());
+            ResetCommand = new RelayCommand<object?>(Reset);
+            CancelCommand = new RelayCommand<object?>(_ => RequestReset?.Invoke());
         }
         public event Action RequestReset;
 

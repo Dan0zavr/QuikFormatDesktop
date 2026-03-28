@@ -8,11 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
     public class TemplateShortMenuViewModel : ShortMenuViewModelBase
     {
+        private ModalNavigationService<DeleteWarningViewModel> _warningService;
         private ModalNavigationService<TemplateViewModel> _navigationService;
         private NavigationStore _navigationStore;
 
@@ -20,14 +22,15 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private Template _template;
 
-        public TemplateShortMenuViewModel(ModalNavigationService<TemplateViewModel> navigationService, NavigationStore navigationStore, TemplateService templateService)
+        public TemplateShortMenuViewModel(ModalNavigationService<DeleteWarningViewModel> warningService, ModalNavigationService<TemplateViewModel> navigationService, NavigationStore navigationStore, TemplateService templateService)
         {
+            _warningService = warningService;
             _navigationService = navigationService;
             _navigationStore = navigationStore;
             _templateService = templateService;
 
-            DeleteCommand = new AsyncRelayCommand(DeleteTemplate);
-            DetailCommand = new RelayCommand(GoToDetails);
+            DeleteCommand = new RelayCommand<object?>(OpenDeleteWarning);
+            DetailCommand = new RelayCommand<object?>(GoToDetails);
         }
 
         public ICommand DeleteCommand { get; }
@@ -58,6 +61,17 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
                 vm.InitializeAsync(_template, true);
             }
             ClosePopup?.Invoke();
+        }
+
+        private void OpenDeleteWarning(object? parameter)
+        {
+            new OpenDeleteWarningCommand(_warningService).Execute(parameter);
+            if(_navigationStore.CurrentModalViewModel is DeleteWarningViewModel deleteWarning)
+            {
+                ClosePopup?.Invoke();
+                deleteWarning.Load(_template);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteTemplate);
+            }
         }
     }
 }

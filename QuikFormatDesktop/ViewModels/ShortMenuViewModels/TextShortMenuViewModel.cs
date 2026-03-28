@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
@@ -20,15 +22,17 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private readonly IServiceProvider _provider;
         private readonly NavigationStore _navigationStore;
+        private ModalNavigationService<DeleteWarningViewModel> _warningService;
 
-        public TextShortMenuViewModel(TextService textService, FontService fontService, IServiceProvider provider, NavigationStore navigationStore)
+        public TextShortMenuViewModel(TextService textService, FontService fontService, IServiceProvider provider, NavigationStore navigationStore, ModalNavigationService<DeleteWarningViewModel> warningService)
         {
             _textService = textService;
             _fontService = fontService;
             _provider = provider;
             _navigationStore = navigationStore;
-            DeleteTextStyleCommand = new AsyncRelayCommand(DeleteTextStyle);
-            DetailCommand = new RelayCommand(GoToDetailsWithAction);
+            _warningService = warningService;
+            DeleteTextStyleCommand = new RelayCommand<object?>(OpenDeleteWarning);
+            DetailCommand = new RelayCommand<object?>(GoToDetailsWithAction);
         }
 
         public TextStyle Style => _textStyle;
@@ -65,5 +69,15 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             ClosePopup?.Invoke();
         }
 
+        private void OpenDeleteWarning(object? parameter)
+        {
+            new OpenDeleteWarningCommand(_warningService).Execute(parameter);
+            if (_navigationStore.CurrentModalViewModel is DeleteWarningViewModel deleteWarning)
+            {
+                ClosePopup?.Invoke();
+                deleteWarning.Load(_textStyle);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteTextStyle);
+            }
+        }
     }
 }

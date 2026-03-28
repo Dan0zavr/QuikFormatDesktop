@@ -1,14 +1,15 @@
-﻿using QuikFormatDesktop.ViewModels.Services;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Enums;
+using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
-using QuikFormatDesktop.ViewModels.Enums;
-using Microsoft.Extensions.Options;
-using QuikFormatDesktop.Models.SupportModels;
-using QuikFormatDesktop.Models;
-using QuikFormatDesktop.ViewModels.Commands;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -48,9 +49,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _options = options;
             SetDefault(_options);
 
-            AddPictureCommand = new AsyncRelayCommand(AddPictureStyle, CanAddPictureStyle);
-            UpdatePictureCommand = new AsyncRelayCommand(UpdatePictureStyle, CanAddPictureStyle);
-            ResetCommand = new RelayCommand(Reset);
+            AddPictureCommand = new AsyncRelayCommand<object?>(AddPictureStyle, CanAddPictureStyle);
+            UpdatePictureCommand = new AsyncRelayCommand<object?>(UpdatePictureStyle, CanAddPictureStyle);
+            ResetCommand = new RelayCommand<object?>(Reset);
         }
 
         public string CardName
@@ -86,8 +87,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _pictureStyleName = value;
                 OnPropertyChanged(nameof(PictureStyleName));
-                (AddPictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
-                (UpdatePictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddPictureCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
+                (UpdatePictureCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -191,8 +192,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _captionText = value;
                 OnPropertyChanged(nameof(CaptionText));
-                (AddPictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
-                (UpdatePictureCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddPictureCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
+                (UpdatePictureCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 

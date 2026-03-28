@@ -1,4 +1,5 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
@@ -38,9 +39,9 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
 
             SetDefault();
 
-            AddFormulaCommand = new AsyncRelayCommand(AddFormulaStyle, CanAddFormulaStyle);
-            UpdateFormulaCommand = new AsyncRelayCommand(UpdateFormulaStyle,CanAddFormulaStyle);
-            ResetCommand = new RelayCommand(Reset);
+            AddFormulaCommand = new AsyncRelayCommand<object?>(AddFormulaStyle, CanAddFormulaStyle);
+            UpdateFormulaCommand = new AsyncRelayCommand<object?>(UpdateFormulaStyle,CanAddFormulaStyle);
+            ResetCommand = new RelayCommand<object?>(Reset);
         }
 
         public ICommand ResetCommand { get; }
@@ -75,8 +76,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _formulaStyleName = value;
                 OnPropertyChanged(nameof(FormulaStyleName));
-                (AddFormulaCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
-                (UpdateFormulaCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+                (AddFormulaCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
+                (UpdateFormulaCommand as IAsyncRelayCommand)?.NotifyCanExecuteChanged();
             }
         }
         private string OldStyleName { get; set; }

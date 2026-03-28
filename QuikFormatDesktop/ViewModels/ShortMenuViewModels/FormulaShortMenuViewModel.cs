@@ -1,5 +1,7 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
@@ -19,9 +21,10 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private readonly IServiceProvider _serviceProvider;
         private readonly NavigationStore _navigationStore;
+        private ModalNavigationService<DeleteWarningViewModel> _warningService;
 
-        public FormulaShortMenuViewModel(FormulaService formulaService, PositionService positionService, MarkerService markerService, 
-            IServiceProvider serviceProvider, NavigationStore navigationStore)
+        public FormulaShortMenuViewModel(FormulaService formulaService, PositionService positionService, MarkerService markerService,
+            IServiceProvider serviceProvider, NavigationStore navigationStore, ModalNavigationService<DeleteWarningViewModel> warningService)
         {
             _formulaService = formulaService;
             _positionService = positionService;
@@ -29,9 +32,9 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             _serviceProvider = serviceProvider;
             _navigationStore = navigationStore;
 
-            DeleteFormulaStyleCommand = new AsyncRelayCommand(DeleteFormulaStyle);
-            DetailCommand = new RelayCommand(GoToDetailsWithAction);
-            
+            DeleteFormulaStyleCommand = new RelayCommand<object?>(OpenDeleteWarning);
+            DetailCommand = new RelayCommand<object?>(GoToDetailsWithAction);
+            _warningService = warningService;
         }
 
         public ICommand DeleteFormulaStyleCommand { get; }
@@ -88,6 +91,17 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
         {
             new GoToDetailsCommand<FormulaStyleViewModel>(_serviceProvider, _navigationStore).Execute(parameter);
             ClosePopup?.Invoke();
+        }
+
+        private void OpenDeleteWarning(object? parameter)
+        {
+            new OpenDeleteWarningCommand(_warningService).Execute(parameter);
+            if (_navigationStore.CurrentModalViewModel is DeleteWarningViewModel deleteWarning)
+            {
+                ClosePopup?.Invoke();
+                deleteWarning.Load(_formulaStyle);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteFormulaStyle);
+            }
         }
     }
 }

@@ -7,11 +7,11 @@ using System.Windows.Input;
 
 namespace QuikFormatDesktop.ViewModels.Commands.ModalCommands
 {
-    public class OpenTemplateModalCommand : ICommand 
+    public class OpenDeleteWarningCommand : ICommand
     {
-        private readonly ModalNavigationService<TemplateViewModel> _navigationService;
+        private readonly ModalNavigationService<DeleteWarningViewModel> _navigationService;
 
-        public OpenTemplateModalCommand(ModalNavigationService<TemplateViewModel> navigationService)
+        public OpenDeleteWarningCommand(ModalNavigationService<DeleteWarningViewModel> navigationService)
         {
             _navigationService = navigationService;
         }

@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="QuikFormatDesktop.Views.DeleteWarningModal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.Views"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InversBoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid Background="#80000000">
+        <Border BorderBrush="{StaticResource BorderColor}" Background="{StaticResource BackColor}" BorderThickness="2" CornerRadius="6" Padding="16" Width="400" Height="220">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Удаление"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource ForeColor}"/>
+
+                <StackPanel Grid.Row="1" Margin="0,12,0,12">
+                    <TextBlock Text="{Binding Message}"
+                           Foreground="{StaticResource BaseTextColor}"/>
+
+                    <TextBlock Text="{Binding StyleName}"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource ForeColor}"
+                           Margin="0,4,0,8"/>
+
+                    <TextBlock Text="Это действие также удалит все стили, которые содержат ссылку на этот стиль." Foreground="{StaticResource DeleteButtonColor}"
+                               TextWrapping="Wrap" Visibility="{Binding IsTemplate, Converter={StaticResource InversBoolToVis}}"/>
+                    <TextBlock Text="Это действие нельзя отменить." Foreground="{StaticResource DeleteButtonColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+
+                    <Button Content="Отмена" Margin="0,0,8,0" Style="{StaticResource BaseButton}" Command="{Binding CloseWindow}" FontSize="12"/>
+
+                    <Button Content="Удалить" Style="{StaticResource DangerButton}" Command="{Binding DeleteCommand}" Padding="10,4" FontSize="12"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
