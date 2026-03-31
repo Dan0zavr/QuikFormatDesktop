@@ -3,66 +3,231 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="288"
-             Background="{StaticResource BackColor}">
-    
-    <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="2">
-        <Grid MinWidth="200">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="8*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+             d:DesignHeight="750" d:DesignWidth="360"
+             Background="Transparent">
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+    </UserControl.Resources>
+
+    <Border Background="{StaticResource HoverBackColor}" 
+            BorderBrush="{StaticResource BorderColor}" 
+            BorderThickness="2" 
+            CornerRadius="8" 
+            Padding="20">
+
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.2*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="0.2*"/>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
-            <!--Drag'n'drop окно-->
-                <Border Grid.Column="1" Grid.Row="1" BorderThickness="2" BorderBrush="{StaticResource BorderColor}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" MinWidth="5"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*" MinWidth="5"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Column="1" Grid.Row="1" Text="Перетащите сюда или" HorizontalAlignment="Center" Style="{StaticResource BaseText}"/>
-                    <Button Grid.Column="1" Grid.Row="2" Content="выберите файл" Style="{StaticResource BaseButton}" Height="26" VerticalAlignment="Bottom" FontSize="16"/>
-                </Grid>
-            </Border>
-            
-            <!--Окно с шаблоном-->
-            <Grid Grid.Column="1" Grid.Row="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Шаблон:" Style="{StaticResource BaseText}"/>
-                <Border Grid.Row="1" Style="{StaticResource TemplatePlace}">
+            <Grid Grid.Row="0">
+                <Border Background="{StaticResource HoverBackColor}" CornerRadius="6"
+                        Padding="5" BorderBrush="{StaticResource BorderColor}" VerticalAlignment="Top" 
+                        HorizontalAlignment="Stretch" Margin="0, 5, 0, 5" Visibility="{Binding IsDocumentSelected, Converter={StaticResource BoolToVis}}"
+                        BorderThickness="2" Height="60">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="pack://application:,,,/Views/Resources/file_icon.png" Width="50"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DisplayDocumentPath}" Style="{StaticResource BaseText}" Margin="0,0,15,0" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                       FontSize="20"/>
+                        </Grid>
+                        <Button Content="✕" Style="{StaticResource TransparentButton}" Foreground="#9fa37c"
+                                FontSize="18" HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand"
+                                Margin="0, 0, 5, 0" Command="{Binding CleanDocumentCommand}"/>
+                    </Grid>
+                </Border>
+
+                <Border Background="{StaticResource BackColor}" BorderBrush="{StaticResource BorderColor}" 
+                        BorderThickness="2" CornerRadius="6" Margin="0,0,0,20" AllowDrop="True" Visibility="{Binding IsDocumentSelected, Converter={StaticResource InverseBoolToVis}}"
+                        Height="200">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction Command="{Binding DropDocumentCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                        
+                        <i:EventTrigger EventName="DragOver">
+                            <i:InvokeCommandAction Command="{Binding DragOverCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10">
+                        <TextBlock Text="Перетащите документ сюда" 
+                               Style="{StaticResource BaseText}" 
+                               FontWeight="Medium" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,6"/>
+                        <TextBlock Text="или" FontSize="14" Foreground="{StaticResource HoverForeColor}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                        <Button Content="Выберите файл" 
+                            Style="{StaticResource BaseButton}" 
+                            FontSize="18"
+                            Padding="16,6" 
+                            HorizontalAlignment="Center"
+                            Cursor="Hand"
+                            Command="{Binding OpenFileDialogCommand}"/>
+                    </StackPanel>
                 </Border>
             </Grid>
+            <Grid Grid.Row="1" Margin="0,0,0,20" VerticalAlignment="Top">
 
-            <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" Margin="0, 0, 0, 20">
-                <TextBlock Text="Предпросмотр" Style="{StaticResource BaseText}"/>
-                <CheckBox Width="20" Height="20" VerticalAlignment="Top" Margin="5, 4, 0, 0"/>
+                <Border Background="{StaticResource BackColor}" 
+                        BorderBrush="{StaticResource BorderColor}" 
+                        BorderThickness="1" 
+                        CornerRadius="8" 
+                        Padding="15"
+                        Visibility="{Binding IsTemplateSelected, Converter={StaticResource InverseBoolToVis}}">
+                    <TextBlock Text="Выберите шаблон из списка" HorizontalAlignment="Center" Style="{StaticResource BaseText}"/>
+
+                </Border>
+
+
+                <StackPanel Visibility="{Binding IsTemplateSelected, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Выбранный шаблон:" Style="{StaticResource BaseText}" FontSize="16" Margin="0,0,0,8"/>
+
+                    <Border Background="{StaticResource BackColor}" 
+                        BorderBrush="{StaticResource BorderColor}" 
+                        BorderThickness="1" 
+                        CornerRadius="8" 
+                        Padding="15">
+                        <StackPanel>
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+
+                                <TextBlock Grid.Column="1" 
+                                        Text="{Binding TemplateName}" 
+                                        Foreground="{StaticResource ForeColor}"
+                                        FontWeight="SemiBold" 
+                                        FontSize="18" 
+                                        VerticalAlignment="Center"
+                                        TextTrimming="CharacterEllipsis"/>
+
+                                <Button Grid.Column="2" 
+                                        Content="Убрать" 
+                                        Style="{StaticResource TransparentButton}"
+                                        FontSize="12" 
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand"
+                                        Command="{Binding CleanTemplateCommand}">
+                                </Button>
+                            </Grid>
+
+                            <TextBlock Text="{Binding Description}" 
+                                    Foreground="{StaticResource HoverForeColor}" 
+                                    FontSize="14" 
+                                    TextWrapping="Wrap" 
+                                    Margin="0,0,0,12"
+                                    LineHeight="16"/>
+
+                            <WrapPanel Orientation="Horizontal">
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsTextStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Текст: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding TextStyle.Name, FallbackValue='Базовый'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsParagraphStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Абзац: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding ParagraphStyle.Name, FallbackValue='С отступом'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsTableStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Таблица: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding TableStyle.Name, FallbackValue='Сетка'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsNumberedNumberingStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Нумерованный список: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding NumberedNumberingStyle.Name, FallbackValue='Сетка'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsMarkedNumberingStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Маркированный список: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding MarkedNumberingStyle.Name, FallbackValue='Сетка'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsPictureStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Рисунок: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding PictureStyle.Name, FallbackValue='Сетка'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsFormulaStyleVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                    <Run Text="Формула: " Foreground="{StaticResource ForeColor}"/>
+                                    <Run Text="{Binding FormulaStyle.Name, FallbackValue='Сетка'}"/>
+                                    </TextBlock>
+                                </Border>
+
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <CheckBox Margin="0,0,0,15" VerticalContentAlignment="Center" IsChecked="{Binding IsPreviewVisible}">
+                        <TextBlock Text="Предварительный просмотр результата" Style="{StaticResource BaseText}" Margin="5,0,0,0" FontSize="16"/>
+                    </CheckBox>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Grid.Row="3">
+                <Button FontSize="16" 
+                        FontWeight="Medium"
+                        Height="40" 
+                        Cursor="Hand"
+                        MinHeight="70">
+
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="TemplateCard" 
+                                    Background="{StaticResource BackColor}" 
+                                    BorderBrush="{StaticResource BorderColor}" 
+                                    BorderThickness="1">
+                                <TextBlock Text="Форматировать" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BaseText}" FontSize="20"/>
+
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="TemplateCard" Property="Background" Value="{StaticResource ButtonColor}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
-
-            <Button Grid.Column="1" Grid.Row="5" Content="Форматировать" Style="{StaticResource BaseButton}" FontSize="18" Height="30"/>
         </Grid>
     </Border>
 </UserControl>

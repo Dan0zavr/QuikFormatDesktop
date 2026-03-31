@@ -13,11 +13,6 @@
     <SolidColorBrush x:Key="DeleteHoverColor" Color="#C9302C"/>
     <SolidColorBrush x:Key="DeleteForeground" Color="White"/>
 
-    <SolidColorBrush Color="{StaticResource SoftBlue}" x:Key="SecondBackColor"/>
-    <SolidColorBrush Color="{StaticResource ButterYellow}" x:Key="BaseTextColor"/>
-    <SolidColorBrush Color="{StaticResource LightSoftBlue}" x:Key="HoverSecondBackColor"/>
-    <SolidColorBrush Color="{StaticResource LightButterYellow}" x:Key="HoverBaseTextzColor"/>
-
     <SolidColorBrush Color="{StaticResource White}" x:Key="MainBackground"/>
 
     <SolidColorBrush Color="{StaticResource DisabledDerkPcean}" x:Key="DisabledColor"/>

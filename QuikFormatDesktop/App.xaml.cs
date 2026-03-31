@@ -15,6 +15,7 @@ using System.Data;
 using System.IO;
 using System.Windows;
 using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
+using QuikFormatDesktop.ViewModels.FormatViewModels;
 
 namespace QuikFormatDesktop
 {
@@ -65,6 +66,10 @@ namespace QuikFormatDesktop
                     services.AddTransient<FormulaStyleViewModel>();
 
                     services.AddTransient<TemplateViewModel>();
+
+                    services.AddTransient<FormatViewModel>();
+                    services.AddTransient<SelectorCardViewModel>();
+                    services.AddTransient<PreviewViewModel>();
 
                     services.AddTransient<TextShortMenuViewModel>();
                     services.AddTransient<ParagraphShortMenuViewModel>();

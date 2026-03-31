@@ -20,6 +20,7 @@
     <None Remove="Views\Resources\centerAlignmentChecked.png" />
     <None Remove="Views\Resources\centerAlignmentMouseOver.png" />
     <None Remove="Views\Resources\centerAlignmentNormal.png" />
+    <None Remove="Views\Resources\file_icon.png" />
     <None Remove="Views\Resources\leftAlignment.png" />
     <None Remove="Views\Resources\leftAlignmentChecked.png" />
     <None Remove="Views\Resources\leftAlignmentMouseOver.png" />
@@ -51,6 +52,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\Resources\file_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
@@ -79,49 +86,49 @@
 
   <ItemGroup>
     <Resource Include="Views\Dictionaries\BaseColors.xaml" />
-    <Resource Include="Views\Resources\bothAlignment.png">
+    <Resource Include="Views\Resources\Alignment\bothAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\bothAlignmentChecked.png">
+    <Resource Include="Views\Resources\Alignment\bothAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\bothAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\Alignment\bothAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\bothAlignmentNormal.png">
+    <Resource Include="Views\Resources\Alignment\bothAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\bottomAlignment.png">
+    <Resource Include="Views\Resources\Alignment\bottomAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\bottomAlignmentChecked.png">
+    <Resource Include="Views\Resources\Alignment\bottomAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\bottomAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\Alignment\bottomAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\centerAlignment.png">
+    <Resource Include="Views\Resources\Alignment\centerAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\centerAlignmentChecked.png">
+    <Resource Include="Views\Resources\Alignment\centerAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\centerAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\Alignment\centerAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\centerAlignmentNormal.png">
+    <Resource Include="Views\Resources\Alignment\centerAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\leftAlignment.png">
+    <Resource Include="Views\Resources\Alignment\leftAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\leftAlignmentChecked.png">
+    <Resource Include="Views\Resources\Alignment\leftAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\leftAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\Alignment\leftAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\leftAlignmentNormal.png">
+    <Resource Include="Views\Resources\Alignment\leftAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Views\Resources\Position\centerLeft.png">
@@ -160,25 +167,25 @@
     <Resource Include="Views\Resources\Position\rightLeftMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\rightAlignment.png">
+    <Resource Include="Views\Resources\Alignment\rightAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\rightAlignmentChecked.png">
+    <Resource Include="Views\Resources\Alignment\rightAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\rightAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\Alignment\rightAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\rightAlignmentNormal.png">
+    <Resource Include="Views\Resources\Alignment\rightAlignmentNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\topAlignment.png">
+    <Resource Include="Views\Resources\Alignment\topAlignment.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\topAlignmentChecked.png">
+    <Resource Include="Views\Resources\Alignment\topAlignmentChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Views\Resources\topAlignmentMouseOver.png">
+    <Resource Include="Views\Resources\Alignment\topAlignmentMouseOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

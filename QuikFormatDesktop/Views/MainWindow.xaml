@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:QuikFormatDesktop.Views"
         xmlns:pages="clr-namespace:QuikFormatDesktop.Views.Pages"
         xmlns:vms="clr-namespace:QuikFormatDesktop.ViewModels"
+        xmlns:fvms="clr-namespace:QuikFormatDesktop.ViewModels.FormatViewModels"
         xmlns:stylesvms="clr-namespace:QuikFormatDesktop.ViewModels.StylesViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="490" Width="880">
@@ -16,7 +17,7 @@
 
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type vms:FormatViewModel}">
+            <DataTemplate DataType="{x:Type fvms:FormatViewModel}">
                 <pages:FormatPage/>
             </DataTemplate>
 
@@ -31,6 +32,7 @@
             <DataTemplate DataType="{x:Type vms:DeleteWarningViewModel}">
                 <local:DeleteWarningModal/>
             </DataTemplate>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>

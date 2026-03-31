@@ -7,15 +7,15 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <!-- Изображение для невыбранного состояния -->
-                        <Image x:Name="StateImage" Source="/Views/Resources/leftAlignmentNormal.png" Width="30" Height="30"/>
+                        <Image x:Name="StateImage" Source="/Views/Resources/Alignment/leftAlignmentNormal.png" Width="30" Height="30"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/leftAlignmentMouseOver.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/leftAlignmentMouseOver.png"/>
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/leftAlignmentChecked.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/leftAlignmentChecked.png"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -29,15 +29,15 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <!-- Изображение для невыбранного состояния -->
-                        <Image x:Name="StateImage" Source="/Views/Resources/rightAlignmentNormal.png" Width="30" Height="30"/>
+                        <Image x:Name="StateImage" Source="/Views/Resources/Alignment/rightAlignmentNormal.png" Width="30" Height="30"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/rightAlignmentMouseOver.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/rightAlignmentMouseOver.png"/>
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/rightAlignmentChecked.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/rightAlignmentChecked.png"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -51,15 +51,15 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <!-- Изображение для невыбранного состояния -->
-                        <Image x:Name="StateImage" Source="/Views/Resources/centerAlignmentNormal.png" Width="30" Height="30"/>
+                        <Image x:Name="StateImage" Source="/Views/Resources/Alignment/centerAlignmentNormal.png" Width="30" Height="30"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/centerAlignmentMouseOver.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/centerAlignmentMouseOver.png"/>
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/centerAlignmentChecked.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/centerAlignmentChecked.png"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -73,15 +73,15 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <!-- Изображение для невыбранного состояния -->
-                        <Image x:Name="StateImage" Source="/Views/Resources/bothAlignmentNormal.png" Width="30" Height="30"/>
+                        <Image x:Name="StateImage" Source="/Views/Resources/Alignment/bothAlignmentNormal.png" Width="30" Height="30"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/bothAlignmentMouseOver.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/bothAlignmentMouseOver.png"/>
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/bothAlignmentChecked.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/bothAlignmentChecked.png"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -95,15 +95,15 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <!-- Изображение для невыбранного состояния -->
-                        <Image x:Name="StateImage" Source="/Views/Resources/topAlignment.png" Width="30" Height="30"/>
+                        <Image x:Name="StateImage" Source="/Views/Resources/Alignment/topAlignment.png" Width="30" Height="30"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/topAlignmentMouseOver.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/topAlignmentMouseOver.png"/>
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/topAlignmentChecked.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/topAlignmentChecked.png"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -117,15 +117,15 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <!-- Изображение для невыбранного состояния -->
-                        <Image x:Name="StateImage" Source="/Views/Resources/bottomAlignment.png" Width="30" Height="30"/>
+                        <Image x:Name="StateImage" Source="/Views/Resources/Alignment/bottomAlignment.png" Width="30" Height="30"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/bottomAlignmentMouseOver.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/bottomAlignmentMouseOver.png"/>
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/bottomAlignmentChecked.png"/>
+                            <Setter TargetName="StateImage" Property="Source" Value="/Views/Resources/Alignment/bottomAlignmentChecked.png"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

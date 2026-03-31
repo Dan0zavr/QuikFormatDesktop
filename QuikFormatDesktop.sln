@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11612.150 stable
+VisualStudioVersion = 18.4.11612.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuikFormatDesktop", "QuikFormatDesktop\QuikFormatDesktop.csproj", "{678309F1-1BC2-47F7-B85C-9D948325A8E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMLParser", "..\XMLParser\XMLParser\XMLParser.csproj", "{41A097A6-70A6-5079-0701-1691E5ED324A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFReader", "..\PDFReader\PDFReader\PDFReader.csproj", "{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{41A097A6-70A6-5079-0701-1691E5ED324A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41A097A6-70A6-5079-0701-1691E5ED324A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41A097A6-70A6-5079-0701-1691E5ED324A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

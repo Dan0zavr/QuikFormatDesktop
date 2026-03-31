@@ -72,11 +72,41 @@
         </Setter>
     </Style>
 
+    <Style x:Key="TransparentButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource DeleteButtonColor}"/>
+        <Setter Property="BorderThickness" Value = "0"/>
+        <Setter Property="FontSize" Value="20"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  RecognizesAccessKey="True"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#d42a1e"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--Базовый стиль текста-->
     <Style x:Key="BaseText" TargetType="TextBlock">
         <Style.Setters>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="{StaticResource BaseTextColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
         </Style.Setters>
     </Style>
 
@@ -84,7 +114,7 @@
     <Style x:Key="TemplateBox" TargetType="GroupBox">
         <Setter Property="BorderBrush" Value="#1b3745"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground" Value="{StaticResource BaseTextColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Template">
@@ -156,7 +186,7 @@
 
     <Style x:Key="TabButton" TargetType="RadioButton">
         <Style.Setters>
-            <Setter Property="Foreground" Value="{StaticResource BaseTextColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="14"/>
@@ -199,7 +229,7 @@
     <Style x:Key="Item" TargetType="ListBoxItem">
         <Style.Setters>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource BaseTextColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 

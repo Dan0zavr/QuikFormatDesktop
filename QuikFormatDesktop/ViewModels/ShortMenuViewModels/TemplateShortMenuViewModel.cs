@@ -1,6 +1,8 @@
-﻿using QuikFormatDesktop.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
+using QuikFormatDesktop.ViewModels.FormatViewModels;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
@@ -8,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.Input;
 
 namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 {
@@ -31,10 +32,12 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
             DeleteCommand = new RelayCommand<object?>(OpenDeleteWarning);
             DetailCommand = new RelayCommand<object?>(GoToDetails);
+            SelectCommand = new RelayCommand<object?>(TransferTemplate);
         }
 
         public ICommand DeleteCommand { get; }
         public ICommand DetailCommand { get; }
+        public ICommand SelectCommand { get; }
 
         public string Name => _template.Name;
         public string Description => _template.Description;
@@ -71,6 +74,15 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
                 ClosePopup?.Invoke();
                 deleteWarning.Load(_template);
                 deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteTemplate);
+            }
+        }
+
+        private void TransferTemplate(object? parameter)
+        {
+            if (_navigationStore.CurrentViewModel is FormatViewModel format)
+            {
+                format.SelectorCardViewModel.LoadTemplate(_template);
+                ClosePopup?.Invoke();
             }
         }
     }

@@ -3,6 +3,7 @@ using QuikFormatDesktop.Models;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Enums;
+using QuikFormatDesktop.ViewModels.FormatViewModels;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.ShortMenuViewModels;

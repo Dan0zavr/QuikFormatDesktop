@@ -3,14 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vms="clr-namespace:QuikFormatDesktop.ViewModels"
              xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="650"
              Background="{StaticResource MainBackground}">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
     <Grid Grid.Column="1"
-      Grid.Row="1"
-      MaxWidth="1400"
-      HorizontalAlignment="Center">
+          Grid.Row="1"
+          MaxWidth="1400"
+          HorizontalAlignment="Center">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -32,7 +38,7 @@
              MinHeight="400" MinWidth="288"
                  Margin="10, 0, 0, 0">
 
-            <local:SelectorCard Width="520" Height="720"/>
+            <local:SelectorCard Width="520" Height="720" DataContext="{Binding SelectorCardViewModel}"/>
 
         </Viewbox>
 
@@ -41,11 +47,11 @@
              Stretch="Uniform"
              StretchDirection="DownOnly"
              HorizontalAlignment="Center"
-             Visibility="{Binding IsPreviewVisible}"
+             Visibility="{Binding IsPreviewVisible, Converter={StaticResource BoolToVis}}"
              MinHeight="400" MinWidth="288"
              Margin="0, 0, 10 ,0">
 
-            <local:PreviewCard Width="520" Height="720"/>
+            <local:PreviewCard Width="520" Height="720" DataContext="{Binding PreviewViewModel}"/>
 
         </Viewbox>
 
