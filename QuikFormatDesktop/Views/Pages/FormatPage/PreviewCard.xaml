@@ -4,16 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
-             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="480" d:DesignWidth="346"
              Background="{StaticResource MainBackground}">
 
     <Grid MinWidth="200">
-        <Border BorderBrush="#a9b2c4" BorderThickness="2">
-            <wv2:WebView2 Margin="10">
-            </wv2:WebView2>
-        </Border>
+        <ListBox BorderBrush="#a9b2c4" BorderThickness="2" ItemsSource="{Binding Pictures}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding Path}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}, Path=ActualWidth}" Margin="7"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+                
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
     
 </UserControl>

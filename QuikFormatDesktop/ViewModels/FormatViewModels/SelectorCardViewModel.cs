@@ -10,7 +10,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using PDFReader;
+using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Models.SupportModels;
 
 namespace QuikFormatDesktop.ViewModels.FormatViewModels
 {
@@ -39,6 +41,8 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private bool _isPreviewVisible;
 
         private string _documentPath;
+
+        public event Action? DocumentChanged;
 
         public SelectorCardViewModel(TextService textService, ParagraphService paragraphService,
             NumberingService numberingService, TableService tableService, PictureService pictureService,
@@ -193,6 +197,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                 OnPropertyChanged(nameof(DocumentPath));
                 OnPropertyChanged(nameof(DisplayDocumentPath));
                 OnPropertyChanged(nameof(IsDocumentSelected));
+                DocumentChanged?.Invoke();
             }
         }
 
@@ -299,9 +304,5 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
         }
 
-        private void LoadPreviewDocument()
-        {
-
-        }
     }
 }

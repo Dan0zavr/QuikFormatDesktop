@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMLParser", "..\XMLParser\X
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFReader", "..\PDFReader\PDFReader\PDFReader.csproj", "{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfConverter", "PdfConverter\PdfConverter.csproj", "{A010AA0E-A1C6-4FEC-9CFA-1C213054A370}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E6BFBC4-B7E2-EE38-0189-4DBB6C4E62FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A010AA0E-A1C6-4FEC-9CFA-1C213054A370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A010AA0E-A1C6-4FEC-9CFA-1C213054A370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A010AA0E-A1C6-4FEC-9CFA-1C213054A370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A010AA0E-A1C6-4FEC-9CFA-1C213054A370}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

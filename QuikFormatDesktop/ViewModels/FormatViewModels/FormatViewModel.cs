@@ -9,14 +9,13 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 {
     public class FormatViewModel : ViewModelBase
     {
-        private bool _isPreviewVisible = false;
-
         public FormatViewModel(SelectorCardViewModel selectorCardViewModel, PreviewViewModel previewViewModel)
         {
             SelectorCardViewModel = selectorCardViewModel;
             PreviewViewModel = previewViewModel;
 
             SelectorCardViewModel.PropertyChanged += OnSelectorChanged;
+            SelectorCardViewModel.DocumentChanged += PreviewViewModel.OnDocumentChanged;
         }
 
         public SelectorCardViewModel SelectorCardViewModel { get; }

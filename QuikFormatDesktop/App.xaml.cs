@@ -44,6 +44,7 @@ namespace QuikFormatDesktop
                     services.Configure<FontSettings>(context.Configuration.GetSection("FontSettings"));
                     services.Configure<ParagraphSettings>(context.Configuration.GetSection("ParagraphSettings"));
                     services.Configure<TableSettings>(context.Configuration.GetSection("TableSettings"));
+                    services.Configure<GeneralSettings>(context.Configuration.GetSection("GeneralSettings"));
 
                     services.AddDbContextFactory<QfDbContext>(options => options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection")));
 
