@@ -16,6 +16,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
             SelectorCardViewModel.PropertyChanged += OnSelectorChanged;
             SelectorCardViewModel.DocumentChanged += PreviewViewModel.OnDocumentChanged;
+            SelectorCardViewModel.TemplateChanged += PreviewViewModel.OnTemplateChanged;
         }
 
         public SelectorCardViewModel SelectorCardViewModel { get; }

@@ -4,26 +4,165 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="480" d:DesignWidth="346"
+             d:DesignHeight="550" d:DesignWidth="400"
              Background="{StaticResource MainBackground}">
 
-    <Grid MinWidth="200">
-        <ListBox BorderBrush="#a9b2c4" BorderThickness="2" ItemsSource="{Binding Pictures}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <UserControl.Resources>
+        <converters:InversBoolConverter x:Key="InverseBool"/>
+        
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+        
+        <Style TargetType="ListBoxItem" x:Key="SelectableImageStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="RadioButton" x:Key="ModernRadioButton">
+            <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
+            <Setter Property="Background" Value="{StaticResource BackColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource HoverBackColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="{StaticResource ForeColor}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ButtonColor}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource ButtonColor}"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid MinWidth="250" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ListBox Grid.Row="0" 
+                 BorderBrush="{StaticResource InnerBorderColor}" 
+                 BorderThickness="1" 
+                 Background="Transparent"
+                 ItemsSource="{Binding OriginalPictures}" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 SelectionMode="Multiple"
+                 ItemContainerStyle="{StaticResource SelectableImageStyle}"
+                 Visibility="{Binding IsOriginal, Converter={StaticResource BoolToVis}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding Path}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ListBox}, Path=ActualWidth}" Margin="7"/>
+                    <Grid Margin="5">
+                        <Image x:Name="PageImage" 
+                               Source="{Binding Image}" 
+                               Stretch="Uniform" 
+                               HorizontalAlignment="Stretch" 
+                               VerticalAlignment="Stretch"/>
+
+                        <Border x:Name="IgnoredOverlay" 
+                                Background="{StaticResource DisabledColor}" 
+                                Opacity="0" 
+                                BorderBrush="{StaticResource DeleteButtonColor}" 
+                                BorderThickness="3" 
+                                CornerRadius="4">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="✖" Foreground="{StaticResource DeleteButtonColor}" FontSize="42" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                <TextBlock Text="ПРОПУЩЕНО" Foreground="{StaticResource MainBackground}" FontSize="16" FontWeight="Bold" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                            <Setter TargetName="IgnoredOverlay" Property="Opacity" Value="0.85"/>
+                            <Setter TargetName="PageImage" Property="Opacity" Value="0.6"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-                
-            </ListBox.ItemContainerStyle>
         </ListBox>
+
+        <ListBox Grid.Row="0" 
+                 BorderBrush="{StaticResource InnerBorderColor}" 
+                 BorderThickness="1" 
+                 Background="Transparent"
+                 ItemsSource="{Binding FormattedPictures}" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 Visibility="{Binding IsOriginal, Converter={StaticResource InverseBoolToVis}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Image x:Name="PageImage" 
+                               Source="{Binding Image}" 
+                               Stretch="Uniform" 
+                               HorizontalAlignment="Stretch" 
+                               VerticalAlignment="Stretch"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Border Background="#80000000"
+            Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ProgressBar Width="150" Height="10" IsIndeterminate="True"/>
+                <TextBlock Text="Загрузка страниц..."
+                       Margin="0,10,0,0"
+                       HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <RadioButton Grid.Column="0" 
+                         Content="Оригинальный" 
+                         GroupName="DocMode" 
+                         IsChecked="{Binding IsOriginal}"
+                         Style="{StaticResource ModernRadioButton}"/>
+
+            <RadioButton Grid.Column="2" 
+                         Content="Форматированный" 
+                         GroupName="DocMode" 
+                         IsChecked="{Binding IsOriginal, Converter={StaticResource InverseBool}}"
+                         Style="{StaticResource ModernRadioButton}"/>
+        </Grid>
     </Grid>
-    
 </UserControl>

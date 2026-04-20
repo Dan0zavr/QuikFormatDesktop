@@ -23,6 +23,11 @@ namespace QuikFormatDesktop.Views.Pages
         public PreviewCard()
         {
             InitializeComponent();
+            this.Unloaded += (s, e) =>
+            {
+                if (this.DataContext is IDisposable disposable)
+                    disposable.Dispose();
+            };
         }
     }
 }

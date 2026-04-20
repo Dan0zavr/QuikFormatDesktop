@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using PDFReader;
 using Microsoft.Extensions.Options;
 using QuikFormatDesktop.Models.SupportModels;
+using QuikFormatDesktop.ViewModels.Navigation;
 
 namespace QuikFormatDesktop.ViewModels.FormatViewModels
 {
@@ -24,6 +25,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private readonly TableService _tableService;
         private readonly PictureService _pictureService;
         private readonly FormulaService _formulaService;
+        private readonly NavigationStore _navigationStore;
 
         private Template _template;
 
@@ -42,11 +44,14 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private string _documentPath;
 
+        private string _saveDirectory;
+
         public event Action? DocumentChanged;
+        public event Action? TemplateChanged;
 
         public SelectorCardViewModel(TextService textService, ParagraphService paragraphService,
             NumberingService numberingService, TableService tableService, PictureService pictureService,
-            FormulaService formulaService)
+            FormulaService formulaService, NavigationStore navigationStore)
         {
             _textService = textService;
             _paragraphService = paragraphService;
@@ -54,12 +59,15 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             _tableService = tableService;
             _pictureService = pictureService;
             _formulaService = formulaService;
+            _navigationStore = navigationStore;
 
             CleanTemplateCommand = new RelayCommand(CleanTemplate);
-            OpenFileDialogCommand = new RelayCommand(OpenDialog);
+            OpenFileDialogCommand = new RelayCommand(OpenFileDialog);
             CleanDocumentCommand = new RelayCommand(CleanDocument);
             DropDocumentCommand = new RelayCommand<DragEventArgs>(DropDocument);
             DragOverCommand = new RelayCommand<DragEventArgs>(DragOver);
+            OpenDirectoryDialogCommand = new RelayCommand(OpenDirectoryDialog);
+            FormatCommand = new RelayCommand(SaveFormattedDocument, CanFormat);
         }
 
         public ICommand CleanTemplateCommand { get; }
@@ -67,6 +75,8 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         public ICommand CleanDocumentCommand { get; }
         public ICommand DropDocumentCommand { get; }
         public ICommand DragOverCommand { get; }
+        public ICommand OpenDirectoryDialogCommand { get; }
+        public ICommand FormatCommand { get; }
 
         public bool IsTemplateSelected => _template != null;
         public Template Template
@@ -77,6 +87,8 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                 _template = value;
                 OnPropertyChanged(nameof(Template));
                 OnPropertyChanged(nameof(IsTemplateSelected));
+                (FormatCommand as IRelayCommand)?.NotifyCanExecuteChanged();
+                TemplateChanged?.Invoke();
             }
         }
         public string TemplateName
@@ -197,11 +209,26 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                 OnPropertyChanged(nameof(DocumentPath));
                 OnPropertyChanged(nameof(DisplayDocumentPath));
                 OnPropertyChanged(nameof(IsDocumentSelected));
+                (FormatCommand as IRelayCommand)?.NotifyCanExecuteChanged();
                 DocumentChanged?.Invoke();
             }
         }
 
         public string DisplayDocumentPath => CutPath(DocumentPath);
+
+        public string SaveDirectory
+        {
+            get => _saveDirectory;
+            set
+            {
+                _saveDirectory = value;
+                OnPropertyChanged(nameof(SaveDirectory));
+                OnPropertyChanged(nameof(DisplayDirectory));
+                (FormatCommand as IRelayCommand)?.NotifyCanExecuteChanged();
+            }
+        }
+
+        public string DisplayDirectory => CutPath(SaveDirectory);
 
         public async Task LoadTemplate(Template template)
         {
@@ -215,7 +242,6 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             if (_template.MarkedNumberingStyle != null) MarkedNumberingStyle = await _numberingService.GetById((int)_template.MarkedNumberingStyle);
             if(_template.PictureStyle != null) PictureStyle = await _pictureService.GetById((int)_template.PictureStyle);
             if(_template.FormulaStyle != null) FormulaStyle = await _formulaService.GetById((int)_template.FormulaStyle);
-            
         }
 
         private void CleanTemplate()
@@ -271,13 +297,22 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             return display;
         }
 
-        private void OpenDialog()
+        private void OpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
                 openFileDialog.Filter = "DOCX Files (*.docx)|*.docx";
                 DocumentPath = openFileDialog.FileName;
+            }
+        }
+
+        private void OpenDirectoryDialog()
+        {
+            OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+            if (openFolderDialog.ShowDialog() == true)
+            {
+                SaveDirectory = openFolderDialog.FolderName;
             }
         }
 
@@ -304,5 +339,23 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
         }
 
+        private bool CanFormat()
+        {
+            if (Template != null && !string.IsNullOrEmpty(DocumentPath) && !string.IsNullOrEmpty(SaveDirectory))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void SaveFormattedDocument()
+        {
+            if(_navigationStore.CurrentViewModel is FormatViewModel formatViewModel)
+            {
+                var previewViiewModel = formatViewModel.PreviewViewModel;
+                string docPath = previewViiewModel.CurrentFormattedDocxFile;
+                File.Copy(docPath, Path.Combine(SaveDirectory, Path.GetFileName(docPath)));
+            }
+        }
     }
 }

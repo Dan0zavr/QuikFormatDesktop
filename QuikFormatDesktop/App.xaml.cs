@@ -99,6 +99,7 @@ namespace QuikFormatDesktop
                     services.AddTransient<MarkerService>();
                     services.AddTransient<MarkerTypeService>();
                     services.AddTransient<PositionService>();
+                    services.AddTransient<TemplateMapper>();
 
                     services.AddTransient<IDialogService, DialogService>();
 

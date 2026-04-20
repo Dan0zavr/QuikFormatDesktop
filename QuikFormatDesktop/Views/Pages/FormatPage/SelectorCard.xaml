@@ -25,6 +25,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
@@ -85,11 +86,44 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            <Grid Grid.Row="1" Margin="0,0,0,20" VerticalAlignment="Top">
+
+            <Grid Grid.Row="1" Margin="0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Папка для сохранения: " Style="{StaticResource BaseText}"/>
+                <TextBox Grid.Column="0" Grid.Row="1" FontSize="14" Text="{Binding DisplayDirectory, Mode=OneWay}" IsReadOnly="True" Cursor=""/>
+                <Button Grid.Column="1" Grid.Row="1" Margin="10, 0, 0, 0" Width="70" Style="{StaticResource BaseButton}" Cursor="Hand" Command="{Binding OpenDirectoryDialogCommand}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="TemplateCard" 
+                                    Background="{StaticResource BackColor}" 
+                                    BorderBrush="{StaticResource BorderColor}" 
+                                    BorderThickness="1">
+                                <TextBlock Text="Обзор..." HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BaseText}" FontSize="14"/>
+
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="TemplateCard" Property="Background" Value="{StaticResource ButtonColor}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="0,0,0,20" VerticalAlignment="Top">
 
                 <Border Background="{StaticResource BackColor}" 
                         BorderBrush="{StaticResource BorderColor}" 
-                        BorderThickness="1" 
+                        BorderThickness="2" 
                         CornerRadius="8" 
                         Padding="15"
                         Visibility="{Binding IsTemplateSelected, Converter={StaticResource InverseBoolToVis}}">
@@ -103,7 +137,7 @@
 
                     <Border Background="{StaticResource BackColor}" 
                         BorderBrush="{StaticResource BorderColor}" 
-                        BorderThickness="1" 
+                        BorderThickness="2" 
                         CornerRadius="8" 
                         Padding="15">
                         <StackPanel>
@@ -202,19 +236,20 @@
                 </StackPanel>
             </Grid>
 
-            <StackPanel Grid.Row="3">
+            <StackPanel Grid.Row="4">
                 <Button FontSize="16" 
                         FontWeight="Medium"
                         Height="40" 
                         Cursor="Hand"
-                        MinHeight="70">
+                        MinHeight="70"
+                        Command="{Binding FormatCommand}">
 
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border x:Name="TemplateCard" 
-                                    Background="{StaticResource BackColor}" 
+                                    Background="{StaticResource DisabledColor}" 
                                     BorderBrush="{StaticResource BorderColor}" 
-                                    BorderThickness="1">
+                                    BorderThickness="2">
                                 <TextBlock Text="Форматировать" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BaseText}" FontSize="20"/>
 
                             </Border>
@@ -222,6 +257,10 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="TemplateCard" Property="Background" Value="{StaticResource ButtonColor}"/>
+                                    <Setter TargetName="TemplateCard" Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="True">
+                                    <Setter TargetName="TemplateCard" Property="Background" Value="{StaticResource BackColor}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
