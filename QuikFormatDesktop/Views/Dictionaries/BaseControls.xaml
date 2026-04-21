@@ -41,6 +41,42 @@
 
     </Style>
 
+    <!--Стиль кнопки для закрытия окна-->
+    <Style x:Key="CloseButton" TargetType="Button">
+        <Style.Setters>
+            <Setter Property="Background" Value="{StaticResource HoverBackColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
+            <Setter Property="BorderThickness" Value = "0"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Padding" Value="10, 0, 10, 0"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  RecognizesAccessKey="True"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource HoverBackColor}"/>
+                                <Setter Property="Foreground" Value="{StaticResource HoverForeColor}"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+
+    </Style>
+
     <Style x:Key="DangerButton" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource DeleteButtonColor}"/>
         <Setter Property="Foreground" Value="{StaticResource DeleteForeground}"/>

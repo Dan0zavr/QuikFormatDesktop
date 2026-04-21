@@ -136,7 +136,9 @@
                             Foreground="{StaticResource ForeColor}" 
                             FontSize="16" 
                             Command="{Binding CloseModalCommand}"
-                            Cursor="Hand"/>
+                            Cursor="Hand"
+                            Style="{StaticResource CloseButton}">
+                        </Button>
                     </Grid>
                 </Border>
 
@@ -217,12 +219,6 @@
 
                 <Border Grid.Row="2" Background="{StaticResource MainBackground}" BorderThickness="0,1,0,0" BorderBrush="{StaticResource InnerBorderColor}" CornerRadius="0,0,6,6" Padding="15">
                     <Grid>
-                        <TextBlock Text="{Binding StatusMessage}" 
-                               Foreground="Green" 
-                               VerticalAlignment="Center" 
-                               HorizontalAlignment="Left"
-                               FontWeight="SemiBold"/>
-
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button Content="Отмена" 
                                 Width="90" Height="28" Margin="0,0,10,0" 
