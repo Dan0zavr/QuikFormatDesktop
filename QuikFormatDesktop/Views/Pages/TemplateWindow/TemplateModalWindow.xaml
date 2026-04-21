@@ -14,6 +14,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <converters:InverseBooleanToVisibilityConverter x:Key="InversBoolToVis"/>
+        <converters:ColorToHexConverter x:Key="ColorToHex"/>
 
         <Style TargetType="TextBlock" x:Key="LabelStyle">
             <Setter Property="FontSize" Value="13"/>
@@ -230,12 +231,21 @@
                                 BorderBrush="{StaticResource BorderColor}"
                                 Foreground="{StaticResource BorderColor}"/>
 
-                            <StackPanel>
+                            <StackPanel Orientation="Horizontal" x:Name="ForPopup">
                                 <Button Content="Сохранить" Width="110" Height="28" FontSize="14" Style="{StaticResource BaseButton}" Command="{Binding AddTemplateCommand}"
                                         Visibility="{Binding IsEdit, Converter={StaticResource InversBoolToVis}}"/>
                                 <Button Content="Обновить" Width="110" Height="28" FontSize="14" Style="{StaticResource BaseButton}" Command="{Binding UpdateTemplateCommand}"
                                         Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
                             </StackPanel>
+
+                            <Popup IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
+                                   Placement="Top"
+                                   PlacementTarget="{Binding ElementName=ForPopup}"
+                                   StaysOpen="False">
+                                <Border Background="{Binding PopupBackground, Converter={StaticResource ColorToHex}}" Padding="7" MaxWidth="100">
+                                    <TextBlock Text="{Binding PopupMessage}" TextWrapping="WrapWithOverflow" Foreground="{Binding PopupForeground, Converter={StaticResource ColorToHex}}" FontSize="11" HorizontalAlignment="Center"/>
+                                </Border>
+                            </Popup>
                         </StackPanel>
                     </Grid>
                 </Border>

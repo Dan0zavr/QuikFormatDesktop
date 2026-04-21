@@ -1,10 +1,12 @@
 ﻿using QuikFormatDesktop.Models;
+using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands
 {
@@ -55,11 +57,11 @@ namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands
                 if (isUnique)
                 {
                     await _numberingService.Add(numberingStyle);
-                    _viewModel.PStatusMessage = "Стиль успешно обновлен";
+                    await ShowPopup("Стиль успешно обновлен", PopupType.Good);
                 }
                 else
                 {
-                    _viewModel.PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Bad);
                 }
             }
             catch (Exception ex)
@@ -71,6 +73,30 @@ namespace QuikFormatDesktop.ViewModels.Commands.NumberingStyleCommands
                 _viewModel.RaiseRequestReset();
             }
 
+        }
+
+        private async Task ShowPopup(string message, PopupType type)
+        {
+            switch (type)
+            {
+                case PopupType.Bad:
+                    _viewModel.PopupBackground = (Color)ColorConverter.ConvertFromString("#fc9d9d");
+                    _viewModel.PopupForeground = (Color)ColorConverter.ConvertFromString("#570000");
+                    break;
+                case PopupType.Good:
+                    _viewModel.PopupBackground = (Color)ColorConverter.ConvertFromString("#b1ffa8");
+                    _viewModel.PopupForeground = (Color)ColorConverter.ConvertFromString("#085200");
+                    break;
+                default:
+                    _viewModel.PopupBackground = Colors.White;
+                    _viewModel.PopupForeground = Colors.Black;
+                    break;
+            }
+
+            _viewModel.PopupMessage = message;
+            _viewModel.IsPopupOpen = true;
+            await Task.Delay(2000);
+            _viewModel.IsPopupOpen = false;
         }
 
         public void RaiseCanExecuteChanged()

@@ -10,6 +10,7 @@ using System.Printing;
 using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -26,7 +27,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private bool _isNumberingEnabled;
         private List<Marker> _numberingFormats;
         private Marker _selectedNumberingFormat;
-        private string _pStatusMessage;
+
+        private string _popupMessage;
+        private bool _isPopupOpen = false;
+        private Color _popupBackground;
+        private Color _popupForeground;
 
         private bool _isEdit = false;
 
@@ -132,13 +137,43 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public string PStatusMessage
+        public string PopupMessage
         {
-            get => _pStatusMessage;
+            get => _popupMessage;
             set
             {
-                _pStatusMessage = value;
-                OnPropertyChanged(nameof(PStatusMessage));
+                _popupMessage = value;
+                OnPropertyChanged(nameof(PopupMessage));
+            }
+        }
+
+        public bool IsPopupOpen
+        {
+            get => _isPopupOpen;
+            set
+            {
+                _isPopupOpen = value;
+                OnPropertyChanged(nameof(IsPopupOpen));
+            }
+        }
+
+        public Color PopupBackground
+        {
+            get => _popupBackground;
+            set
+            {
+                _popupBackground = value;
+                OnPropertyChanged(nameof(PopupBackground));
+            }
+        }
+
+        public Color PopupForeground
+        {
+            get => _popupForeground;
+            set
+            {
+                _popupForeground = value;
+                OnPropertyChanged(nameof(PopupForeground));
             }
         }
 
@@ -180,11 +215,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (await _formulaService.IsUnique(formulaStyle.Name))
                 {
                     await _formulaService.Add(formulaStyle);
-                    PStatusMessage = "Стиль успешно добавлен";
+                    await ShowPopup("Стиль успешно добавлен", PopupType.Good);
                 }
                 else
                 {
-                    PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Bad);
                 }
             }
             catch (Exception ex)
@@ -224,11 +259,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (isUnique)
                 {
                     await _formulaService.Update(formulaStyle);
-                    PStatusMessage = "Стиль успешно обновлен";
+                    await ShowPopup("Стиль успешно обновлен", PopupType.Good);
                 }
                 else
                 {
-                    PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Bad);
                 }
             }
             catch (Exception ex)
@@ -270,6 +305,30 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public void Reset(object? parameter)
         {
             Reset();
+        }
+
+        private async Task ShowPopup(string message, PopupType type)
+        {
+            switch (type)
+            {
+                case PopupType.Bad:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#fc9d9d");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#570000");
+                    break;
+                case PopupType.Good:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#b1ffa8");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#085200");
+                    break;
+                default:
+                    PopupBackground = Colors.White;
+                    PopupForeground = Colors.Black;
+                    break;
+            }
+
+            PopupMessage = message;
+            IsPopupOpen = true;
+            await Task.Delay(2000);
+            IsPopupOpen = false;
         }
     }
 }

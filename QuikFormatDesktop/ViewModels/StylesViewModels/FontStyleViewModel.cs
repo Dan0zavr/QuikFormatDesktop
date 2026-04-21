@@ -3,14 +3,10 @@ using Microsoft.Extensions.Options;
 using QuikFormatDesktop.Exceptions;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
-using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -23,12 +19,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _styleName;
         private Font _selectedFont;
         private int _selectedFontSize;
-        private string _pStatusMessage;
+        private string _popupMessage;
 
         private bool _isEdit = false;
 
         private List<Font> _fonts = new List<Font>();
         private List<int> _fontSizes = new List<int>();
+
+        private bool _isPopupOpen = false;
+        private Color _popupBackground;
+        private Color _popupForeground;
 
         public ICommand AddTextCommand { get; }
         public ICommand UpdateTextCommand{ get; }
@@ -126,13 +126,43 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public string PStatusMessage
+        public string PopupMessage
         {
-            get => _pStatusMessage;
+            get => _popupMessage;
             set
             {
-                _pStatusMessage = value;
-                OnPropertyChanged(nameof(PStatusMessage));
+                _popupMessage = value;
+                OnPropertyChanged(nameof(PopupMessage));
+            }
+        }
+
+        public bool IsPopupOpen
+        {
+            get => _isPopupOpen;
+            set
+            {
+                _isPopupOpen = value;
+                OnPropertyChanged(nameof(IsPopupOpen));
+            }
+        }
+
+        public Color PopupBackground
+        {
+            get => _popupBackground;
+            set
+            {
+                _popupBackground = value;
+                OnPropertyChanged(nameof(PopupBackground));
+            }
+        }
+
+        public Color PopupForeground
+        {
+            get => _popupForeground;
+            set
+            {
+                _popupForeground = value;
+                OnPropertyChanged(nameof(PopupForeground));
             }
         }
 
@@ -166,11 +196,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (await _textStyleService.IsUnique(textStyle.Name))
                 {
                     await _textStyleService.Add(textStyle);
-                    PStatusMessage = "Стиль успешно добавлен";
+                    await ShowPopup("Стиль успешно добавлен", PopupType.Good);
                 }
                 else
                 {
-                    PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Bad);
                 }
             }
             catch (FontNotFoundException fex)
@@ -210,11 +240,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (isUnique)
                 {
                     await _textStyleService.Update(textStyle);
-                    PStatusMessage = "Стиль успешно обновлен";
+                    await ShowPopup("Стиль успешно обновлен", PopupType.Good);
                 }
                 else
                 {
-                    PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Bad);
                 }
             }
             catch (FontNotFoundException fex)
@@ -253,6 +283,30 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             OldStyleName = textStyle.Name;
             SelectedFont = Fonts.Where(x => x.Id == textStyle.Font).FirstOrDefault();
             SelectedFontSize = textStyle.FontSize;
+        }
+
+        private async Task ShowPopup(string message, PopupType type)
+        {
+            switch (type)
+            {
+                case PopupType.Bad:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#fc9d9d");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#570000");
+                    break;
+                case PopupType.Good:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#b1ffa8");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#085200");
+                    break;
+                default: 
+                    PopupBackground = Colors.White;
+                    PopupForeground = Colors.Black;
+                    break;
+            }
+
+            PopupMessage = message;
+            IsPopupOpen = true;
+            await Task.Delay(2000);
+            IsPopupOpen = false;
         }
     }
 }

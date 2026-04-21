@@ -68,7 +68,6 @@ namespace QuikFormatDesktop
 
                     services.AddTransient<TemplateViewModel>();
 
-                    services.AddTransient<FormatViewModel>();
                     services.AddTransient<SelectorCardViewModel>();
                     services.AddTransient<PreviewViewModel>();
 

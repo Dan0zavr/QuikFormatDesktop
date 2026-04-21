@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+        <converters:ColorToHexConverter x:Key="ColorToHex"/>
     </UserControl.Resources>
 
     <Border Background="{StaticResource HoverBackColor}" 
@@ -242,7 +243,8 @@
                         Height="40" 
                         Cursor="Hand"
                         MinHeight="70"
-                        Command="{Binding FormatCommand}">
+                        Command="{Binding FormatCommand}"
+                        x:Name="ForPopup">
 
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -266,6 +268,15 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+
+                <Popup IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
+                       Placement="Top"
+                       PlacementTarget="{Binding ElementName=ForPopup}"
+                       StaysOpen="False">
+                    <Border Background="{Binding PopupBackground, Converter={StaticResource ColorToHex}}" Padding="7" MaxWidth="300">
+                        <TextBlock Text="{Binding PopupMessage}" TextWrapping="WrapWithOverflow" Foreground="{Binding PopupForeground, Converter={StaticResource ColorToHex}}" FontSize="14" HorizontalAlignment="Center"/>
+                    </Border>
+                </Popup>
             </StackPanel>
         </Grid>
     </Border>

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -29,11 +30,14 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private double _beforeInterval;
         private double _afterInterval;
         private bool _contextualSpacing = false;
-        private string _pStatusMessage;
-
         private bool _isEdit = false;
 
         private List<double> _intervals;
+
+        private string _popupMessage;
+        private bool _isPopupOpen = false;
+        private Color _popupBackground;
+        private Color _popupForeground;
 
         public ParagraphStyleViewModel(IOptions<ParagraphSettings> options, ParagraphService paragraphService, AlignmentService alignmentService, IDialogService dialogService)
         {
@@ -179,16 +183,6 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public string PStatusMessage
-        {
-            get => _pStatusMessage;
-            set
-            {
-                _pStatusMessage = value;
-                OnPropertyChanged(nameof(PStatusMessage));
-            }
-        }
-
         public List<double> Intervals
         {
             get => _intervals;
@@ -196,6 +190,46 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             {
                 _intervals = value;
                 OnPropertyChanged(nameof(Intervals));
+            }
+        }
+
+        public string PopupMessage
+        {
+            get => _popupMessage;
+            set
+            {
+                _popupMessage = value;
+                OnPropertyChanged(nameof(PopupMessage));
+            }
+        }
+
+        public bool IsPopupOpen
+        {
+            get => _isPopupOpen;
+            set
+            {
+                _isPopupOpen = value;
+                OnPropertyChanged(nameof(IsPopupOpen));
+            }
+        }
+
+        public Color PopupBackground
+        {
+            get => _popupBackground;
+            set
+            {
+                _popupBackground = value;
+                OnPropertyChanged(nameof(PopupBackground));
+            }
+        }
+
+        public Color PopupForeground
+        {
+            get => _popupForeground;
+            set
+            {
+                _popupForeground = value;
+                OnPropertyChanged(nameof(PopupForeground));
             }
         }
 
@@ -231,11 +265,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (await _paragraphService.IsUnique(paragraphStyle.Name))
                 {
                     await _paragraphService.Add(paragraphStyle);
-                    PStatusMessage = "Стиль успешно добавлен";
+                    await ShowPopup("Стиль успешно добавлен", PopupType.Good);
                 }
                 else
                 {
-                    PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Bad);
                 }
             }
             catch (AlignmentNotFoundException aex)
@@ -282,11 +316,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (isUnique)
                 {
                     await _paragraphService.Update(paragraphStyle);
-                    PStatusMessage = "Стиль успешно обновлен";
+                    await ShowPopup("Стиль успешно обновлен", PopupType.Good);
                 }
                 else
                 {
-                    PStatusMessage = "Стиль с таким именем уже существует";
+                    await ShowPopup("Стиль с таким именем уже существует", PopupType.Good);
                 }
             }
             catch (AlignmentNotFoundException aex)
@@ -339,6 +373,30 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             BeforeInterval = (double)paragraphStyle.BeforeInterval;
             AfterInterval =(double)paragraphStyle.AfterInterval;
             ContextualSpacing = paragraphStyle.ContextualSpacing;
+        }
+
+        private async Task ShowPopup(string message, PopupType type)
+        {
+            switch (type)
+            {
+                case PopupType.Bad:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#fc9d9d");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#570000");
+                    break;
+                case PopupType.Good:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#b1ffa8");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#085200");
+                    break;
+                default:
+                    PopupBackground = Colors.White;
+                    PopupForeground = Colors.Black;
+                    break;
+            }
+
+            PopupMessage = message;
+            IsPopupOpen = true;
+            await Task.Delay(2000);
+            IsPopupOpen = false;
         }
     }
 }

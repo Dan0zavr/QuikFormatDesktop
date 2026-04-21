@@ -8,6 +8,7 @@
              xmlns:shortmenu="clr-namespace:QuikFormatDesktop.ViewModels.ShortMenuViewModels"
              xmlns:vm="clr-namespace:QuikFormatDesktop.ViewModels.ShortMenuViewModels"
              xmlns:pages="clr-namespace:QuikFormatDesktop.Views.Pages"
+             xmlns:converters="clr-namespace:QuikFormatDesktop.Views.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="160"
              Background = "{StaticResource BackColor}">
@@ -48,6 +49,7 @@
         </DataTemplate>
 
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:StyleTypeToDescriptionConverter x:Key="StyleTypeToDescription"/>
     </UserControl.Resources>
 
 
@@ -90,7 +92,7 @@
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" Margin="0,5,0,5"/>
+                                        <TextBlock Text="{Binding Name, Converter={StaticResource StyleTypeToDescription}}" FontWeight="Bold" FontSize="14" Margin="0,5,0,5" Foreground="{StaticResource ForeColor}"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>

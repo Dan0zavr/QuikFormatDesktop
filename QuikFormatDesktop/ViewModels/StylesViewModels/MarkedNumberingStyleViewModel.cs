@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -22,9 +23,13 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private string _numberingStyleName;
         private List<Marker> _markers = new List<Marker>();
         private Marker _selectedMarker;
-        private string _pStatusMessage;
+        private string _popupMessage;
 
         private bool _isEdit = false;
+
+        private bool _isPopupOpen = false;
+        private Color _popupBackground;
+        private Color _popupForeground;
 
         public MarkedNumberingStyleViewModel(NumberingService numberingService, MarkerService markerService, IDialogService dialogService)
         {
@@ -106,13 +111,43 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        public string PStatusMessage
+        public string PopupMessage
         {
-            get => _pStatusMessage;
+            get => _popupMessage;
             set
             {
-                _pStatusMessage = value;
-                OnPropertyChanged(nameof(PStatusMessage));
+                _popupMessage = value;
+                OnPropertyChanged(nameof(PopupMessage));
+            }
+        }
+
+        public bool IsPopupOpen
+        {
+            get => _isPopupOpen;
+            set
+            {
+                _isPopupOpen = value;
+                OnPropertyChanged(nameof(IsPopupOpen));
+            }
+        }
+
+        public Color PopupBackground
+        {
+            get => _popupBackground;
+            set
+            {
+                _popupBackground = value;
+                OnPropertyChanged(nameof(PopupBackground));
+            }
+        }
+
+        public Color PopupForeground
+        {
+            get => _popupForeground;
+            set
+            {
+                _popupForeground = value;
+                OnPropertyChanged(nameof(PopupForeground));
             }
         }
 

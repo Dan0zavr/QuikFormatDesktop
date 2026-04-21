@@ -448,7 +448,6 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
         }
 
-
         public void Dispose()
         {
             try
@@ -463,7 +462,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
             catch (Exception ex)
             {
-
+                _dialogService.ShowError($"Произошла ошибка при удалении временных папок, пожалуйста удалите следующие папки: {CurrentFormattedDocxDirectory}, {CurrentFormattedPdfDirectory}, {CurrentOriginalDocxDirectory}");
             }
         }
     }

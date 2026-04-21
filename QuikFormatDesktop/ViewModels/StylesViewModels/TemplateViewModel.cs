@@ -3,6 +3,7 @@ using Microsoft.Web.WebView2.Core;
 using QuikFormatDesktop.Models;
 using QuikFormatDesktop.Models.SupportModels;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.Enums;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuikFormatDesktop.ViewModels.StylesViewModels
 {
@@ -37,16 +39,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private readonly FormulaService _formulaService;
         private readonly TemplateService _templateService;
 
-        private readonly AlignmentService _alignmentService;
-        private readonly PositionService _positionService;
-        private readonly MarkerTypeService _markerTypeService; 
-        private readonly MarkerService _markerService;
+        private bool _isPopupOpen = false;
+        private string _popupMessage;
+        private Color _popupBackground;
+        private Color _popupForeground;
 
         private NavigationStore _navigationStore;
 
         public TemplateViewModel(TextService textService, ParagraphService paragraphService, TableService tableService,
             PictureService pictureService, NumberingService numberingService, FormulaService formulaService, TemplateService templateService,
-            AlignmentService alignmentService, PositionService positionService, MarkerTypeService markerTypeService, MarkerService markerService, 
             NavigationStore navigationStore)
         {
             _textService = textService;
@@ -56,10 +57,6 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _numberingService = numberingService;
             _formulaService = formulaService;
             _templateService = templateService;
-            _alignmentService = alignmentService;
-            _positionService = positionService;
-            _markerTypeService = markerTypeService;
-            _markerService = markerService;
             _navigationStore = navigationStore;
 
             CloseModalCommand = new RelayCommand<object?>(CloseModal);
@@ -178,6 +175,46 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public ObservableCollection<StyleItem> MarkedNumberingStyleItems { get; set; } = new();
         public ObservableCollection<StyleItem> NumberedNumberingStyleItems { get; set; } = new();
         public ObservableCollection<StyleItem> FormulaStyleItems { get; set; } = new();
+
+        public string PopupMessage
+        {
+            get => _popupMessage;
+            set
+            {
+                _popupMessage = value;
+                OnPropertyChanged(nameof(PopupMessage));
+            }
+        }
+
+        public bool IsPopupOpen
+        {
+            get => _isPopupOpen;
+            set
+            {
+                _isPopupOpen = value;
+                OnPropertyChanged(nameof(IsPopupOpen));
+            }
+        }
+
+        public Color PopupBackground
+        {
+            get => _popupBackground;
+            set
+            {
+                _popupBackground = value;
+                OnPropertyChanged(nameof(PopupBackground));
+            }
+        }
+
+        public Color PopupForeground
+        {
+            get => _popupForeground;
+            set
+            {
+                _popupForeground = value;
+                OnPropertyChanged(nameof(PopupForeground));
+            }
+        }
 
         private async Task LoadTextStyles()
         {
@@ -305,9 +342,15 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                     PictureStyle = SelectedPictureStyle?.Id,
                     FormulaStyle = SelectedFormulaStyle?.Id
                 };
+
                 if (await _templateService.IsUnique(template.Name))
                 {
                     await _templateService.Add(template);
+                    await ShowPopup("Шаблон успешно добавлен", PopupType.Good);
+                }
+                else
+                {
+                    await ShowPopup("Шаблон с таким именем уже существует", PopupType.Bad);
                 }
             }
             finally
@@ -344,6 +387,11 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 if (isUniqe)
                 {
                     await _templateService.Update(template);
+                    await ShowPopup("Шаблон успешно обновлен", PopupType.Good);
+                }
+                else
+                {
+                    await ShowPopup("Шаблон с таким именем уже существует", PopupType.Bad);
                 }
             }
             finally
@@ -394,6 +442,30 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 IsLoading = false;
                 OnPropertyChanged(nameof(IsLoading));
             }
+        }
+
+        private async Task ShowPopup(string message, PopupType type)
+        {
+            switch (type)
+            {
+                case PopupType.Bad:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#fc9d9d");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#570000");
+                    break;
+                case PopupType.Good:
+                    PopupBackground = (Color)ColorConverter.ConvertFromString("#b1ffa8");
+                    PopupForeground = (Color)ColorConverter.ConvertFromString("#085200");
+                    break;
+                default:
+                    PopupBackground = Colors.White;
+                    PopupForeground = Colors.Black;
+                    break;
+            }
+
+            PopupMessage = message;
+            IsPopupOpen = true;
+            await Task.Delay(2000);
+            IsPopupOpen = false;
         }
     }
 }

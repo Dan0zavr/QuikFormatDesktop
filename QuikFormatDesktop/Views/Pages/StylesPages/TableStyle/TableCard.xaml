@@ -13,6 +13,7 @@
         <converters:HexToColorConverter x:Key="HexToColorConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisible"/>
+        <converters:ColorToHexConverter x:Key="ColorToHex"/>
     </UserControl.Resources>
 
     <GroupBox Header="{Binding CardName}" FontSize="14" Padding="4" Background="{StaticResource MainBackground}">
@@ -157,23 +158,25 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
-                <TextBlock Text="{Binding PStatusMessage}" 
-                            Foreground="Green" 
-                            FontWeight="Bold"
-                            VerticalAlignment="Center"
-                            Margin="0,0,10,0" />
-
+                
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <StackPanel>
                         <Button Content="Сброс" Width="100" Margin="0,0,10,0" Command="{Binding ResetCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
                         <Button Content="Отмена" Width="100" Margin="0,0,10,0" Command="{Binding ResetCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" x:Name="ForPopup">
                         <Button Content="Добавить" Width="100" Command="{Binding AddTableCommand}" Visibility="{Binding IsEdit, Converter={StaticResource InverseBoolToVisible}}"/>
                         <Button Content="Обновить" Width="100" Command="{Binding UpdateTableCommand}" Visibility="{Binding IsEdit, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
+                    <Popup IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
+                           Placement="Top"
+                           PlacementTarget="{Binding ElementName=ForPopup}"
+                           StaysOpen="False">
+                        <Border Background="{Binding PopupBackground, Converter={StaticResource ColorToHex}}" Padding="7" MaxWidth="100">
+                            <TextBlock Text="{Binding PopupMessage}" TextWrapping="WrapWithOverflow" Foreground="{Binding PopupForeground, Converter={StaticResource ColorToHex}}" FontSize="11" HorizontalAlignment="Center"/>
+                        </Border>
+                    </Popup>
                 </StackPanel>
             </Grid>
         </Grid>

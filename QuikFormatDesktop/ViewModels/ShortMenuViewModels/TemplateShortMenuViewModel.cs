@@ -32,7 +32,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
             DeleteCommand = new RelayCommand<object?>(OpenDeleteWarning);
             DetailCommand = new RelayCommand<object?>(GoToDetails);
-            SelectCommand = new RelayCommand<object?>(TransferTemplate);
+            SelectCommand = new AsyncRelayCommand(TransferTemplate);
         }
 
         public ICommand DeleteCommand { get; }
@@ -50,7 +50,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             }
         }
 
-        private async Task DeleteTemplate(object? parameter)
+        private async Task DeleteTemplate()
         {
             await _templateService.Delete(_template);
             ClosePopup?.Invoke();
@@ -73,15 +73,15 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
             {
                 ClosePopup?.Invoke();
                 deleteWarning.Load(_template);
-                deleteWarning.DeleteCommand = new AsyncRelayCommand<object?>(DeleteTemplate);
+                deleteWarning.DeleteCommand = new AsyncRelayCommand(DeleteTemplate);
             }
         }
 
-        private void TransferTemplate(object? parameter)
+        private async Task TransferTemplate()
         {
             if (_navigationStore.CurrentViewModel is FormatViewModel format)
             {
-                format.SelectorCardViewModel.LoadTemplate(_template);
+                await format.SelectorCardViewModel.LoadTemplate(_template);
                 ClosePopup?.Invoke();
             }
         }
