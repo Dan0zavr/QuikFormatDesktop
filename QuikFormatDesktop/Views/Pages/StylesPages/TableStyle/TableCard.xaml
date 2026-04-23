@@ -113,10 +113,10 @@
                                                                               ConverterParameter={x:Static enums:AlignmentType.Bottom}}"/>
                     </UniformGrid>
 
-                    <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                    <!--<StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
                         <TextBlock Text="Отступы внутри ячеек (см):" FontSize="12"/>
                         <TextBox FontSize="12" Margin="10, 0, 0, 0" Width="200" VerticalAlignment="Center" Text="{Binding Padding, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
+                    </StackPanel>-->
                 </StackPanel>
             </Grid>
 

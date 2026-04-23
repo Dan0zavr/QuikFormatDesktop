@@ -48,17 +48,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SelectedAlignment = AlignmentType.Both;
             SelectedInterval = options.Value.DefaultInterval;
 
-            AddParagraphCommand = new AsyncRelayCommand<object?>(AddParagraphStyleAsync, CanAddParagraphStyle);
-            UpdateParagraphCommand = new AsyncRelayCommand<object?>(UpdateParagraphStyleAsync, CanAddParagraphStyle);
-            ResetCommand = new RelayCommand<object?>(Reset);
+            AddParagraphCommand = new AsyncRelayCommand(AddParagraphStyleAsync, CanAddParagraphStyle);
+            UpdateParagraphCommand = new AsyncRelayCommand(UpdateParagraphStyleAsync, CanAddParagraphStyle);
+            ResetCommand = new RelayCommand(Reset);
             CancelCommand = new RelayCommand<object?>(_ => RequestReset?.Invoke());
         }
 
         public event Action RequestReset;
 
         public ICommand CancelCommand { get; }
-
-        public ICommand ResetCommand;
+        public ICommand ResetCommand { get; }
         public ICommand AddParagraphCommand { get; }
         public ICommand UpdateParagraphCommand { get; }
 
@@ -233,7 +232,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        private bool CanAddParagraphStyle(object? parameter)
+        private bool CanAddParagraphStyle()
         {
             return !string.IsNullOrWhiteSpace(ParagraphStyleName) &&
                    FirstLineIndent != null &&
@@ -243,7 +242,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                    BeforeInterval != null;
         }
 
-        private async Task AddParagraphStyleAsync(object? parameter)
+        private async Task AddParagraphStyleAsync()
         {
             try
             {
@@ -286,7 +285,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
-        private async Task UpdateParagraphStyleAsync(object? parameter)
+        private async Task UpdateParagraphStyleAsync()
         {
             try
             {
@@ -349,11 +348,6 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             BeforeInterval = 0;
             AfterInterval = 0;
             ContextualSpacing = false;
-        }
-
-        public void Reset(object? parameter)
-        {
-            Reset();
         }
 
         public void Load(ParagraphStyle paragraphStyle, bool isEdit)

@@ -136,6 +136,13 @@ namespace QuikFormatDesktop
 
         protected override async void OnExit(ExitEventArgs e)
         {
+            var navigationStore = _host.Services.GetRequiredService<NavigationStore>();
+            if (navigationStore.CurrentViewModel is FormatViewModel formatVm)
+            {
+                PreviewViewModel previewViewModel = formatVm.PreviewViewModel;
+                await previewViewModel.DisposeAsync();
+            }
+
             await _host.StopAsync();
             _host.Dispose();
             base.OnExit(e);

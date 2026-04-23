@@ -142,7 +142,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             {
                 _tableStyle = value;
                 OnPropertyChanged(nameof(TableStyle));
-                OnPropertyChanged(nameof(IsTextStyleVisible));
+                OnPropertyChanged(nameof(IsTableStyleVisible));
             }
         }
         public PictureStyle PictureStyle
@@ -312,7 +312,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
             List<int> deletedIndexes = new List<int>();
 
-            while (parts.Sum(x => x.Length) > 39)
+            while (parts.Sum(x => x.Length) > 35)
             {
                 if (parts.Count == 2) break;
 

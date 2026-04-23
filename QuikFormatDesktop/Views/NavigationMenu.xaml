@@ -101,7 +101,7 @@
 
                     <Popup IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
                            Placement="Right"
-                           PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=ListBox}}"
+                           PlacementTarget="{Binding ElementName=StyleListBox}"
                            StaysOpen="False">
 
                         <i:Interaction.Behaviors>

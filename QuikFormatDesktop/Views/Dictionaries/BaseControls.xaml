@@ -268,6 +268,7 @@
             <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -275,11 +276,7 @@
 
                         <Border x:Name="Root"
                         Background="{TemplateBinding Background}">
-
-                            <ContentPresenter
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch"/>
-
+                            <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
 

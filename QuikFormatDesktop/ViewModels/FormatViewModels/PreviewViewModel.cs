@@ -20,7 +20,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace QuikFormatDesktop.ViewModels.FormatViewModels
 {
-    public class PreviewViewModel : ViewModelBase, IDisposable
+    public class PreviewViewModel : ViewModelBase, IAsyncDisposable
     {
         private readonly SemaphoreSlim _processSemaphore = new SemaphoreSlim(1, 1);
 
@@ -258,6 +258,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private async Task<string> ConvertToPictures(string pdfFile, string docxFile, string pdfDirectory, ObservableCollection<ImageItem> picturesList)
         {
             pdfFile = await Convert(docxFile, pdfDirectory);
+            if (string.IsNullOrEmpty(pdfFile)) return "";
             string picturesDirectory = Directory.CreateDirectory(Path.Combine(pdfDirectory, "Pictures")).FullName;
             picturesList.Clear();
             var pictures = PdfToPngConverter.Convert(pdfFile, picturesDirectory);
@@ -271,56 +272,84 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<string> Convert(string docxPath, string pdfPath)
         {
-            if (_currentProcess != null && !_currentProcess.HasExited)
+            try
             {
-                var oldProcess = _currentProcess;
+                if (_currentProcess != null)
+                {
+                    try
+                    {
+                        if (!_currentProcess.HasExited)
+                        {
+                            _currentProcess.Kill();
+                            await _currentProcess.WaitForExitAsync();
+                        }
+                    }
+                    catch { }
+                    finally
+                    {
+                        _currentProcess.Dispose();
+                        _currentProcess = null;
+                    }
+                }
 
-                oldProcess.Kill();
+                if (docxPath == null)
+                {
+                    return null;
+                }
 
-                await oldProcess.WaitForExitAsync();
-                oldProcess.Dispose();
+                Priority priority = _options.Value.ConverterPriority;
+
+                string exePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PdfConverter.exe");
+
+                if (!Path.Exists(exePath))
+                {
+                    _dialogService.ShowError("Не найден файл PdfConverter.exe, переустановите приложение или добавьте файл в корневую папку");
+                    return "";
+                }
+
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = $"\"{priority.ToString()}\" \"{docxPath}\" \"{pdfPath}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                startInfo.StandardOutputEncoding = Encoding.UTF8;
+                startInfo.StandardErrorEncoding = Encoding.UTF8;
+
+                using var process = new Process { StartInfo = startInfo };
+                _currentProcess = process;
+                process.Start();
+
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+
+                await process.WaitForExitAsync();
+
+                string result = await outputTask;
+                string error = await errorTask;
+
+                int exitCode = process.ExitCode;
+
+                process.Close();
+                _currentProcess = null;
+
+                if (exitCode != 0)
+                {
+                    _dialogService.ShowError(error);
+                    return string.Empty;
+                }
+
+                return result?.Trim() ?? string.Empty;
             }
-
-            if (docxPath == null)
+            catch (Exception ex)
             {
-                return null;
+                _dialogService.ShowError($"Произошла ошибка {ex}");
+                return "";
             }
-                
-            Priority priority = _options.Value.ConverterPriority;
-
-            string exePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PdfConverter.exe");
-
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = exePath,
-                Arguments = $"\"{priority.ToString()}\" \"{docxPath}\" \"{pdfPath}\"",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            startInfo.StandardOutputEncoding = Encoding.UTF8;
-            startInfo.StandardErrorEncoding = Encoding.UTF8;
-
-            _currentProcess = new Process { StartInfo = startInfo };
-            _currentProcess.Start();
-
-            Task<string> outputTask = _currentProcess.StandardOutput.ReadToEndAsync();
-            Task<string> errorTask = _currentProcess.StandardError.ReadToEndAsync();
-            Task waitForExitTask = _currentProcess.WaitForExitAsync();
-
-            await Task.WhenAll(outputTask, errorTask, waitForExitTask);
-
-            string result = outputTask.Result;
-            string error = errorTask.Result;
-
-            if (_currentProcess.ExitCode != 0)
-            {
-                _dialogService.ShowError(error);
-            }
-
-            return result.Trim();
         }
 
         private string CreateTempPath()
@@ -448,22 +477,69 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             try
             {
-                _currentProcess?.Kill();
-                _currentProcess?.Dispose();
+                if (_currentProcess != null)
+                {
+                    try
+                    {
+                        if (!_currentProcess.HasExited)
+                        {
+                            _currentProcess.Kill();
+                            await _currentProcess.WaitForExitAsync();
+                            await Task.Delay(200);
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+
+                    }
+                    finally
+                    {
+                        _currentProcess.Dispose();
+                        _currentProcess = null;
+                    }
+                }
 
                 if (Directory.Exists(CurrentFormattedPdfDirectory)) Directory.Delete(CurrentFormattedPdfDirectory, true);
                 if (Directory.Exists(CurrentFormattedDocxDirectory)) Directory.Delete(CurrentFormattedDocxDirectory, true);
-
                 if (Directory.Exists(CurrentOriginalPdfDirectory)) Directory.Delete(CurrentOriginalPdfDirectory, true);
+
+                await DeleteDirectoryWithRetry(CurrentFormattedPdfDirectory);
+                await DeleteDirectoryWithRetry(CurrentFormattedDocxDirectory);
+                await DeleteDirectoryWithRetry(CurrentOriginalPdfDirectory);
             }
             catch (Exception ex)
             {
-                _dialogService.ShowError($"Произошла ошибка при удалении временных папок, пожалуйста удалите следующие папки: {CurrentFormattedDocxDirectory}, {CurrentFormattedPdfDirectory}, {CurrentOriginalDocxDirectory}");
+                _dialogService.ShowError($"Произошла ошибка при удалении временных папок, пожалуйста удалите следующие папки: {CurrentFormattedDocxDirectory}, {CurrentFormattedPdfDirectory}");
             }
+        }
+
+        private async Task DeleteDirectoryWithRetry(string path)
+        {
+        if (!Directory.Exists(path))
+            return;
+
+        for (int i = 0; i < 5; i++)
+        {
+            try
+            {
+                Directory.Delete(path, true);
+                return;
+            }
+            catch (IOException)
+            {
+                await Task.Delay(200);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                await Task.Delay(200);
+            }
+        }
+
+        throw new Exception($"Не удалось удалить папку: {path}");
         }
     }
 }

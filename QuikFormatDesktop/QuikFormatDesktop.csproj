@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -73,6 +73,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
     <PackageReference Include="PdfiumViewer" Version="2.13.0" />
     <PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" Version="2018.4.8.256" />
@@ -86,12 +87,6 @@
     <ProjectReference Include="..\..\XMLParser\XMLParser\XMLParser.csproj" />
     <ProjectReference Include="..\PdfConverter\PdfConverter.csproj" />
   </ItemGroup>
-
-	<ItemGroup>
-		<None Include="$(SolutionDir)PdfConverter\bin\$(Configuration)\net10.0\PdfConverter.exe">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
 
   <ItemGroup>
     <Resource Include="Views\Dictionaries\BaseControls.xaml" />
@@ -208,5 +203,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+   <Target Name="CopyPdfConverterToPublish" AfterTargets="Publish">
+	   <Copy SourceFiles="..\PdfConverter\bin\$(Configuration)\net10.0\PdfConverter.exe" DestinationFolder="$(PublishDir)" />
+   </Target>
 
 </Project>

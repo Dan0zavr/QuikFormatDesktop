@@ -12,9 +12,9 @@ namespace QuikFormatDesktop.ViewModels.Navigation
             get => _currentViewModel;
             set
             {
-                if (_currentViewModel is IDisposable disposableOld)
+                if (_currentViewModel is IAsyncDisposable asyncDisposable)
                 {
-                    disposableOld.Dispose();
+                   asyncDisposable.DisposeAsync();
                 }
 
                 _currentViewModel = value;
