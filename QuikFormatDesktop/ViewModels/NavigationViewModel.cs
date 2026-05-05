@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models.SupportModels;
 using QuikFormatDesktop.ViewModels.Commands;
 using QuikFormatDesktop.ViewModels.Commands.ModalCommands;
 using QuikFormatDesktop.ViewModels.Enums;
@@ -23,6 +25,7 @@ namespace QuikFormatDesktop.ViewModels
     {
         private readonly NavigationStore _navigationStore;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IOptions<SystemStyles> _styles;
 
         private readonly TemplateService _templateService;
         private readonly TextService _textService;
@@ -56,10 +59,11 @@ namespace QuikFormatDesktop.ViewModels
             FontService fontService,
             AlignmentService alignmentService,
             PositionService positionService, MarkerService markerService, 
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, IOptions<SystemStyles> styles)
         {
             _navigationStore = navigationStore;
             _serviceProvider = serviceProvider;
+            _styles = styles;
 
             _templateService = templateService;
             _textService = textService;
@@ -76,7 +80,7 @@ namespace QuikFormatDesktop.ViewModels
 
             GoToStyles = new NavigateCommand<StylesViewModel>(navigationToStylesService);
             GoToFormat = new NavigateCommand<FormatViewModel>(navigationToFormatService);
-            OpenTemplateModal = new OpenTemplateModalCommand(modalNavigationService);
+            OpenTemplateModal = new OpenTemplateModalCommand<TemplateViewModel>(modalNavigationService);
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
@@ -225,6 +229,13 @@ namespace QuikFormatDesktop.ViewModels
                     t.Type = StyleType.Template;
                     Items.Add(t);
                 }
+
+                foreach (var t in _styles.Value.Templates)
+                {
+                    t.Type = StyleType.SystemTemplate;
+                    Items.Add(t);
+                }
+
             }
             else if (_navigationStore.CurrentViewModel is StylesViewModel stylesVM)
             {
@@ -286,7 +297,7 @@ namespace QuikFormatDesktop.ViewModels
                         Items.Add(item);
                     }
 
-                    var numberedNumbering = await _numberingService.GetStylesByType(MarkerTypeEnum.Numberd);
+                    var numberedNumbering = await _numberingService.GetStylesByType(MarkerTypeEnum.Numbered);
                     foreach (var item in numberedNumbering)
                     {
                         item.Type = StyleType.NumberedNumbering;
@@ -389,10 +400,20 @@ namespace QuikFormatDesktop.ViewModels
                     vm = formulaVm;
                     break;
                 case Template template:
-                    var templateVm = _serviceProvider.GetRequiredService<TemplateShortMenuViewModel>();
-                    templateVm.Load(template);
-                    vm = templateVm;
-                    break;
+                    if (template.Type is StyleType.Template)
+                    {
+                        var templateVm = _serviceProvider.GetRequiredService<TemplateShortMenuViewModel>();
+                        templateVm.Load(template);
+                        vm = templateVm;
+                        break;
+                    }
+                    else
+                    {
+                        var templateVm = _serviceProvider.GetRequiredService<SystemTemplateShortMenuViewModel>();
+                        templateVm.Load(template);
+                        vm = templateVm;
+                        break;
+                    }
 
                 default:
                     PopupViewModel = null;

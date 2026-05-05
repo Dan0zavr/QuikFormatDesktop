@@ -1,8 +1,11 @@
-﻿using QuikFormatDesktop.Models;
+﻿using Microsoft.Extensions.Options;
+using QuikFormatDesktop.Models;
+using QuikFormatDesktop.Models.SupportModels;
 using QuikFormatDesktop.ViewModels.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Markup.Localizer;
 using Xceed.Wpf.Toolkit.Converters;
 
 namespace QuikFormatDesktop.ViewModels.FormatViewModels
@@ -22,9 +25,11 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private readonly AlignmentService _alignmentService;
         private readonly PositionService _positionService;
 
+        private readonly IOptions<SystemStyles> _systemStyles;
+
         public TemplateMapper(TextService textService, ParagraphService paragraphService, PictureService pictureService,
                               TableService tableService, NumberingService numberingService, FormulaService formulaService, FontService fontService,
-                              MarkerService markerService, MarkerTypeService markerTypeService, AlignmentService alignmentService, PositionService positionService)
+                              MarkerService markerService, MarkerTypeService markerTypeService, AlignmentService alignmentService, PositionService positionService, IOptions<SystemStyles> systemStyles)
         {
             _textService = textService;
             _paragraphService = paragraphService;
@@ -37,6 +42,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             _markerTypeService = markerTypeService;
             _alignmentService = alignmentService;
             _positionService = positionService;
+            _systemStyles = systemStyles;
         }
 
         public async Task<XMLParser.Styles.Template> MapToParser(Template template)
@@ -75,8 +81,16 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<XMLParser.Styles.TextStyle> MapTextStyle(int id)
         {
-            TextStyle textStyle = await _textService.GetById(id);
+            TextStyle textStyle = null;
 
+            if (id < 0)
+            {
+                textStyle = _systemStyles.Value.TextStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else
+            {
+                textStyle = await _textService.GetById(id);
+            }
             XMLParser.Styles.TextStyle parserStyle = new XMLParser.Styles.TextStyle
             {
                 FontName = (await _fontService.GetById(textStyle.Font)).FontName,
@@ -88,7 +102,16 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<XMLParser.Styles.ParagraphStyle> MapParagraphStyle(int id)
         {
-            ParagraphStyle paragraphStyle = await _paragraphService.GetById(id);
+            ParagraphStyle paragraphStyle = null;
+
+            if (id < 0)
+            {
+                paragraphStyle = _systemStyles.Value.ParagraphStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else
+            {
+                paragraphStyle = await _paragraphService.GetById(id);
+            }
 
             XMLParser.Styles.ParagraphStyle parserStyle = new XMLParser.Styles.ParagraphStyle
             {
@@ -107,13 +130,38 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<XMLParser.Styles.NumberingElementStyle> MapNumberingStyle(int id)
         {
-            NumberingStyle numberingStyle = await _numberingService.GetById(id);
+            NumberingStyle numberingStyle = null;
+
+            if (id < 0)
+            {
+                numberingStyle = _systemStyles.Value.NumberingStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else
+            {
+                numberingStyle = await _numberingService.GetById(id);
+            }
+            
             Marker marker = await _markerService.GetById(numberingStyle.Marker);
+            string markerType = (await _markerTypeService.GetById(marker.MarkerType)).Type.ToString();
+
+            string parserMarkerType = "";
+
+            switch (markerType.ToLower())
+            {
+                case "marked":
+                    parserMarkerType = "bullet";
+                    break;
+                case "numbered":
+                    parserMarkerType = "decimal";
+                    break;
+                default:
+                    break;
+            }
 
             XMLParser.Styles.NumberingElementStyle parserStyle = new XMLParser.Styles.NumberingElementStyle
             {
                 Marker = marker.Marker1,
-                NumberingType = (await _markerTypeService.GetById(marker.MarkerType)).Type
+                NumberingType = parserMarkerType
             };
 
             return parserStyle;
@@ -121,7 +169,16 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<XMLParser.Styles.TableStyle> MapTableStyle(int id)
         {
-            TableStyle tableStyle = await _tableService.GetById(id);
+            TableStyle tableStyle = null;
+
+            if (id < 0)
+            {
+                tableStyle = _systemStyles.Value.TableStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else 
+            {
+                tableStyle = await _tableService.GetById(id);
+            }
 
             XMLParser.Styles.TextStyle parserTextStyle = await MapTextStyle(tableStyle.TextStyle);
             XMLParser.Styles.ParagraphStyle parserParagraphStyle = await MapParagraphStyle(tableStyle.ParagraphStyle);
@@ -141,7 +198,15 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<XMLParser.Styles.PictureStyle> MapPictureStyle(int id)
         {
-            PictureStyle pictureStyle = await _pictureService.GetById(id);
+            PictureStyle pictureStyle = null;
+            if (id < 0)
+            {
+                pictureStyle = _systemStyles.Value.PictureStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else
+            {
+                pictureStyle = await _pictureService.GetById(id);
+            }
             XMLParser.Styles.ParagraphStyle paragraphStyle = await MapParagraphStyle(pictureStyle.ParagraphStyle);
 
             XMLParser.Styles.PictureStyle parserStyle = new XMLParser.Styles.PictureStyle
@@ -156,7 +221,17 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task<XMLParser.Styles.FormulaStyle> MapFormulaStyle(int id)
         {
-            FormulaStyle formulaStyle = await _formulaService.GetById(id);
+            FormulaStyle formulaStyle = null;
+
+            if (id < 0)
+            {
+                formulaStyle = _systemStyles.Value.FormulaStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else
+            {
+                formulaStyle = await _formulaService.GetById(id);
+            }
+
             Enum.TryParse( (await _positionService.GetById(formulaStyle.Position)).Position1, true, out XMLParser.Styles.AlignmentPreset alignment);
 
             string numerationFormat = null;

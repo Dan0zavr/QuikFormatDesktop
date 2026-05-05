@@ -58,7 +58,7 @@ namespace QuikFormatDesktop.ViewModels.ShortMenuViewModels
 
         private void GoToDetails(object? parameter)
         {
-            new OpenTemplateModalCommand(_navigationService).Execute(parameter);
+            new OpenTemplateModalCommand<TemplateViewModel>(_navigationService).Execute(parameter);
             if (_navigationStore.CurrentModalViewModel is TemplateViewModel vm)
             {
                 vm.InitializeAsync(_template, true);

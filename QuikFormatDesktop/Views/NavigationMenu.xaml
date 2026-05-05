@@ -48,6 +48,10 @@
             <pages:ShortTemplateMenu/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type vm:SystemTemplateShortMenuViewModel}">
+            <pages:ShortSystemTemplateMenu/>
+        </DataTemplate>
+
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <converters:StyleTypeToDescriptionConverter x:Key="StyleTypeToDescription"/>
     </UserControl.Resources>

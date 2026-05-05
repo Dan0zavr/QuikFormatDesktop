@@ -184,7 +184,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             SelectedPosition = PositionType.CenterRight;
             InsertBlankLines = false;
             IsNumberingEnabled = true;
-            NumberingFormats = await _markerService.GetByType(MarkerTypeEnum.Numberd);
+            NumberingFormats = await _markerService.GetByType(MarkerTypeEnum.Numbered);
             SelectedNumberingFormat = _numberingFormats.FirstOrDefault();
         }
 

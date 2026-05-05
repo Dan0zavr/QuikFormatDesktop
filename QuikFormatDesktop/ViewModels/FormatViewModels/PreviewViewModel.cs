@@ -236,21 +236,29 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         {
             if (_navigationStore.CurrentViewModel is FormatViewModel formatViewModel)
             {
-                if (formatViewModel.SelectorCardViewModel.Template != null)
+                try
                 {
-                    CurrentFormattedDocxDirectory = CreateTempPath();
-                    CurrentFormattedPdfDirectory = CreateTempPath();
+                    if (formatViewModel.SelectorCardViewModel.Template != null)
+                    {
+                        CurrentFormattedDocxDirectory = CreateTempPath();
+                        CurrentFormattedPdfDirectory = CreateTempPath();
 
-                    XMLParser.ParseManager parseManager = new XMLParser.ParseManager();
+                        XMLParser.ParseManager parseManager = new XMLParser.ParseManager();
 
-                    XMLParser.Styles.Template template = await _templateMapper.MapToParser(formatViewModel.SelectorCardViewModel.Template);
-                    int[] ignoredPages = GetIgnoredPages(OriginalPictures);
+                        XMLParser.Styles.Template template = await _templateMapper.MapToParser(formatViewModel.SelectorCardViewModel.Template);
+                        int[] ignoredPages = GetIgnoredPages(OriginalPictures);
 
-                    CurrentFormattedDocxFile = parseManager.MainScript(CurrentOriginalDocxFile, CurrentFormattedDocxDirectory, template, ignoredPages, CurrentOriginalPdfFile);
+                        CurrentFormattedDocxFile = parseManager.MainScript(CurrentOriginalDocxFile, CurrentFormattedDocxDirectory, template, ignoredPages, CurrentOriginalPdfFile);
 
-                    CurrentFormattedPicturesDirectory = await ConvertToPictures(CurrentFormattedPdfFile, CurrentFormattedDocxFile, CurrentFormattedPdfDirectory, FormattedPictures);
+                        CurrentFormattedPicturesDirectory = await ConvertToPictures(CurrentFormattedPdfFile, CurrentFormattedDocxFile, CurrentFormattedPdfDirectory, FormattedPictures);
 
-                    IsFormattedDocumentDone = true;
+                        IsFormattedDocumentDone = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _dialogService.ShowError($"Произошла ошибка конвертации: {ex.Message}");
+                    formatViewModel.SelectorCardViewModel.DocumentPath = null;
                 }
             }
         }

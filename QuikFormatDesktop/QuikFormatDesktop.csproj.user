@@ -76,7 +76,13 @@
     <Compile Update="Views\Pages\StylesPages\TextStyle\TextStylePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Pages\TemplateWindow\ShortSystemTemplateMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Pages\TemplateWindow\ShortTemplateMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\TemplateWindow\SystemTemplateModalWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Pages\TemplateWindow\TemplateModalWindow.xaml.cs">

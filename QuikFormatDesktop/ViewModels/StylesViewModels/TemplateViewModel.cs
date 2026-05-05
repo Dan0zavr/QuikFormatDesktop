@@ -242,7 +242,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private async Task LoadNumberingStyles()
         {
             List<NumberingStyle> markedNumbering = await _numberingService.GetStylesByType(Enums.MarkerTypeEnum.Marked);
-            List<NumberingStyle> numberedNumbering = await _numberingService.GetStylesByType(Enums.MarkerTypeEnum.Numberd);
+            List<NumberingStyle> numberedNumbering = await _numberingService.GetStylesByType(Enums.MarkerTypeEnum.Numbered);
 
             FillCollection(MarkedNumberingStyleItems, markedNumbering, includeEmpty: true);
             FillCollection(NumberedNumberingStyleItems, numberedNumbering, includeEmpty: true);

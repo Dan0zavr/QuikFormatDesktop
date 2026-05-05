@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -28,6 +29,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private readonly PictureService _pictureService;
         private readonly FormulaService _formulaService;
         private readonly NavigationStore _navigationStore;
+        private readonly IOptions<SystemStyles> _systemStyles;
 
         private Template _template;
 
@@ -58,7 +60,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         public SelectorCardViewModel(TextService textService, ParagraphService paragraphService,
             NumberingService numberingService, TableService tableService, PictureService pictureService,
-            FormulaService formulaService, NavigationStore navigationStore)
+            FormulaService formulaService, NavigationStore navigationStore, IOptions<SystemStyles> systemStyles)
         {
             _textService = textService;
             _paragraphService = paragraphService;
@@ -67,6 +69,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             _pictureService = pictureService;
             _formulaService = formulaService;
             _navigationStore = navigationStore;
+            _systemStyles = systemStyles;
 
             CleanTemplateCommand = new RelayCommand(CleanTemplate);
             OpenFileDialogCommand = new RelayCommand(OpenFileDialog);
@@ -289,6 +292,20 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             if (_template.MarkedNumberingStyle != null) MarkedNumberingStyle = await _numberingService.GetById((int)_template.MarkedNumberingStyle);
             if(_template.PictureStyle != null) PictureStyle = await _pictureService.GetById((int)_template.PictureStyle);
             if(_template.FormulaStyle != null) FormulaStyle = await _formulaService.GetById((int)_template.FormulaStyle);
+        }
+
+        public async Task LoadSystemTemplate(Template template)
+        {
+            Template = template;
+            TemplateName = _template.Name;
+            Description = _template.Description;
+            if (_template.TextStyle != null) TextStyle = _systemStyles.Value.TextStyles.FirstOrDefault(x => x.Id == template.TextStyle);
+            if (_template.ParagraphStyle != null) ParagraphStyle = _systemStyles.Value.ParagraphStyles.FirstOrDefault(x => x.Id == template.ParagraphStyle);
+            if (_template.TableStyle != null) TableStyle = _systemStyles.Value.TableStyles.FirstOrDefault(x => x.Id == template.TableStyle);
+            if (_template.PictureStyle != null) PictureStyle = _systemStyles.Value.PictureStyles.FirstOrDefault(x => x.Id == template.PictureStyle);
+            if (_template.NumberedNumberingStyle != null) NumberedNumberingStyle = _systemStyles.Value.NumberingStyles.FirstOrDefault(x => x.Id == template.NumberedNumberingStyle);
+            if (_template.MarkedNumberingStyle != null) MarkedNumberingStyle = _systemStyles.Value.NumberingStyles.FirstOrDefault(x => x.Id == template.MarkedNumberingStyle);
+            if (_template.FormulaStyle != null) FormulaStyle = _systemStyles.Value.FormulaStyles.FirstOrDefault(x => x.Id == template.FormulaStyle);
         }
 
         private void CleanTemplate()

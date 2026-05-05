@@ -317,19 +317,23 @@ public partial class QfDbContext : DbContext
 
         modelBuilder.Entity<MarkerType>().HasData(
             new MarkerType { Id = 1, Type = MarkerTypeEnum.Marked.ToString().ToLower() },
-            new MarkerType { Id = 2, Type = MarkerTypeEnum.Numberd.ToString().ToLower() });
+            new MarkerType { Id = 2, Type = MarkerTypeEnum.Numbered.ToString().ToLower() });
 
         modelBuilder.Entity<Marker>().HasData(
             new Marker { Id = 1, Marker1 = "&#8211;", MarkerType = 1 },
             new Marker { Id = 2, Marker1 = "&#8226;", MarkerType = 1 },
             new Marker { Id = 3, Marker1 = "&#8227;", MarkerType = 1 },
-            new Marker { Id = 4, Marker1 = "$.", MarkerType = 2 },
-            new Marker { Id = 5, Marker1 = "$)", MarkerType = 2 });
+            new Marker { Id = 4, Marker1 = "–", MarkerType = 1 },
+            new Marker { Id = 5, Marker1 = "$.", MarkerType = 2 },
+            new Marker { Id = 6, Marker1 = "$)", MarkerType = 2 },
+            new Marker { Id = 7, Marker1 = "($)", MarkerType = 2}
+        );
 
         modelBuilder.Entity<Font>().HasData(
-        new Font { Id = 1, FontName = "Arial" },
-        new Font { Id = 2, FontName = "Times New Roman" },
-        new Font { Id = 3, FontName = "Calibri" });
+            new Font { Id = 1, FontName = "Times New Roman" },
+            new Font { Id = 2, FontName = "Arial" },
+            new Font { Id = 3, FontName = "Calibri" }
+        );
 
         OnModelCreatingPartial(modelBuilder);
     }

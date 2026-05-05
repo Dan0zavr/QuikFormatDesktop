@@ -179,7 +179,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private async Task LoadMarkers()
         {
             _markers.Clear();
-            _markers = await _markerService.GetByType(MarkerTypeEnum.Numberd);
+            _markers = await _markerService.GetByType(MarkerTypeEnum.Numbered);
             _selectedMarker = _markers.FirstOrDefault();
         }
 

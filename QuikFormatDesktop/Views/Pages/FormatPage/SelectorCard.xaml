@@ -26,8 +26,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
@@ -64,7 +64,7 @@
                         <i:EventTrigger EventName="Drop">
                             <i:InvokeCommandAction Command="{Binding DropDocumentCommand}" PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
-                        
+
                         <i:EventTrigger EventName="DragOver">
                             <i:InvokeCommandAction Command="{Binding DragOverCommand}" PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
@@ -107,9 +107,7 @@
                                     BorderBrush="{StaticResource BorderColor}" 
                                     BorderThickness="1">
                                 <TextBlock Text="Обзор..." HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BaseText}" FontSize="14"/>
-
                             </Border>
-
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="TemplateCard" Property="Background" Value="{StaticResource ButtonColor}"/>
@@ -120,36 +118,45 @@
                 </Button>
             </Grid>
 
-            <Grid Grid.Row="2" Margin="0,0,0,20" VerticalAlignment="Top">
+            <Grid Grid.Row="2" Margin="0,0,0,20">
 
                 <Border Background="{StaticResource BackColor}" 
                         BorderBrush="{StaticResource BorderColor}" 
                         BorderThickness="2" 
                         CornerRadius="8" 
                         Padding="15"
+                        VerticalAlignment="Top"
                         Visibility="{Binding IsTemplateSelected, Converter={StaticResource InverseBoolToVis}}">
                     <TextBlock Text="Выберите шаблон из списка" HorizontalAlignment="Center" Style="{StaticResource BaseText}"/>
-
                 </Border>
 
+                <Grid Visibility="{Binding IsTemplateSelected, Converter={StaticResource BoolToVis}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <StackPanel Visibility="{Binding IsTemplateSelected, Converter={StaticResource BoolToVis}}">
-                    <TextBlock Text="Выбранный шаблон:" Style="{StaticResource BaseText}" FontSize="16" Margin="0,0,0,8"/>
+                    <TextBlock Grid.Row="0" Text="Выбранный шаблон:" Style="{StaticResource BaseText}" FontSize="16" Margin="0,0,0,8"/>
 
-                    <Border Background="{StaticResource BackColor}" 
+                    <Border Grid.Row="1" Background="{StaticResource BackColor}" 
                         BorderBrush="{StaticResource BorderColor}" 
                         BorderThickness="2" 
                         CornerRadius="8" 
                         Padding="15">
-                        <StackPanel>
 
-                            <Grid Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-
 
                                 <TextBlock Grid.Column="1" 
                                         Text="{Binding TemplateName}" 
@@ -169,73 +176,75 @@
                                 </Button>
                             </Grid>
 
-                            <TextBlock Text="{Binding Description}" 
+                            <TextBlock Grid.Row="1" Text="{Binding Description}" 
                                     Foreground="{StaticResource HoverForeColor}" 
                                     FontSize="14" 
                                     TextWrapping="Wrap" 
                                     Margin="0,0,0,12"
                                     LineHeight="16"/>
 
-                            <WrapPanel Orientation="Horizontal">
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,5,0">
+                                <WrapPanel Orientation="Horizontal">
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsTextStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Текст: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding TextStyle.Name, FallbackValue='Базовый'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsTextStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Текст: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding TextStyle.Name, FallbackValue='Базовый'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsParagraphStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Абзац: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding ParagraphStyle.Name, FallbackValue='С отступом'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsParagraphStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Абзац: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding ParagraphStyle.Name, FallbackValue='С отступом'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsTableStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Таблица: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding TableStyle.Name, FallbackValue='Сетка'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsTableStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Таблица: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding TableStyle.Name, FallbackValue='Сетка'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsNumberedNumberingStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Нумерованный список: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding NumberedNumberingStyle.Name, FallbackValue='Сетка'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsNumberedNumberingStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Нумерованный список: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding NumberedNumberingStyle.Name, FallbackValue='Сетка'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsMarkedNumberingStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Маркированный список: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding MarkedNumberingStyle.Name, FallbackValue='Сетка'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsMarkedNumberingStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Маркированный список: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding MarkedNumberingStyle.Name, FallbackValue='Сетка'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsPictureStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Рисунок: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding PictureStyle.Name, FallbackValue='Сетка'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsPictureStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Рисунок: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding PictureStyle.Name, FallbackValue='Сетка'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                                <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsFormulaStyleVisible, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
-                                    <Run Text="Формула: " Foreground="{StaticResource ForeColor}"/>
-                                    <Run Text="{Binding FormulaStyle.Name, FallbackValue='Сетка'}"/>
-                                    </TextBlock>
-                                </Border>
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsFormulaStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Формула: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding FormulaStyle.Name, FallbackValue='Сетка'}"/>
+                                        </TextBlock>
+                                    </Border>
 
-                            </WrapPanel>
-                        </StackPanel>
+                                </WrapPanel>
+                            </ScrollViewer>
+                        </Grid>
                     </Border>
-
-                    <CheckBox Margin="0,0,0,15" VerticalContentAlignment="Center" IsChecked="{Binding IsPreviewVisible}">
-                        <TextBlock Text="Предварительный просмотр результата" Style="{StaticResource BaseText}" Margin="5,0,0,0" FontSize="16"/>
-                    </CheckBox>
-                </StackPanel>
+                </Grid>
             </Grid>
+
+            <CheckBox Grid.Row="3" Margin="0,0,0,15" VerticalContentAlignment="Center" IsChecked="{Binding IsPreviewVisible}">
+                <TextBlock Text="Предварительный просмотр результата" Style="{StaticResource BaseText}" Margin="5,0,0,0" FontSize="16"/>
+            </CheckBox>
 
             <StackPanel Grid.Row="4">
                 <Button FontSize="16" 

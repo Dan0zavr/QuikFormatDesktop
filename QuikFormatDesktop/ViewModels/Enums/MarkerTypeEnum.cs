@@ -7,6 +7,6 @@ namespace QuikFormatDesktop.ViewModels.Enums
     public enum MarkerTypeEnum
     {
         Marked,
-        Numberd
+        Numbered
     }
 }

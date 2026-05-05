@@ -4,18 +4,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuikFormatDesktop.Database;
 using QuikFormatDesktop.Models.SupportModels;
-using QuikFormatDesktop.Views;
 using QuikFormatDesktop.ViewModels;
 using QuikFormatDesktop.ViewModels.Commands;
+using QuikFormatDesktop.ViewModels.FormatViewModels;
 using QuikFormatDesktop.ViewModels.Navigation;
 using QuikFormatDesktop.ViewModels.Services;
+using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
 using QuikFormatDesktop.ViewModels.StylesViewModels;
+using QuikFormatDesktop.Views;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using QuikFormatDesktop.ViewModels.ShortMenuViewModels;
-using QuikFormatDesktop.ViewModels.FormatViewModels;
 
 namespace QuikFormatDesktop
 {
@@ -45,6 +46,7 @@ namespace QuikFormatDesktop
                     services.Configure<ParagraphSettings>(context.Configuration.GetSection("ParagraphSettings"));
                     services.Configure<TableSettings>(context.Configuration.GetSection("TableSettings"));
                     services.Configure<GeneralSettings>(context.Configuration.GetSection("GeneralSettings"));
+                    services.Configure<SystemStyles>(context.Configuration.GetSection("SystemStyles"));
 
                     services.AddDbContextFactory<QfDbContext>(options => options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -67,6 +69,7 @@ namespace QuikFormatDesktop
                     services.AddTransient<FormulaStyleViewModel>();
 
                     services.AddTransient<TemplateViewModel>();
+                    services.AddTransient<SystemTemplateViewModel>();
 
                     services.AddTransient<SelectorCardViewModel>();
                     services.AddTransient<PreviewViewModel>();
@@ -79,6 +82,7 @@ namespace QuikFormatDesktop
                     services.AddTransient<MarkedNumberingShortMenuViewModel>();
                     services.AddTransient<NumberedNumberingShortMenuViewModel>();
                     services.AddTransient<TemplateShortMenuViewModel>();
+                    services.AddTransient<SystemTemplateShortMenuViewModel>();
 
                     services.AddTransient<DeleteWarningViewModel>();
 
@@ -106,6 +110,7 @@ namespace QuikFormatDesktop
                     services.AddSingleton<NavigationService<StylesViewModel>>();
 
                     services.AddScoped<ModalNavigationService<TemplateViewModel>>();
+                    services.AddScoped<ModalNavigationService<SystemTemplateViewModel>>();
                     services.AddScoped<ModalNavigationService<DeleteWarningViewModel>>();
                 });
         }
@@ -118,7 +123,8 @@ namespace QuikFormatDesktop
             {
                 var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<QfDbContext>>();
                 await using var context = await factory.CreateDbContextAsync();
-                await context.Database.MigrateAsync();
+                //await context.Database.MigrateAsync();
+                context.Database.EnsureCreated();
             }
 
             var mainViewModel = _host.Services.GetRequiredService<MainViewModel>();

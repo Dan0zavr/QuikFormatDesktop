@@ -29,6 +29,10 @@
                 <pages:TemplateModalWindow/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type stylesvms:SystemTemplateViewModel}">
+                <pages:SystemTemplateModalWindow/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vms:DeleteWarningViewModel}">
                 <local:DeleteWarningModal/>
             </DataTemplate>

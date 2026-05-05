@@ -21,7 +21,11 @@ namespace QuikFormatDesktop.ViewModels.Navigation
         {
             _navigationStore.CurrentModalViewModel = _serviceProvider.GetRequiredService<T>();
 
-            if (_navigationStore.CurrentModalViewModel is TemplateViewModel templateViewModel)
+            if (_navigationStore.CurrentModalViewModel is SystemTemplateViewModel systemTemplate)
+            {
+                systemTemplate.InitializeAsync();
+            }
+            else if (_navigationStore.CurrentModalViewModel is TemplateViewModel templateViewModel)
             {
                 templateViewModel.InitializeAsync();
             }

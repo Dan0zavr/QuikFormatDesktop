@@ -15,6 +15,7 @@ namespace QuikFormatDesktop.ViewModels.Enums
         [Description("Стили таблиц")] Table,
         [Description("Стили картинок")] Picture,
         [Description("Стили формул")] Formula,
-        [Description("Шаблоны")] Template
+        [Description("Шаблоны")] Template,
+        [Description("Втроенные шаблоны")] SystemTemplate
     }
 }
