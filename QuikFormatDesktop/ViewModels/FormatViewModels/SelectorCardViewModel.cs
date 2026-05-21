@@ -219,7 +219,16 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                 OnPropertyChanged(nameof(DocumentPath));
                 OnPropertyChanged(nameof(DisplayDocumentPath));
                 OnPropertyChanged(nameof(IsDocumentSelected));
-                (FormatCommand as IRelayCommand)?.NotifyCanExecuteChanged();
+                var dispatcher = Application.Current?.Dispatcher;
+                if (dispatcher != null && !dispatcher.CheckAccess())
+                {
+                    dispatcher.Invoke(() => (FormatCommand as IRelayCommand)?.NotifyCanExecuteChanged());
+                }
+                else
+                {
+                    (FormatCommand as IRelayCommand)?.NotifyCanExecuteChanged();
+                }
+
                 DocumentChanged?.Invoke();
             }
         }
@@ -317,6 +326,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private void CleanDocument()
         {
             DocumentPath = null;
+            IsPreviewVisible = false;
         }
 
         private string CutPath(string fullPath)

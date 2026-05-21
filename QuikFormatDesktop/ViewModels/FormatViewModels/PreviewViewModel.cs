@@ -38,6 +38,9 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private string _currentFormattedPdfFile;
         private string _currentFormattedPicturesDirectory;
 
+        private List<string> _originalPicturePaths;
+        private List<string> _formattedPicturePaths;
+
         private NavigationStore _navigationStore;
         private readonly IOptions<GeneralSettings> _options;
         private readonly TemplateMapper _templateMapper;
@@ -213,6 +216,23 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
                 await ConvertOriginalDocxToPictures();
                 await FormatAndConvertDocxToPictures();
+
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    if (_originalPicturePaths != null)
+                    {
+                        OriginalPictures.Clear();
+                        foreach (var path in _originalPicturePaths)
+                            OriginalPictures.Add(new ImageItem { Image = LoadImage(path), IsSelected = false });
+                    }
+
+                    if (_formattedPicturePaths != null)
+                    {
+                        FormattedPictures.Clear();
+                        foreach (var path in _formattedPicturePaths)
+                            FormattedPictures.Add(new ImageItem { Image = LoadImage(path), IsSelected = false });
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -229,7 +249,9 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         {
             CurrentOriginalPdfDirectory = CreateTempPath();
 
-            CurrentOriginalPicturesDirectory = await ConvertToPictures(CurrentOriginalPdfFile, CurrentOriginalDocxFile, CurrentOriginalPdfDirectory, OriginalPictures);
+            var (picturesDir, picturePaths) = await ConvertToPictures(CurrentOriginalPdfFile, CurrentOriginalDocxFile, CurrentOriginalPdfDirectory);
+            CurrentOriginalPicturesDirectory = picturesDir;
+            _originalPicturePaths = picturePaths;
         }
 
         private async Task FormatAndConvertDocxToPictures()
@@ -250,8 +272,9 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
                         CurrentFormattedDocxFile = parseManager.MainScript(CurrentOriginalDocxFile, CurrentFormattedDocxDirectory, template, ignoredPages, CurrentOriginalPdfFile);
 
-                        CurrentFormattedPicturesDirectory = await ConvertToPictures(CurrentFormattedPdfFile, CurrentFormattedDocxFile, CurrentFormattedPdfDirectory, FormattedPictures);
-
+                        var (picturesDir, picturePaths) = await ConvertToPictures(CurrentFormattedPdfFile, CurrentFormattedDocxFile, CurrentFormattedPdfDirectory);
+                        CurrentFormattedPicturesDirectory = picturesDir;
+                        _formattedPicturePaths = picturePaths;
                         IsFormattedDocumentDone = true;
                     }
                 }
@@ -263,19 +286,18 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
         }
 
-        private async Task<string> ConvertToPictures(string pdfFile, string docxFile, string pdfDirectory, ObservableCollection<ImageItem> picturesList)
+        private async Task<(string picturesDirectory, List<string> pictureFiles)> ConvertToPictures(string pdfFile, string docxFile, string pdfDirectory)
         {
             pdfFile = await Convert(docxFile, pdfDirectory);
-            if (string.IsNullOrEmpty(pdfFile)) return "";
-            string picturesDirectory = Directory.CreateDirectory(Path.Combine(pdfDirectory, "Pictures")).FullName;
-            picturesList.Clear();
-            var pictures = PdfToPngConverter.Convert(pdfFile, picturesDirectory);
+            if (string.IsNullOrEmpty(pdfFile))
+                return (null, new List<string>());
 
-            foreach (var p in pictures)
-            {
-                picturesList.Add(new ImageItem { Image = LoadImage(p), IsSelected = false });
-            }
-            return picturesDirectory;
+            string picturesDirectory = Directory.CreateDirectory(
+                Path.Combine(pdfDirectory, "Pictures")).FullName;
+
+            var pictureFiles = PdfToPngConverter.Convert(pdfFile, picturesDirectory).ToList();
+
+            return (picturesDirectory, pictureFiles);
         }
 
         private async Task<string> Convert(string docxPath, string pdfPath)
@@ -453,7 +475,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
             try
             {
-                await Task.Delay(300, _selectionCts.Token);
+                await Task.Delay(1000, _selectionCts.Token);
 
                 await HandleSelectionChangedAsync(_selectionCts.Token);
             }
@@ -471,6 +493,8 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                     .Where(i => i.IsSelected)
                     .ToList();
 
+                IsLoading = true;
+
                 await Task.Run(async () =>
                 {
                     token.ThrowIfCancellationRequested();
@@ -478,9 +502,24 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                     await FormatAndConvertDocxToPictures();
 
                 }, token);
+
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    if (_formattedPicturePaths != null)
+                    {
+                        FormattedPictures.Clear();
+                        foreach (var path in _formattedPicturePaths)
+                            FormattedPictures.Add(new ImageItem
+                            {
+                                Image = LoadImage(path),
+                                IsSelected = false
+                            });
+                    }
+                });
             }
             finally
             {
+                IsLoading = false;
                 _processSemaphore.Release();
             }
         }
