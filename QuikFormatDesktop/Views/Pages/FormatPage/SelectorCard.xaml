@@ -235,6 +235,13 @@
                                         </TextBlock>
                                     </Border>
 
+                                    <Border Background="{StaticResource ButtonColor}" CornerRadius="4" Padding="6,3" Margin="0,0,6,6" Visibility="{Binding IsGlobalStyleVisible, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Foreground="{StaticResource HoverForeColor}" FontSize="13">
+                                        <Run Text="Глобальный: " Foreground="{StaticResource ForeColor}"/>
+                                        <Run Text="{Binding GlobalStyle.Name, FallbackValue='Сетка'}"/>
+                                        </TextBlock>
+                                    </Border>
+
                                 </WrapPanel>
                             </ScrollViewer>
                         </Grid>

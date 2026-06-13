@@ -13,5 +13,6 @@ namespace QuikFormatDesktop.Models.SupportModels
         public List<PictureStyle> PictureStyles { get; set; }
         public List<FormulaStyle> FormulaStyles { get; set; }
         public List<NumberingStyle> NumberingStyles { get; set; }
+        public List<GlobalStyle> GlobalStyles { get; set; }
     }
 }

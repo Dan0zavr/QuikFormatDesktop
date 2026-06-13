@@ -29,6 +29,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private NumberingStyle _selectedMarkedNumberingStyle;
         private NumberingStyle _selectedNumberedNumberingStyle;
         private FormulaStyle _selectedFormulaStyle;
+        private GlobalStyle _selectegGlobalStyle;
 
         private readonly TextService _textService;
         private readonly ParagraphService _paragraphService;
@@ -36,6 +37,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private readonly PictureService _pictureService;
         private readonly NumberingService _numberingService;
         private readonly FormulaService _formulaService;
+        private readonly GlobalStyleService _globalService;
         private readonly TemplateService _templateService;
 
         private bool _isPopupOpen = false;
@@ -46,7 +48,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private NavigationStore _navigationStore;
 
         public TemplateViewModel(TextService textService, ParagraphService paragraphService, TableService tableService,
-            PictureService pictureService, NumberingService numberingService, FormulaService formulaService, TemplateService templateService,
+            PictureService pictureService, NumberingService numberingService, FormulaService formulaService, GlobalStyleService globalService, TemplateService templateService,
             NavigationStore navigationStore)
         {
             _textService = textService;
@@ -55,6 +57,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             _pictureService = pictureService;
             _numberingService = numberingService;
             _formulaService = formulaService;
+            _globalService = globalService;
             _templateService = templateService;
             _navigationStore = navigationStore;
 
@@ -167,6 +170,16 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             }
         }
 
+        public GlobalStyle SelectedGlobalStyle
+        {
+            get => _selectegGlobalStyle;
+            set
+            {
+                _selectegGlobalStyle = value;
+                OnPropertyChanged(nameof(SelectedFormulaStyle));
+            }
+        }
+
         public ObservableCollection<StyleItem> TextStyleItems { get; set; } = new();
         public ObservableCollection<StyleItem> ParagraphStyleItems { get; set; } = new();
         public ObservableCollection<StyleItem> TableStyleItems { get; set; } = new();
@@ -174,6 +187,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         public ObservableCollection<StyleItem> MarkedNumberingStyleItems { get; set; } = new();
         public ObservableCollection<StyleItem> NumberedNumberingStyleItems { get; set; } = new();
         public ObservableCollection<StyleItem> FormulaStyleItems { get; set; } = new();
+        public ObservableCollection<StyleItem> GlobalStyleItems { get; set; } = new();
 
         public string PopupMessage
         {
@@ -254,6 +268,12 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
             FillCollection(FormulaStyleItems, styles, includeEmpty: true);
         }
 
+        private async Task LoadGlobalStyles()
+        {
+            List<GlobalStyle> styles = await _globalService.GetAll();
+            FillCollection(GlobalStyleItems, styles, includeEmpty: true);
+        }
+
         public async Task LoadStylesData()
         {
             await Task.WhenAll(
@@ -262,7 +282,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 LoadTableStyles(),
                 LoadPictureStyles(),
                 LoadNumberingStyles(),
-                LoadFormulaStyles());
+                LoadFormulaStyles(),
+                LoadGlobalStyles());
         }
 
         public void SetDefault()
@@ -285,6 +306,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 SelectedNumberedNumberingStyle = NumberedNumberingStyleItems.FirstOrDefault()?.Style as NumberingStyle;
 
                 SelectedFormulaStyle = FormulaStyleItems.FirstOrDefault()?.Style as FormulaStyle;
+
+                SelectedGlobalStyle = GlobalStyleItems.FirstOrDefault()?.Style as GlobalStyle;
             }
         }
 
@@ -339,7 +362,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                     NumberedNumberingStyle = SelectedNumberedNumberingStyle?.Id,
                     MarkedNumberingStyle = SelectedMarkedNumberingStyle?.Id,
                     PictureStyle = SelectedPictureStyle?.Id,
-                    FormulaStyle = SelectedFormulaStyle?.Id
+                    FormulaStyle = SelectedFormulaStyle?.Id,
+                    GlobalStyle = SelectedGlobalStyle?.Id
                 };
 
                 if (await _templateService.IsUnique(template.Name))
@@ -373,7 +397,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                     NumberedNumberingStyle = SelectedNumberedNumberingStyle?.Id,
                     MarkedNumberingStyle = SelectedMarkedNumberingStyle?.Id,
                     PictureStyle = SelectedPictureStyle?.Id,
-                    FormulaStyle = SelectedFormulaStyle?.Id
+                    FormulaStyle = SelectedFormulaStyle?.Id,
+                    GlobalStyle = SelectedGlobalStyle?.Id
                 };
 
                 bool isUniqe = true;
@@ -415,6 +440,7 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
                 SelectedMarkedNumberingStyle = MarkedNumberingStyleItems.FirstOrDefault(x => x.Style?.Id == template.MarkedNumberingStyle)?.Style as NumberingStyle;
                 SelectedNumberedNumberingStyle = NumberedNumberingStyleItems.FirstOrDefault(x => x.Style?.Id == template.NumberedNumberingStyle)?.Style as NumberingStyle;
                 SelectedFormulaStyle = FormulaStyleItems.FirstOrDefault(x => x.Style?.Id == template.FormulaStyle)?.Style as FormulaStyle;
+                SelectedGlobalStyle = GlobalStyleItems.FirstOrDefault(x => x.Style?.Id == template.GlobalStyle)?.Style as GlobalStyle;
             }
         }
 

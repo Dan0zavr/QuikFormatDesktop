@@ -28,6 +28,15 @@
     <Compile Update="Views\Pages\StylesPages\FormulaStyle\ShortFormulaMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Pages\StylesPages\GlobalStyle\GlobalCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\StylesPages\GlobalStyle\GlobalPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Pages\StylesPages\GlobalStyle\ShortGlobalMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Pages\StylesPages\NumberingStyle\MarkedNumberingCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

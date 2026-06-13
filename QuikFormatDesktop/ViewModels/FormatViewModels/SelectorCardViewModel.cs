@@ -16,7 +16,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
+using XMLParser.SpecialClasses.InputOutput;
 
 namespace QuikFormatDesktop.ViewModels.FormatViewModels
 {
@@ -28,6 +28,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private readonly TableService _tableService;
         private readonly PictureService _pictureService;
         private readonly FormulaService _formulaService;
+        private readonly GlobalStyleService _globalService;
         private readonly NavigationStore _navigationStore;
         private readonly IOptions<SystemStyles> _systemStyles;
 
@@ -43,6 +44,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private NumberingStyle _markedNumberingStyle;
         private NumberingStyle _numberedNumberingStyle;
         private FormulaStyle _formulaStyle;
+        private GlobalStyle _globalStyle;
 
         private bool _isPreviewVisible;
 
@@ -60,7 +62,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         public SelectorCardViewModel(TextService textService, ParagraphService paragraphService,
             NumberingService numberingService, TableService tableService, PictureService pictureService,
-            FormulaService formulaService, NavigationStore navigationStore, IOptions<SystemStyles> systemStyles)
+            FormulaService formulaService, GlobalStyleService globalService, NavigationStore navigationStore, IOptions<SystemStyles> systemStyles)
         {
             _textService = textService;
             _paragraphService = paragraphService;
@@ -68,6 +70,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             _tableService = tableService;
             _pictureService = pictureService;
             _formulaService = formulaService;
+            _globalService = globalService;
             _navigationStore = navigationStore;
             _systemStyles = systemStyles;
 
@@ -188,6 +191,17 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                 OnPropertyChanged(nameof(IsFormulaStyleVisible));
             }
         }
+
+        public GlobalStyle GlobalStyle
+        {
+            get => _globalStyle;
+            set
+            {
+                _globalStyle = value;
+                OnPropertyChanged(nameof(GlobalStyle));
+                OnPropertyChanged(nameof(IsGlobalStyleVisible));
+            }
+        }
         public bool IsTextStyleVisible => TextStyle == null ? false : true;
         public bool IsParagraphStyleVisible => ParagraphStyle == null ? false : true;
         public bool IsTableStyleVisible => TableStyle == null ? false : true;
@@ -195,6 +209,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         public bool IsMarkedNumberingStyleVisible => MarkedNumberingStyle == null ? false : true;
         public bool IsPictureStyleVisible => PictureStyle == null ? false : true;
         public bool IsFormulaStyleVisible => FormulaStyle == null ? false : true;
+        public bool IsGlobalStyleVisible => GlobalStyle == null ? false : true;
         
         public bool IsPreviewVisible
         {
@@ -301,6 +316,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             if (_template.MarkedNumberingStyle != null) MarkedNumberingStyle = await _numberingService.GetById((int)_template.MarkedNumberingStyle);
             if(_template.PictureStyle != null) PictureStyle = await _pictureService.GetById((int)_template.PictureStyle);
             if(_template.FormulaStyle != null) FormulaStyle = await _formulaService.GetById((int)_template.FormulaStyle);
+            if(_template.GlobalStyle != null) GlobalStyle = await _globalService.GetById((int)_template.GlobalStyle);
         }
 
         public async Task LoadSystemTemplate(Template template)
@@ -315,6 +331,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             if (_template.NumberedNumberingStyle != null) NumberedNumberingStyle = _systemStyles.Value.NumberingStyles.FirstOrDefault(x => x.Id == template.NumberedNumberingStyle);
             if (_template.MarkedNumberingStyle != null) MarkedNumberingStyle = _systemStyles.Value.NumberingStyles.FirstOrDefault(x => x.Id == template.MarkedNumberingStyle);
             if (_template.FormulaStyle != null) FormulaStyle = _systemStyles.Value.FormulaStyles.FirstOrDefault(x => x.Id == template.FormulaStyle);
+            if (_template.GlobalStyle != null) GlobalStyle = _systemStyles.Value.GlobalStyles.FirstOrDefault(x => x.Id == template.GlobalStyle);
         }
 
         private void CleanTemplate()
@@ -428,7 +445,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             {
                 var previewViiewModel = formatViewModel.PreviewViewModel;
                 string docPath = previewViiewModel.CurrentFormattedDocxFile;
-                string newDocName = XMLParser.XMLWrite.EnsureUniqueFileName(Path.GetFileName(docPath), SaveDirectory);
+                string newDocName = XMLParser.SpecialClasses.InputOutput.XMLWrite.EnsureUniqueFileName(Path.GetFileName(docPath), SaveDirectory);
                 try
                 {
                     File.Copy(docPath, Path.Combine(SaveDirectory, Path.GetFileName(newDocName)));

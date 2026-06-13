@@ -22,6 +22,8 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 {
     public class PreviewViewModel : ViewModelBase, IAsyncDisposable
     {
+        private const int WAIT_TIME = 2600;
+
         private readonly SemaphoreSlim _processSemaphore = new SemaphoreSlim(1, 1);
 
         private string _currentOriginalDocxDirectory;
@@ -475,7 +477,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
             try
             {
-                await Task.Delay(1000, _selectionCts.Token);
+                await Task.Delay(WAIT_TIME, _selectionCts.Token);
 
                 await HandleSelectionChangedAsync(_selectionCts.Token);
             }
@@ -566,27 +568,27 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
 
         private async Task DeleteDirectoryWithRetry(string path)
         {
-        if (!Directory.Exists(path))
-            return;
-
-        for (int i = 0; i < 5; i++)
-        {
-            try
-            {
-                Directory.Delete(path, true);
+            if (!Directory.Exists(path))
                 return;
-            }
-            catch (IOException)
-            {
-                await Task.Delay(200);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                await Task.Delay(200);
-            }
-        }
 
-        throw new Exception($"Не удалось удалить папку: {path}");
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    Directory.Delete(path, true);
+                    return;
+                }
+                catch (IOException)
+                {
+                    await Task.Delay(200);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    await Task.Delay(200);
+                }
+            }
+
+            throw new Exception($"Не удалось удалить папку: {path}");
         }
     }
 }

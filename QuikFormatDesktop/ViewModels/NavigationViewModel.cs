@@ -34,6 +34,7 @@ namespace QuikFormatDesktop.ViewModels
         private readonly NumberingService _numberingService;
         private readonly PictureService _pictureService;
         private readonly FormulaService _formulaService;
+        private readonly GlobalStyleService _globalStyleService;
         private readonly FontService _fontService;
         private readonly AlignmentService _alignmentService;
         private readonly PositionService _positionService;
@@ -52,7 +53,7 @@ namespace QuikFormatDesktop.ViewModels
             TemplateService templateService, TextService textService,
             ParagraphService paragraphService, TableService tableService,
             NumberingService numberingService, PictureService pictureService,
-            FormulaService formulaService,
+            FormulaService formulaService, GlobalStyleService globalStyleService,
             NavigationService<StylesViewModel> navigationToStylesService,
             NavigationService<FormatViewModel> navigationToFormatService,
             ModalNavigationService<TemplateViewModel> modalNavigationService,
@@ -72,6 +73,7 @@ namespace QuikFormatDesktop.ViewModels
             _numberingService = numberingService;
             _pictureService = pictureService;
             _formulaService = formulaService;
+            _globalStyleService = globalStyleService;
 
             _fontService = fontService;
             _alignmentService = alignmentService;
@@ -91,6 +93,7 @@ namespace QuikFormatDesktop.ViewModels
             _numberingService.StylesChanged += OnStylesChanged;
             _pictureService.StylesChanged += OnStylesChanged;
             _formulaService.StylesChanged += OnStylesChanged;
+            _globalStyleService.StylesChanged += OnStylesChanged;
 
 
             ItemsView = CollectionViewSource.GetDefaultView(Items);
@@ -337,6 +340,16 @@ namespace QuikFormatDesktop.ViewModels
                         Items.Add(item);
                     }
                     break;
+                case TabItemIndex.Global:
+                    GroupBoxHeader = "Глобалльные стили";
+
+                    var globals = await _globalStyleService.GetAll();
+                    foreach (var item in globals)
+                    {
+                        item.Type = StyleType.Global;
+                        Items.Add(item);
+                    }
+                    break;
             }
 
             UpdateGrouping();
@@ -399,6 +412,14 @@ namespace QuikFormatDesktop.ViewModels
                     PopupViewModel = formulaVm;
                     vm = formulaVm;
                     break;
+
+                case GlobalStyle global:
+                    var globalVm = _serviceProvider.GetRequiredService<GlobalStyleShortMenuViewModel>();
+                    globalVm.Load(global);
+                    PopupViewModel = globalVm;
+                    vm = globalVm;
+                    break;
+
                 case Template template:
                     if (template.Type is StyleType.Template)
                     {

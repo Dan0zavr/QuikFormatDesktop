@@ -18,6 +18,7 @@ namespace QuikFormatDesktop.ViewModels
         private PictureStyleViewModel _pictureStyleViewModel;
         private NumberingStyleViewModel _numberingStyleViewModel;
         private FormulaStyleViewModel _formulaStyleViewModel;
+        private GlobalStyleViewModel _globalStyleViewModel;
 
         public StylesViewModel(IServiceProvider serviceProvider)
         {
@@ -38,6 +39,7 @@ namespace QuikFormatDesktop.ViewModels
                 PictureStyleViewModel.Reset();
                 NumberingStyleViewModel.Reset();
                 FormulaStyleViewModel.Reset();
+                GlobalStyleViewModel.Reset();
             }
         }
 
@@ -57,5 +59,8 @@ namespace QuikFormatDesktop.ViewModels
 
         public FormulaStyleViewModel FormulaStyleViewModel =>
             _formulaStyleViewModel ??= _serviceProvider.GetRequiredService<FormulaStyleViewModel>();
+
+        public GlobalStyleViewModel GlobalStyleViewModel =>
+            _globalStyleViewModel ??= _serviceProvider.GetRequiredService<GlobalStyleViewModel>();
     }
 }

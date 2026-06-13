@@ -214,6 +214,14 @@
                       Style="{StaticResource PreviewComboBox}"/>
                         </StackPanel>
 
+                        <StackPanel Margin="0,0,0,5">
+                            <TextBlock Text="Глобальный стиль:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox Height="28"
+                        ItemsSource="{Binding GlobalStyleItems}" 
+                        DisplayMemberPath="DisplayName" SelectedValuePath="Style" SelectedValue="{Binding SelectedGlobalStyle}"
+                        Style="{StaticResource PreviewComboBox}"/>
+                        </StackPanel>
+
                     </StackPanel>
                 </ScrollViewer>
 

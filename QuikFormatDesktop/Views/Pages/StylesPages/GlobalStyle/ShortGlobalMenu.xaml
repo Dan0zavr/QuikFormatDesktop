@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="QuikFormatDesktop.Views.Pages.ShortGlobalMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuikFormatDesktop.Views.Pages"
+             mc:Ignorable="d" d:Width="240">
+    <Border Background="{StaticResource BackColor}"
+        BorderBrush="{StaticResource BorderColor}"
+        BorderThickness="1"
+        CornerRadius="6"
+        Padding="10">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Название -->
+            <TextBlock Grid.Row="0"
+                   Text="{Binding Name}"
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource BaseText}"
+                   FontWeight="SemiBold"/>
+
+            <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                <TextBlock Text="Поля" Style="{StaticResource BaseText}" HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Слева:"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                    <TextBlock Margin="5,0,0,0"
+                           Text="{Binding LeftMargin}"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Справа:"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                    <TextBlock Margin="5,0,0,0"
+                           Text="{Binding RightMargin}"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Сверху:"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                    <TextBlock Margin="5,0,0,0"
+                           Text="{Binding TopMargin}"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Снизу:"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                    <TextBlock Margin="5,0,0,0"
+                           Text="{Binding BottomMargin}"
+                           Style="{StaticResource BaseText}"
+                           FontSize="12"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Grid Grid.Row="3" Margin="0,15,0,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                    Content="Обновить"
+                    Style="{StaticResource BaseButton}"
+                    FontSize="12"
+                    Margin="2"
+                    Command="{Binding DetailCommand}"
+                    CommandParameter="{Binding Style}"/>
+
+                <Button Grid.Column="2"
+                    Content="Удалить"
+                    Style="{StaticResource DangerButton}"
+                    FontSize="12"
+                    Margin="2"
+                    Command="{Binding DeleteGlobalStyleCommand}"/>
+            </Grid>
+
+        </Grid>
+    </Border>
+</UserControl>

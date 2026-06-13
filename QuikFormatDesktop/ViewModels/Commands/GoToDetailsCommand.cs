@@ -61,6 +61,10 @@ namespace QuikFormatDesktop.ViewModels.Commands
                     stylesVm.SelectedTabIndex = (int)TabItemIndex.Formula;
                     stylesVm.FormulaStyleViewModel.Load(targetStyle, true);
                     break;
+                case Enums.StyleType.Global:
+                    stylesVm.SelectedTabIndex = (int)TabItemIndex.Global;
+                    stylesVm.GlobalStyleViewModel.Load(targetStyle, true);
+                    break;
 
             }
 

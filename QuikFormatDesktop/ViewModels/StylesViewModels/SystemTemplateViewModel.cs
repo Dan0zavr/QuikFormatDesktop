@@ -16,8 +16,8 @@ namespace QuikFormatDesktop.ViewModels.StylesViewModels
         private readonly IOptions<SystemStyles> _systemStyles;
 
         public SystemTemplateViewModel(TextService textService, ParagraphService paragraphService, TableService tableService, PictureService pictureService,
-            NumberingService numberingService, FormulaService formulaService, TemplateService templateService, NavigationStore navigationStore, IOptions<SystemStyles> systemStyles) 
-            : base(textService, paragraphService, tableService, pictureService, numberingService, formulaService, templateService, navigationStore)
+            NumberingService numberingService, FormulaService formulaService, GlobalStyleService globalService, TemplateService templateService, NavigationStore navigationStore, IOptions<SystemStyles> systemStyles) 
+            : base(textService, paragraphService, tableService, pictureService, numberingService, formulaService, globalService, templateService, navigationStore)
         {
             _systemStyles = systemStyles;
         }

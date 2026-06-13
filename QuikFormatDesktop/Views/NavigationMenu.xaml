@@ -44,6 +44,10 @@
             <pages:ShortFormulaMenu/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type vm:GlobalStyleShortMenuViewModel}">
+            <pages:ShortGlobalMenu/>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type vm:TemplateShortMenuViewModel}">
             <pages:ShortTemplateMenu/>
         </DataTemplate>

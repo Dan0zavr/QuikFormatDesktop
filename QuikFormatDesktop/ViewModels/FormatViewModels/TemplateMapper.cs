@@ -18,6 +18,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private readonly TableService _tableService;
         private readonly NumberingService _numberingService; 
         private readonly FormulaService _formulaService;
+        private readonly GlobalStyleService _globalService;
 
         private readonly FontService _fontService;
         private readonly MarkerService _markerService;
@@ -28,7 +29,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
         private readonly IOptions<SystemStyles> _systemStyles;
 
         public TemplateMapper(TextService textService, ParagraphService paragraphService, PictureService pictureService,
-                              TableService tableService, NumberingService numberingService, FormulaService formulaService, FontService fontService,
+                              TableService tableService, NumberingService numberingService, FormulaService formulaService, GlobalStyleService globalService, FontService fontService,
                               MarkerService markerService, MarkerTypeService markerTypeService, AlignmentService alignmentService, PositionService positionService, IOptions<SystemStyles> systemStyles)
         {
             _textService = textService;
@@ -37,6 +38,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             _tableService = tableService;
             _numberingService = numberingService;
             _formulaService = formulaService;
+            _globalService = globalService;
             _fontService = fontService;
             _markerService = markerService;
             _markerTypeService = markerTypeService;
@@ -55,6 +57,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             XMLParser.Styles.TableStyle tableStyle = null;
             XMLParser.Styles.PictureStyle pictureStyle = null;
             XMLParser.Styles.FormulaStyle formulaStyle = null;
+            XMLParser.Styles.GlobalStyle globalStyle = null;
 
             if (template.TextStyle != null) textStyle = await MapTextStyle((int)template.TextStyle);
             if(template.ParagraphStyle != null) paragraphStyle = await MapParagraphStyle((int)template.ParagraphStyle);
@@ -65,6 +68,7 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             if(template.TableStyle != null) tableStyle = await MapTableStyle((int)template.TableStyle);
             if (template.PictureStyle != null) pictureStyle = await MapPictureStyle((int)template.PictureStyle);
             if(template.FormulaStyle != null) formulaStyle = await MapFormulaStyle((int) template.FormulaStyle);
+            if(template.GlobalStyle != null) globalStyle = await MapGlobalStyle((int)template.GlobalStyle);
 
             XMLParser.Styles.Template parserTemplate = new XMLParser.Styles.Template
             {
@@ -73,7 +77,8 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
                 NumberingStyle = numberingStyles,
                 TableStyle = tableStyle,
                 PictureStyle = pictureStyle,
-                FormulaStyle = formulaStyle
+                FormulaStyle = formulaStyle,
+                GlobalStyle = globalStyle
             };
 
             return parserTemplate;
@@ -251,5 +256,38 @@ namespace QuikFormatDesktop.ViewModels.FormatViewModels
             }
             return parserStyle;
         }
+
+        private async Task<XMLParser.Styles.GlobalStyle> MapGlobalStyle(int id)
+        {
+            GlobalStyle globalStyle = null;
+
+            if (id < 0)
+            {
+                globalStyle = _systemStyles.Value.GlobalStyles.FirstOrDefault(x => x.Id == id);
+            }
+            else
+            {
+                globalStyle = await _globalService.GetById(id);
+            }
+
+            if (globalStyle == null)
+                return null;
+
+            var alignment = await _alignmentService.GetById(globalStyle.AlignmentId);
+
+            XMLParser.Styles.GlobalStyle parserStyle = new XMLParser.Styles.GlobalStyle
+            {
+                LeftMargin = globalStyle.LeftMargin,
+                RightMargin = globalStyle.RightMargin,
+                TopMargin = globalStyle.TopMargin,
+                BottomMargin = globalStyle.BottomMargin,
+                SpecialColontitul = globalStyle.SpecialColontitul,
+                LastNoNumberingPage = globalStyle.LastNoNumberingPage,
+                Alignment = alignment.Alignment1
+            };
+
+            return parserStyle;
+        }
+
     }
 }

@@ -20,6 +20,7 @@ public partial class ParagraphStyle : StyleObject
     public double? AfterInterval { get; set; }
 
     public bool ContextualSpacing { get; set; }
+    public virtual Alignment AlignmentNavigation { get; set; } = null;
 
     public virtual ICollection<PictureStyle> PictureStyles { get; set; } = new List<PictureStyle>();
 

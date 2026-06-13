@@ -40,6 +40,7 @@ public partial class QfDbContext : DbContext
     public virtual DbSet<Template> Templates { get; set; }
 
     public virtual DbSet<TextStyle> TextStyles { get; set; }
+    public virtual DbSet<GlobalStyle> GlobalStyles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -168,6 +169,7 @@ public partial class QfDbContext : DbContext
                 .HasColumnType("varchar(32)")
                 .HasColumnName("name");
             entity.Property(e => e.RightIndent).HasColumnName("right_indent");
+            entity.HasOne(d => d.AlignmentNavigation).WithMany(p => p.ParagraphStyles).HasForeignKey(d => d.Alignment);
 
             entity.Ignore(e => e.Type);
         });
@@ -262,6 +264,7 @@ public partial class QfDbContext : DbContext
             entity.Property(e => e.PictureStyle).HasColumnName("picture_style");
             entity.Property(e => e.TableStyle).HasColumnName("table_style");
             entity.Property(e => e.TextStyle).HasColumnName("text_style");
+            entity.Property(e => e.GlobalStyle).HasColumnName("global_style");
 
             entity.Ignore(e => e.Type);
 
@@ -278,6 +281,8 @@ public partial class QfDbContext : DbContext
             entity.HasOne(d => d.TableStyleNavigation).WithMany(p => p.Templates).HasForeignKey(d => d.TableStyle);
 
             entity.HasOne(d => d.TextStyleNavigation).WithMany(p => p.TemplateTextStyleNavigations).HasForeignKey(d => d.TextStyle);
+
+            entity.HasOne(d => d.GlobalStyleNavigation).WithMany(p => p.TemplateGlobalStyleNavigations).HasForeignKey(d => d.GlobalStyle);
         });
 
         modelBuilder.Entity<TextStyle>(entity =>
@@ -297,6 +302,29 @@ public partial class QfDbContext : DbContext
             entity.Ignore(e => e.Type);
 
             entity.HasOne(d => d.FontNavigation).WithMany(p => p.TextStyles).HasForeignKey(d => d.Font);
+        });
+
+        modelBuilder.Entity<GlobalStyle>(entity =>
+        {
+            entity.ToTable("global_style");
+
+            entity.HasIndex(e => e.Name, "IX_global_style_name").IsUnique();
+
+            entity.Property(e => e.Id) .HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnType("varchar(32)").HasColumnName("name");
+            entity.Property(e => e.LeftMargin).HasColumnName("left_margin");
+            entity.Property(e => e.RightMargin).HasColumnName("right_margin");
+            entity.Property(e => e.TopMargin).HasColumnName("top_margin");
+            entity.Property(e => e.BottomMargin).HasColumnName("bottom_margin");
+
+            entity.Property(e => e.SpecialColontitul).HasColumnType("varchar(16)").HasColumnName("special_colontitul");
+            entity.Property(e => e.LastNoNumberingPage).HasColumnName("last_no_numbering_page");
+
+            entity.Ignore(e => e.Type);
+
+            entity.Property(e => e.AlignmentId).HasColumnName("alignment");
+
+            entity.HasOne(d => d.AlignmentNavigation).WithMany(p => p.GlobalStyles).HasForeignKey(d => d.AlignmentId);
         });
 
         modelBuilder.Entity<Position>().HasData(

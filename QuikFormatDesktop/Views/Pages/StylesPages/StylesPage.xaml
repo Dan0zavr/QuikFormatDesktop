@@ -84,6 +84,22 @@
                     </ContentControl>
                 </TabItem.Content>
             </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Глобальный стиль"/>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <ContentControl Content="{Binding GlobalStyleViewModel}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate>
+                                <local:GlobalPage/>
+                            </DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
+                </TabItem.Content>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

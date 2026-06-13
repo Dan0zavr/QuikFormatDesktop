@@ -21,6 +21,7 @@ public partial class Template : StyleObject
     public int? MarkedNumberingStyle { get; set; }
 
     public int? NumberedNumberingStyle { get; set; }
+    public int? GlobalStyle { get; set; }
 
     public virtual FormulaStyle? FormulaStyleNavigation { get; set; }
 
@@ -35,4 +36,5 @@ public partial class Template : StyleObject
     public virtual TableStyle? TableStyleNavigation { get; set; }
 
     public virtual TextStyle? TextStyleNavigation { get; set; }
+    public virtual GlobalStyle? GlobalStyleNavigation { get; set; }
 }

@@ -10,6 +10,7 @@ namespace QuikFormatDesktop.ViewModels.Enums
         Numbering = 1,
         Table = 2,
         Picture = 3,
-        Formula = 4
+        Formula = 4,
+        Global = 5
     }
 }
